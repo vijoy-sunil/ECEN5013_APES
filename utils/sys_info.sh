@@ -18,7 +18,7 @@ echo -e "Kernel version\t\t\t: $(uname -r)"				>>$my_path/$filename
 echo -e "Kernel build time\t\t: $(uname -v)"				>>$my_path/$filename
 echo -e "System architecture\t\t: $(uname -m)"				>>$my_path/$filename
 
-echo -e "\nKernel build information\t:| OS version  |  Kernel version |    Build user   |       GCC version         |     OS version    |">>$my_path/$filename
+echo -e "\nKernel build information\t:| OS type      |  Kernel version |    Build user   |       GCC version         |     OS distribution    |">>$my_path/$filename
 echo -e "\t\t\t\t $(cat /proc/version)"					>>$my_path/$filename
 
 echo -e "\nFile system memory\t\t:"					>>$my_path/$filename
