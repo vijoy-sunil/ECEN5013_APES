@@ -16,7 +16,7 @@ all:	doubly_ll
 
 clean:
 	-rm -f *.o *.d
-	-rm -fdoubly_ll
+	-rm -f doubly_ll
 
 pthread: doubly_ll.o
 	$(CC) $(LDFLAGS) $(CFLAGS) -o $@ $@.o 
