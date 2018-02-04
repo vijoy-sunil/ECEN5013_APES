@@ -19,10 +19,11 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-#define OFFSET(type,member)	((size_t)(&(((type*)0)->member)))
+#define offsetof(type, member) ((size_t) &((type *)0)->member)
 
-#define GET_LIST_CONTAINER(addr,type,member)  \
-                          ( (type*) ( ((char*)addr) - OFFSET(type,member) ) )
+#define GET_LIST_CONTAINER(ptr, type, member) ({                      \
+       const typeof( ((type *)0)->member ) *__mptr = (ptr);    \
+       (type *)( (char *)__mptr - offsetof(type,member) );})
 
 
 typedef struct node {

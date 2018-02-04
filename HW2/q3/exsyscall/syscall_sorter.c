@@ -47,11 +47,13 @@ SYSCALL_DEFINE3(sorter, unsigned long*, src, unsigned long*, dest, unsigned long
 	printk(KERN_INFO "Sorting complete");
 
 	printk(KERN_INFO "Copying buffer from kernel space to user space");
-	if(copy_to_user(dest, buffer, length *sizeof(int32_t)));
-	return -EFAULT;
+	if(copy_to_user(dest, buffer, length *sizeof(int32_t)))
+		return -EFAULT;
 
 	printk(KERN_INFO "Free allocated memory");
 	kfree(buffer);
 	printk(KERN_INFO "EXIT: sorter system call");
+
+	return 0;
 
 }

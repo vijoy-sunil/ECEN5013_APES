@@ -18,5 +18,5 @@
 #include <time.h>
 
 #define BUFFER_DEPTH 256
-#define COUNT 5
+#define COUNT 15
 

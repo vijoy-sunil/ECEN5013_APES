@@ -50,7 +50,6 @@ node_t* insert_at_beginning(node_t* head, uint32_t data)
 		head->prev =new_head; 
 
 		head = new_head;
-		//free(new_head);
 	}
 
 	return head;
@@ -196,15 +195,14 @@ node_t* delete_from_beginning(node_t* head)
 	//if list contains only head
 	if(head->next == NULL)
 	{		
-		free(head);		
+		//free(head);		
 		return NULL;
 	}
 	else
 	{
 		node_t* temp_node;
 		temp_node = head->next;
-		free(head);
-			printf("\nhead addr: %p\n", head);
+		//free(head);
 
 		temp_node->prev = NULL;
 		node_t* new_head = temp_node;
@@ -297,8 +295,8 @@ node_t* delete_from_position(node_t* head, uint32_t index)
 
 node_t* destroy(node_t* head)
 {
-	free(head);
-	return NULL;
+	head = NULL;
+	return head;
 }
 
 void print_mylist(node_t* head)
@@ -324,7 +322,6 @@ void print_mylist(node_t* head)
 
 int main(void)
 {
-	info_t* current_node_addr;
 
 	head = insert_at_beginning(head, 16);	printf("\nhead addr: %p\n", head);
 

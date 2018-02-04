@@ -46,8 +46,9 @@ node_t* insert_at_beginning(node_t* head, uint32_t data)
 
 		head->prev = NULL;
 		head->next = NULL;
-		//info_t* new_node_addr = GET_LIST_CONTAINER(head, info_t, list);
-		//new_node_addr->data = data;	
+		info_t* new_node_addr = GET_LIST_CONTAINER(head, info_t, list);
+		new_node_addr->data = data;
+		printf("\nnewnode addr: %p\n", new_node_addr);	
 	}
 
 	else
@@ -58,8 +59,9 @@ node_t* insert_at_beginning(node_t* head, uint32_t data)
 
 		new_head->prev = NULL;
 		new_head->next = head;
-		//info_t* new_node_addr = GET_LIST_CONTAINER(new_head, info_t, list);
-		//new_node_addr->data = data;	
+		info_t* new_node_addr = GET_LIST_CONTAINER(new_head, info_t, list);
+		new_node_addr->data = data;
+		printf("\nnewnode addr: %p\n", new_node_addr);		
 		
 		head->prev =new_head; 
 
@@ -75,8 +77,11 @@ int main(void)
 	printf("\nhead addr: %p\n", head);
 	head = insert_at_beginning(head, 16);	printf("\nhead addr: %p\n", head);
 
+	head = insert_at_beginning(head, 16);	printf("\nhead addr: %p\n", head);
 
+	//info_t* node_addr = GET_LIST_CONTAINER(head, info_t, list);
 	free(head);				printf("\nhead addr: %p\n", head);
+	
 
 	return 0;	
 }

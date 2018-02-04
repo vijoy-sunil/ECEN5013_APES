@@ -9,4 +9,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
+
+#define MAX_FILE_SIZE 200
 
