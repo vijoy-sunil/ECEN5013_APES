@@ -27,7 +27,8 @@ node_t* insert_at_beginning(node_t* head, uint32_t data)
 	{
 		//allocate memory
 		head = (node_t*)malloc(sizeof(node_t*));
-		info_t* new_node = (info_t*)malloc(sizeof(info_t*));
+		if(head == NULL)
+			printf("\nMALLOC FAIL !!!\n");
 
 		head->prev = NULL;
 		head->next = NULL;
@@ -38,7 +39,8 @@ node_t* insert_at_beginning(node_t* head, uint32_t data)
 	else
 	{
 		node_t* new_head =  (node_t*)malloc(sizeof(node_t*));
-		info_t* new_node = (info_t*)malloc(sizeof(info_t*));
+		if(new_head == NULL)
+			printf("\nMALLOC FAIL !!!\n");
 
 		new_head->prev = NULL;
 		new_head->next = head;
@@ -48,6 +50,7 @@ node_t* insert_at_beginning(node_t* head, uint32_t data)
 		head->prev =new_head; 
 
 		head = new_head;
+		//free(new_head);
 	}
 
 	return head;
@@ -60,7 +63,8 @@ node_t* insert_at_end(node_t* head, uint32_t data)
 	{
 		//allocate memory
 		head = (node_t*)malloc(sizeof(node_t*));
-		info_t* new_node = (info_t*)malloc(sizeof(info_t*));
+		if(head == NULL)
+			printf("\nMALLOC FAIL !!!\n");
 
 		head->prev = NULL;
 		head->next = NULL;
@@ -72,7 +76,8 @@ node_t* insert_at_end(node_t* head, uint32_t data)
 	{
 		//allocate memory
 		node_t* new_tail = (node_t*)malloc(sizeof(node_t*));
-		info_t* new_node = (info_t*)malloc(sizeof(info_t*));
+		if(head == NULL)
+			printf("\nMALLOC FAIL !!!\n");
 
 		node_t* temp_node;
 		temp_node = head;
@@ -102,7 +107,8 @@ node_t* insert_at_position(node_t* head, uint32_t data, uint32_t index)
 	{
 		//allocate memory
 		head = (node_t*)malloc(sizeof(node_t*));
-		info_t* new_node = (info_t*)malloc(sizeof(info_t*));
+		if(head == NULL)
+			printf("\nMALLOC FAIL !!!\n");
 
 		head->prev = NULL;
 		head->next = NULL;
@@ -113,7 +119,8 @@ node_t* insert_at_position(node_t* head, uint32_t data, uint32_t index)
 	else
 	{
 		node_t* new_list = (node_t*)malloc(sizeof(node_t*));
-		info_t* new_node = (info_t*)malloc(sizeof(info_t*));
+		if(head == NULL)
+			printf("\nMALLOC FAIL !!!\n");
 
 		//find number of links in list
 		len = size(head);
@@ -188,16 +195,16 @@ node_t* delete_from_beginning(node_t* head)
 {
 	//if list contains only head
 	if(head->next == NULL)
-	{
-		//free(head);
+	{		
+		free(head);		
 		return NULL;
 	}
 	else
 	{
 		node_t* temp_node;
 		temp_node = head->next;
-
-		//free(head);
+		free(head);
+			printf("\nhead addr: %p\n", head);
 
 		temp_node->prev = NULL;
 		node_t* new_head = temp_node;
@@ -290,7 +297,7 @@ node_t* delete_from_position(node_t* head, uint32_t index)
 
 node_t* destroy(node_t* head)
 {
-	//free(head);
+	free(head);
 	return NULL;
 }
 
@@ -319,37 +326,38 @@ int main(void)
 {
 	info_t* current_node_addr;
 
-	head = insert_at_beginning(head, 16);
+	head = insert_at_beginning(head, 16);	printf("\nhead addr: %p\n", head);
 
-	head = insert_at_beginning(head, 24);
 
-	head = insert_at_beginning(head, 32);
+	head = insert_at_beginning(head, 24);	printf("\nhead addr: %p\n", head);
 
-	head = insert_at_end(head, 64);
+	head = insert_at_beginning(head, 32);	printf("\nhead addr: %p\n", head);
 
-	head = insert_at_end(head, 72);
+	head = insert_at_end(head, 64);	printf("\nhead addr: %p\n", head);
 
-	head = insert_at_position(head, 80, 3);
+	head = insert_at_end(head, 72);	printf("\nhead addr: %p\n", head);
 
-	print_mylist(head);
-	printf("\n------------------------------\n");
-
-	head = delete_from_beginning(head);
+	head = insert_at_position(head, 80, 3);	printf("\nhead addr: %p\n", head);
 
 	print_mylist(head);
 	printf("\n------------------------------\n");
 
-	head = delete_from_end(head);
+	head = delete_from_beginning(head);	printf("\nhead addr: %p\n", head);
 
 	print_mylist(head);
 	printf("\n------------------------------\n");
 
-	head = delete_from_position(head, 2);
+	head = delete_from_end(head);	printf("\nhead addr: %p\n", head);
 
 	print_mylist(head);
 	printf("\n------------------------------\n");
 
-	head = destroy(head);
+	head = delete_from_position(head, 2);	printf("\nhead addr: %p\n", head);
+
+	print_mylist(head);
+	printf("\n------------------------------\n");
+
+	head = destroy(head);	printf("\nhead addr: %p\n", head);
 
 	print_mylist(head);
 	printf("\n------------------------------\n");
