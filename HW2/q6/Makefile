@@ -18,7 +18,7 @@ clean:
 	-rm -f *.o *.d
 	-rm -f doubly_ll
 
-pthread: doubly_ll.o
+doubly_ll: doubly_ll.o
 	$(CC) $(LDFLAGS) $(CFLAGS) -o $@ $@.o 
 
 depend:

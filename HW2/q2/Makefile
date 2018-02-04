@@ -18,7 +18,7 @@ clean:
 	-rm -f *.o *.d
 	-rm -f file_io
 
-pthread: file_io.o
+file_io: file_io.o
 	$(CC) $(LDFLAGS) $(CFLAGS) -o $@ $@.o 
 
 depend:

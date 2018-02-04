@@ -18,7 +18,7 @@ clean:
 	-rm -f *.o *.d
 	-rm -f call_syscall_sorter
 
-pthread: call_syscall_sorter.o
+call_syscall_sorter: call_syscall_sorter.o
 	$(CC) $(LDFLAGS) $(CFLAGS) -o $@ $@.o 
 
 depend:

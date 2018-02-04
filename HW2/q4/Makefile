@@ -18,7 +18,7 @@ clean:
 	-rm -f *.o *.d
 	-rm -f my_crontasks
 
-pthread: my_crontasks.o
+my_crontasks: my_crontasks.o
 	$(CC) $(LDFLAGS) $(CFLAGS) -o $@ $@.o 
 
 depend:
