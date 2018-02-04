@@ -184,19 +184,134 @@ size_t size(node_t* any_node)
 	return len;	
 }
 
+node_t* delete_from_beginning(node_t* head)
+{
+	//if list contains only head
+	if(head->next == NULL)
+	{
+		//free(head);
+		return NULL;
+	}
+	else
+	{
+		node_t* temp_node;
+		temp_node = head->next;
+
+		//free(head);
+
+		temp_node->prev = NULL;
+		node_t* new_head = temp_node;
+
+		return new_head;
+	}
+}
+
+node_t* delete_from_end(node_t* head)
+{
+	//if list contains only head
+	if(head->next == NULL)
+	{
+		//free(head);
+		return NULL;
+	}
+	else
+	{
+		node_t* temp_node;
+		temp_node = head;
+		
+		//traverse till end
+		while(temp_node->next != NULL){
+			temp_node = temp_node->next;
+		}	
+		
+		node_t* last_node = temp_node->prev;
+		last_node->next = NULL;
+		temp_node->prev = NULL;	
+
+		//free(temp_node);		
+		return head;
+	}
+}
+
+node_t* delete_from_position(node_t* head, uint32_t index)
+{
+	int len, i = 0;
+	//if list contains only head
+	if(head->next == NULL)
+	{
+		//free(head);
+		return NULL;
+	}
+	else
+	{
+		//find number of links in list
+		len = size(head);
+		if(len == -1)
+			printf("\nNO LIST\n");
+
+		if(index == 0)
+			head = delete_from_beginning(head);
+		else if(index == len)
+			head = delete_from_end(head);
+		else
+		{
+			if((index > len + 1) || (index < 0)){
+				printf("\nINDEX OUT OF BOUNDS!!!\n");
+				return head;
+			}
+			else
+			{
+				node_t* temp_node, *before_node, *after_node;
+				temp_node = head;
+
+				//traverse to index
+				while(i + 1 != index)
+				{
+					++i;
+					temp_node = temp_node->next;	
+				}
+				
+				before_node = temp_node->prev;
+				after_node = temp_node->next;
+
+				before_node->next = after_node;
+				after_node->prev = before_node;
+
+				temp_node->prev = NULL;
+				temp_node->next = NULL;
+
+				//free(temp_node);
+				
+				return head;	
+			}
+		}	
+	}
+}
+
+node_t* destroy(node_t* head)
+{
+	//free(head);
+	return NULL;
+}
+
 void print_mylist(node_t* head)
 {
 	node_t* temp_node;
 	temp_node = head;
 	int i = 0;
 
-	//traverse the list till end
-	while(temp_node != NULL)
-	{
-		info_t* curr_node_addr = GET_LIST_CONTAINER(temp_node, info_t, list);
-		printf("Element [%d]: %d\n", i, curr_node_addr->data);	
-		i++;	
-		temp_node = temp_node->next;
+	if(temp_node == NULL)
+		printf("\nLIST EMPTY!!!\n");
+
+	else{
+		//traverse the list till end
+		while(temp_node != NULL)
+		{
+			info_t* curr_node_addr = GET_LIST_CONTAINER(temp_node, info_t, list);
+			printf("Element [%d]: %d\n", i, curr_node_addr->data);	
+			i++;	
+			temp_node = temp_node->next;
+		}
 	}	
 }
 
@@ -217,6 +332,28 @@ int main(void)
 	head = insert_at_position(head, 80, 3);
 
 	print_mylist(head);
+	printf("\n------------------------------\n");
+
+	head = delete_from_beginning(head);
+
+	print_mylist(head);
+	printf("\n------------------------------\n");
+
+	head = delete_from_end(head);
+
+	print_mylist(head);
+	printf("\n------------------------------\n");
+
+	head = delete_from_position(head, 2);
+
+	print_mylist(head);
+	printf("\n------------------------------\n");
+
+	head = destroy(head);
+
+	print_mylist(head);
+	printf("\n------------------------------\n");
+
 	return 0;	
 }
 

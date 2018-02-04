@@ -43,7 +43,7 @@ node_t* insert_at_position(node_t*, uint32_t, uint32_t);
 node_t* destroy(node_t*);
 node_t* delete_from_beginning(node_t*);
 node_t* delete_from_end(node_t*);
-node_t* delete_from_position(node_t*);
+node_t* delete_from_position(node_t*, uint32_t);
 
 size_t size(node_t*);
 void print_mylist(node_t* head);
