@@ -103,7 +103,7 @@ node_t* insert_at_end(node_t* head, uint32_t data)
 	
 }
 
-node_t* insert_at_position(node_t* head, uint32_t data, uint32_t index)
+node_t* insert_at_position(node_t* head, uint32_t data, int32_t index)
 {
 	size_t len;
 	int i = 0;
@@ -112,8 +112,10 @@ node_t* insert_at_position(node_t* head, uint32_t data, uint32_t index)
 	{
 		if(index == 0)
 			head = insert_at_beginning(head, data);
-		else
-			printf("\nINDEX OUT OF BOUNDS!!!\n");
+		else if(index < 0){
+			printf("\nINDEX OUT OF BOUNDS\n");
+			return NULL;
+		}
 	}
 	
 	else
@@ -153,12 +155,6 @@ node_t* insert_at_position(node_t* head, uint32_t data, uint32_t index)
 				}
 
 				stemp = temp_node->next;
-				//temp_node->next = &(new_node->list);					
-
-				//new_node->list.prev = temp_node;
-				//new_node->list.next = stemp;
-
-				//stemp->prev = &(new_node->list);
 
 				new_node->list.prev = temp_node;				
 				new_node->list.next = temp_node->next;
@@ -266,7 +262,7 @@ node_t* delete_from_end(node_t* head)
 	}
 }
 
-node_t* delete_from_position(node_t* head, uint32_t index)
+node_t* delete_from_position(node_t* head, int32_t index)
 {
 	int len, i;
 	//if no list	
@@ -278,8 +274,10 @@ node_t* delete_from_position(node_t* head, uint32_t index)
 	{
 		//find number of links in list
 		len = size(head);
-		if(len == -1)
+		if(len == -1){
 			printf("\nNO LIST\n");
+			return NULL;
+		}
 
 		if(index == 0)
 			head = delete_from_beginning(head);
@@ -307,12 +305,8 @@ node_t* delete_from_position(node_t* head, uint32_t index)
 				}
 
 				before_node = temp_node->prev;
-				info_t* addr = GET_LIST_CONTAINER(before_node, info_t, list);
-				printf("-----%d", addr->data);
 
 				after_node = temp_node->next;
-				info_t* asaddr = GET_LIST_CONTAINER(after_node, info_t, list);
-				printf("-----%d", asaddr->data);
 
 
 				before_node->next = after_node;
@@ -356,55 +350,80 @@ void print_mylist(node_t* head)
 	}	
 }
 
+/*
 int main(void)
 {
 
-	head = insert_at_beginning(head, 16);	printf("\nhead addr: %p\n", head);
+	printf("\nInserting node at beginning\n");
+	head = insert_at_beginning(head, 16);
+	print_mylist(head);
+	printf("\n------------------------------\n");	
 
-	head = insert_at_beginning(head, 24);	printf("\nhead addr: %p\n", head);
+	printf("\nInserting node at beginning\n");
+	head = insert_at_beginning(head, 24);
+	print_mylist(head);
+	printf("\n------------------------------\n");	
 
-	head = insert_at_beginning(head, 32);	printf("\nhead addr: %p\n", head);
+	printf("\nInserting node at beginning\n");	
+	head = insert_at_beginning(head, 32);	
+	print_mylist(head);
+	printf("\n------------------------------\n");	
 
-	head = insert_at_beginning(head, 40);	printf("\nhead addr: %p\n", head);
+	printf("\nInserting node at beginning\n");
+	head = insert_at_beginning(head, 40);	
+	print_mylist(head);
+	printf("\n------------------------------\n");	
 
-	head = insert_at_beginning(head, 48);	printf("\nhead addr: %p\n", head);
+	printf("\nInserting node at beginning\n");
+	head = insert_at_beginning(head, 48);	
+	print_mylist(head);
+	printf("\n------------------------------\n");	
 
-	head = insert_at_beginning(head, 56);	printf("\nhead addr: %p\n", head);
+	printf("\nInserting node at beginning\n");
+	head = insert_at_beginning(head, 56);
+	print_mylist(head);
+	printf("\n------------------------------\n");		
 
 
-	head = insert_at_end(head, 64);	printf("\nhead addr: %p\n", head);
+	printf("\nInserting node at end\n");
+	head = insert_at_end(head, 64);
+	print_mylist(head);
+	printf("\n------------------------------\n");	
 
-	head = insert_at_end(head, 72);	printf("\nhead addr: %p\n", head);
+	printf("\nInserting node at end\n");
+	head = insert_at_end(head, 72);
+	print_mylist(head);
+	printf("\n------------------------------\n");
+		
+	printf("\nInserting node at position 4\n");
+	head = insert_at_position(head, 999, 4);
+	print_mylist(head);
+	printf("\n------------------------------\n");	
 
-	head = insert_at_position(head, 999, 4);	printf("\nhead addr: %p\n", head);
-
+	printf("\nDeleting node from beginning\n");	
+	head = delete_from_beginning(head);	
 	print_mylist(head);
 	printf("\n------------------------------\n");
 
+	printf("\nDeleting node from end\n");
+	head = delete_from_end(head);
+	print_mylist(head);
+	printf("\n------------------------------\n");	
 
-	head = delete_from_beginning(head);	printf("\nhead addr: %p\n", head);
 
+	printf("\nDeleting node from poition 3\n");
+	head = delete_from_position(head, 3);	
 	print_mylist(head);
 	printf("\n------------------------------\n");
 
-	head = delete_from_end(head);	printf("\nhead addr: %p\n", head);
-
-	print_mylist(head);
-	printf("\n------------------------------\n");
-
-	head = delete_from_position(head, 3);	printf("\nhead addr: %p\n", head);
-
-	print_mylist(head);
-	printf("\n------------------------------\n");
-
-	head = destroy(head);	printf("\nhead addr: %p\n", head);
-
+	printf("\nDeleting list\n");
+	head = destroy(head);	
 	print_mylist(head);
 	printf("\n------------------------------\n");
 
 	return 0;	
 }
-
+*/
 
 
 
