@@ -26,30 +26,34 @@ node_t* insert_at_beginning(node_t* head, uint32_t data)
 	if(head == NULL)
 	{
 		//allocate memory
-		head = (node_t*)malloc(sizeof(node_t*));
-		if(head == NULL)
+		info_t* new_node = (info_t*)malloc(sizeof(info_t));
+		if(new_node == NULL)
 			printf("\nMALLOC FAIL !!!\n");
+		
+		new_node->data = data;
+				
+		new_node->list.prev = NULL;
+		new_node->list.next = NULL;
 
-		head->prev = NULL;
-		head->next = NULL;
-		info_t* new_node_addr = GET_LIST_CONTAINER(head, info_t, list);
-		new_node_addr->data = data;	
+		head = &(new_node->list);
 	}
 
 	else
 	{
-		node_t* new_head =  (node_t*)malloc(sizeof(node_t*));
-		if(new_head == NULL)
+		info_t* new_node = (info_t*)malloc(sizeof(info_t));
+		if(new_node == NULL)
 			printf("\nMALLOC FAIL !!!\n");
 
-		new_head->prev = NULL;
-		new_head->next = head;
-		info_t* new_node_addr = GET_LIST_CONTAINER(new_head, info_t, list);
-		new_node_addr->data = data;	
-		
-		head->prev =new_head; 
+		new_node->data = data;
 
-		head = new_head;
+		new_node->list.prev = NULL;
+		new_node->list.next = head;
+
+		
+		
+		head->prev = &(new_node->list); 
+
+		head = &(new_node->list);
 	}
 
 	return head;
@@ -61,21 +65,24 @@ node_t* insert_at_end(node_t* head, uint32_t data)
 	if(head == NULL)
 	{
 		//allocate memory
-		head = (node_t*)malloc(sizeof(node_t*));
-		if(head == NULL)
+		info_t* new_node = (info_t*)malloc(sizeof(info_t));
+		if(new_node == NULL)
 			printf("\nMALLOC FAIL !!!\n");
 
-		head->prev = NULL;
-		head->next = NULL;
-		info_t* new_node_addr = GET_LIST_CONTAINER(head, info_t, list);
-		new_node_addr->data = data;		
+		new_node->data = data;
+				
+		new_node->list.prev = NULL;
+		new_node->list.next = NULL;
+
+		head = &(new_node->list);
+		
 	}
 
 	else
 	{
 		//allocate memory
-		node_t* new_tail = (node_t*)malloc(sizeof(node_t*));
-		if(head == NULL)
+		info_t* new_node = (info_t*)malloc(sizeof(info_t));
+		if(new_node == NULL)
 			printf("\nMALLOC FAIL !!!\n");
 
 		node_t* temp_node;
@@ -85,12 +92,11 @@ node_t* insert_at_end(node_t* head, uint32_t data)
 		while(temp_node->next != NULL)
 			temp_node = temp_node->next;				
 		
-		temp_node->next = new_tail;
-		new_tail->prev = temp_node;
-		new_tail->next = NULL;
+		temp_node->next = &(new_node->list);
+		new_node->list.prev = temp_node;
+		new_node->list.next = NULL;
 
-		info_t* new_node_addr = GET_LIST_CONTAINER(new_tail, info_t, list);
-		new_node_addr->data = data;
+		new_node->data = data;
 						
 	}
 	return head;
@@ -104,21 +110,17 @@ node_t* insert_at_position(node_t* head, uint32_t data, uint32_t index)
 	//if no head exists, init this node as head
 	if(head == NULL)
 	{
-		//allocate memory
-		head = (node_t*)malloc(sizeof(node_t*));
-		if(head == NULL)
-			printf("\nMALLOC FAIL !!!\n");
-
-		head->prev = NULL;
-		head->next = NULL;
-		info_t* new_node_addr = GET_LIST_CONTAINER(head, info_t, list);
-		new_node_addr->data = data;		
+		if(index == 0)
+			head = insert_at_beginning(head, data);
+		else
+			printf("\nINDEX OUT OF BOUNDS!!!\n");
 	}
 	
 	else
 	{
-		node_t* new_list = (node_t*)malloc(sizeof(node_t*));
-		if(head == NULL)
+		//allocate memory
+		info_t* new_node = (info_t*)malloc(sizeof(info_t));
+		if(new_node == NULL)
 			printf("\nMALLOC FAIL !!!\n");
 
 		//find number of links in list
@@ -128,7 +130,7 @@ node_t* insert_at_position(node_t* head, uint32_t data, uint32_t index)
 
 		if(index == 0)
 			head = insert_at_beginning(head, data);
-		else if(index == len)
+		else if(index == len + 1)
 			head = insert_at_end(head, data);
 		else
 		{
@@ -141,20 +143,30 @@ node_t* insert_at_position(node_t* head, uint32_t data, uint32_t index)
 				node_t* temp_node;
 				temp_node = head;
 
+				node_t* stemp;
+
 				//traverse to index
-				while(i != index)
+				while(i < (index-1))
 				{
 					i++;
 					temp_node = temp_node->next;	
 				}
-				temp_node = temp_node->prev;
-				new_list->prev = temp_node;
-				new_list->next = temp_node->next;
-				temp_node->next = new_list;
-				temp_node->next->prev =new_list ;				
 
-				info_t* new_node_addr = GET_LIST_CONTAINER(new_list, info_t, list);
-				new_node_addr->data = data;				
+				stemp = temp_node->next;
+				//temp_node->next = &(new_node->list);					
+
+				//new_node->list.prev = temp_node;
+				//new_node->list.next = stemp;
+
+				//stemp->prev = &(new_node->list);
+
+				new_node->list.prev = temp_node;				
+				new_node->list.next = temp_node->next;
+
+				temp_node->next = &(new_node->list);
+				stemp->prev =&(new_node->list); 
+
+				new_node->data = data;				
 			}
 				
 		}
@@ -164,14 +176,14 @@ node_t* insert_at_position(node_t* head, uint32_t data, uint32_t index)
 
 size_t size(node_t* any_node)
 {
-	size_t len;
+	size_t len = 1;
 	node_t* temp_node;
 	temp_node = any_node;
 
 	if(any_node == NULL)
 		len = -1;
 	else
-	{
+	{	
 		//backward traverse till head
 		while(temp_node != NULL){
 			len++;
@@ -192,31 +204,46 @@ size_t size(node_t* any_node)
 
 node_t* delete_from_beginning(node_t* head)
 {
-	//if list contains only head
-	if(head->next == NULL)
+	//if no list	
+	if(head == NULL){
+		printf("\nNO LIST\n");
+		return NULL;
+	}
+
+	//if list contains only head	
+	else if(head->next == NULL)
 	{		
-		//free(head);		
+		info_t* node_addr = GET_LIST_CONTAINER(head, info_t, list);
+		free(node_addr);		
 		return NULL;
 	}
 	else
 	{
 		node_t* temp_node;
 		temp_node = head->next;
-		//free(head);
+		info_t* node_addr = GET_LIST_CONTAINER(head, info_t, list);
+		free(node_addr);
 
 		temp_node->prev = NULL;
-		node_t* new_head = temp_node;
-
-		return new_head;
+		head = temp_node;
+		
+		return head;
 	}
 }
 
 node_t* delete_from_end(node_t* head)
 {
+	//if no list	
+	if(head == NULL){
+		printf("\nNO LIST\n");
+		return NULL;
+	}
+
 	//if list contains only head
-	if(head->next == NULL)
+	else if(head->next == NULL)
 	{
-		//free(head);
+		info_t* node_addr = GET_LIST_CONTAINER(head, info_t, list);
+		free(node_addr);		
 		return NULL;
 	}
 	else
@@ -229,22 +256,22 @@ node_t* delete_from_end(node_t* head)
 			temp_node = temp_node->next;
 		}	
 		
-		node_t* last_node = temp_node->prev;
-		last_node->next = NULL;
+		node_t* secondlast_node = temp_node->prev;
+		secondlast_node->next = NULL;
 		temp_node->prev = NULL;	
 
-		//free(temp_node);		
+		info_t* node_addr = GET_LIST_CONTAINER(temp_node, info_t, list);
+		free(node_addr);				
 		return head;
 	}
 }
 
 node_t* delete_from_position(node_t* head, uint32_t index)
 {
-	int len, i = 0;
-	//if list contains only head
-	if(head->next == NULL)
-	{
-		//free(head);
+	int len, i;
+	//if no list	
+	if(head == NULL){
+		printf("\nNO LIST\n");
 		return NULL;
 	}
 	else
@@ -256,36 +283,43 @@ node_t* delete_from_position(node_t* head, uint32_t index)
 
 		if(index == 0)
 			head = delete_from_beginning(head);
-		else if(index == len)
+		else if(index == len - 1)
 			head = delete_from_end(head);
 		else
 		{
-			if((index > len + 1) || (index < 0)){
+			if((index >= len) || (index < 0)){
 				printf("\nINDEX OUT OF BOUNDS!!!\n");
 				return head;
 			}
 			else
 			{
-				node_t* temp_node, *before_node, *after_node;
+				i = 0;
+				node_t* temp_node;
 				temp_node = head;
+ 
+				node_t* before_node, *after_node;
 
 				//traverse to index
-				while(i + 1 != index)
+				while(i  < (index))
 				{
-					++i;
-					temp_node = temp_node->next;	
+					temp_node = temp_node->next;
+					i++;	
 				}
-				
+
 				before_node = temp_node->prev;
+				info_t* addr = GET_LIST_CONTAINER(before_node, info_t, list);
+				printf("-----%d", addr->data);
+
 				after_node = temp_node->next;
+				info_t* asaddr = GET_LIST_CONTAINER(after_node, info_t, list);
+				printf("-----%d", asaddr->data);
+
 
 				before_node->next = after_node;
 				after_node->prev = before_node;
 
-				temp_node->prev = NULL;
-				temp_node->next = NULL;
-
-				//free(temp_node);
+				info_t* node_addr = GET_LIST_CONTAINER(temp_node, info_t, list);
+				free(node_addr);
 				
 				return head;	
 			}
@@ -317,6 +351,8 @@ void print_mylist(node_t* head)
 			i++;	
 			temp_node = temp_node->next;
 		}
+
+		printf("\nList size: %ld\n", size(head));
 	}	
 }
 
@@ -325,19 +361,26 @@ int main(void)
 
 	head = insert_at_beginning(head, 16);	printf("\nhead addr: %p\n", head);
 
-
 	head = insert_at_beginning(head, 24);	printf("\nhead addr: %p\n", head);
 
 	head = insert_at_beginning(head, 32);	printf("\nhead addr: %p\n", head);
+
+	head = insert_at_beginning(head, 40);	printf("\nhead addr: %p\n", head);
+
+	head = insert_at_beginning(head, 48);	printf("\nhead addr: %p\n", head);
+
+	head = insert_at_beginning(head, 56);	printf("\nhead addr: %p\n", head);
+
 
 	head = insert_at_end(head, 64);	printf("\nhead addr: %p\n", head);
 
 	head = insert_at_end(head, 72);	printf("\nhead addr: %p\n", head);
 
-	head = insert_at_position(head, 80, 3);	printf("\nhead addr: %p\n", head);
+	head = insert_at_position(head, 999, 4);	printf("\nhead addr: %p\n", head);
 
 	print_mylist(head);
 	printf("\n------------------------------\n");
+
 
 	head = delete_from_beginning(head);	printf("\nhead addr: %p\n", head);
 
@@ -349,7 +392,7 @@ int main(void)
 	print_mylist(head);
 	printf("\n------------------------------\n");
 
-	head = delete_from_position(head, 2);	printf("\nhead addr: %p\n", head);
+	head = delete_from_position(head, 3);	printf("\nhead addr: %p\n", head);
 
 	print_mylist(head);
 	printf("\n------------------------------\n");
