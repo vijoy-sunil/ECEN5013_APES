@@ -1,0 +1,17 @@
+The cmocka unit test tests the doubly linked list implemented in q6/
+The following functions are tested
+
+To run this test
+		(test_insert_at_beginning_head_is_null),
+		(test_insert_at_end_head_is_null),
+		(test_insert_at_position_head_is_null),
+
+		(test_delete_from_beginning_head_is_null),
+		(test_delete_from_end_head_is_null),
+		(test_delete_from_position_head_is_null),
+		
+		(test_size_no_list)
+
+>> make
+
+>> ./test_doubly_ll
