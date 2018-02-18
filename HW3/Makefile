@@ -4,10 +4,10 @@ CC=gcc
 
 CDEFS=
 CFLAGS= -O0 -g $(INCLUDE_DIRS) $(CDEFS)
-LIBS= -lpthread
+LIBS= -lpthread -lrt
 
 HFILES= 
-CFILES= main.c all_threads.c
+CFILES= main.c all_threads.c my_timer.c
 
 SRCS= ${HFILES} ${CFILES}
 OBJS= ${CFILES:.c=.o}
