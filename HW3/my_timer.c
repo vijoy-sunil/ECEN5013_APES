@@ -56,11 +56,12 @@ void my_handler(union sigval arg)				//handler function for timer
 		ncpus = get_nprocs();
 
 		diff = (idle_2 - idle_1)/ncpus;
+		diff = 100 - diff;
 	}
 
 	
 	
-	fprintf(logfile_ptr, "CPU utilization: %lu (IDLE percentage)\n", diff );	
+	fprintf(logfile_ptr, "CPU utilization: %lu %% \n", diff );	
 	
 
 	fprintf(logfile_ptr, "\n------------------------------------------------------------------- \n");
@@ -79,18 +80,31 @@ void init_timer(unsigned long period_ns, void* tinfo)
 	//copy shared struct to handler struct
 	handlerStruct = (threadinfo_t*)tinfo;
 
-  	//Set the sigevent structure to cause the signal to be
-   	//delivered by creating a new thread.
-	sev.sigev_notify = SIGEV_THREAD;
-	sev.sigev_value.sival_ptr = &timer_id;
-	sev.sigev_notify_function = my_handler;
-	sev.sigev_notify_attributes = NULL;
+	
+	if(period_ns != 0)
+	{
+	  	//Set the sigevent structure
+		sev.sigev_notify = SIGEV_THREAD;
+		sev.sigev_value.sival_ptr = &timer_id;
+		sev.sigev_notify_function = my_handler;
+		sev.sigev_notify_attributes = NULL;
 
-	//set timer interval
-	timer_params.it_value.tv_sec 	= period_ns / 1000000000;
-	timer_params.it_value.tv_nsec 	= period_ns % 1000000000;
-	timer_params.it_interval.tv_sec = timer_params.it_value.tv_sec;
-	timer_params.it_interval.tv_nsec= timer_params.it_value.tv_nsec;
+		//set timer interval
+		timer_params.it_value.tv_sec 	= period_ns / 1000000000;
+		timer_params.it_value.tv_nsec 	= period_ns % 1000000000;
+		timer_params.it_interval.tv_sec = timer_params.it_value.tv_sec;
+		timer_params.it_interval.tv_nsec= timer_params.it_value.tv_nsec;
+	}
+	else
+	{
+		//delete timer
+		timer_params.it_value.tv_sec 	= 0;
+		timer_params.it_value.tv_nsec 	= 0;
+		timer_params.it_interval.tv_sec = timer_params.it_value.tv_sec;
+		timer_params.it_interval.tv_nsec= timer_params.it_value.tv_nsec;
+
+		timer_delete(timer_id);
+	}
 
 	//create timer
 	if (timer_create(CLOCK_REALTIME, &sev, &timer_id) == -1)
@@ -100,3 +114,6 @@ void init_timer(unsigned long period_ns, void* tinfo)
                 printf("\nERROR: timer start\n");	
 
 }
+
+
+

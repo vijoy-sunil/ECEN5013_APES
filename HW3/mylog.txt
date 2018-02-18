@@ -1,0 +1,793 @@
+RUNNING: mainService thread
+POSIXID: 140711241824000
+LINUXID: 23925
+TIMESTAMP: mainService thread start 1518989298.206106
+
+------------------------------------------------------------------- 
+RUNNING: child1_Service thread
+POSIXID: 140711233431296
+LINUXID: 23925
+TIMESTAMP: child1_Service thread start 1518989298.206322
+
+------------------------------------------------------------------- 
+Characters with only 3 occurences in valentinesday.txt file
+z
+q
+x
+
+------------------------------------------------------------------- 
+RUNNING: child2_Service thread
+POSIXID: 140711225038592
+LINUXID: 23925
+TIMESTAMP: child2_Service thread start 1518989298.207216
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 0 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 0 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 0 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 0 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 0 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 0 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 0 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 0 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 54 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 54 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 54 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 54 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 54 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 54 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 54 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 54 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 54 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 57 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 57 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 57 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 57 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 57 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 57 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 57 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 57 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 57 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 85 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 85 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 85 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 85 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 85 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 85 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 85 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 85 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 85 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 99 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 99 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 99 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 99 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 99 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 99 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 99 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 99 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 99 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 94 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 94 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 94 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 94 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 94 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 94 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 94 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 94 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 94 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 50 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 50 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 50 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 50 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 50 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 50 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 50 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 50 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 50 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 49 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 49 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 49 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 49 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 49 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 49 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 49 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 49 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 49 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 58 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 58 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 58 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 58 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 58 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 58 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 58 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 58 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 58 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 54 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 54 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 54 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 54 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 54 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 54 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 54 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 54 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 54 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 47 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 47 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 47 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 47 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 47 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 47 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 47 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 47 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 47 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 45 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 45 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 45 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 45 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 45 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 45 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 45 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 45 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 45 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 47 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 47 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 47 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 47 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 47 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 47 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 47 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 47 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 47 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 55 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 55 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 55 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 55 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 55 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 55 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 55 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 55 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 55 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 52 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 52 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 52 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 52 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 52 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 52 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 52 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 52 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 52 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 53 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 53 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 53 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 53 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 53 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 53 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 53 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 53 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 53 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 58 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 58 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 58 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 58 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 58 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 58 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 58 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 58 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 58 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 42 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 42 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 42 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 42 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 42 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 42 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 42 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 42 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 42 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 53 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 53 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 53 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 53 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 53 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 53 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 53 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 53 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 53 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 51 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 51 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 51 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 51 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 51 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 51 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 51 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 51 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 51 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 49 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 49 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 49 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 49 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 49 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 49 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 49 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 49 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 49 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 58 % 
+
+------------------------------------------------------------------- 
+CPU Utilization: logged by child2_Service thread
+CPU utilization: 58 % 
+
+------------------------------------------------------------------- 
+TIMESTAMP: child2_Service thread end 1518989298.207216
+
+------------------------------------------------------------------- 
+TIMESTAMP: child1_Service thread end 1518989298.206322
+
+------------------------------------------------------------------- 
+TIMESTAMP: mainService thread end 1518989322.212179
+
+------------------------------------------------------------------- 

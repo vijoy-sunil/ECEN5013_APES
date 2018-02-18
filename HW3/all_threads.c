@@ -1,6 +1,7 @@
 #include "main.h"
 #include "all_threads.h"
 #include "my_timer.h"
+#include "doubly_ll.h"
 
 bool continue_ch1 = true;
 bool continue_ch2 = true;
@@ -34,7 +35,7 @@ void *masterService(void *tinfo)
 	fprintf(logfile_ptr, "POSIXID: %lu\n", pthread_self());
 	fprintf(logfile_ptr, "LINUXID: %d\n", getpid());
 	fprintf(logfile_ptr, "TIMESTAMP: mainService thread start %ld.%ld\n",time_stamp.tv_sec, time_stamp.tv_usec);
-
+	fprintf(logfile_ptr, "\n------------------------------------------------------------------- \n");
 	fclose(logfile_ptr);													//close file
 	pthread_mutex_unlock(&logfile_lock);
 	//------------------------------------Creating child threads------------------------------------------------------
@@ -92,7 +93,7 @@ void *masterService(void *tinfo)
 
 void *child_1Service(void *tinfo)
 {
-
+	FILE* valentinesday_ptr;
 	struct timeval time_stamp;
 	gettimeofday(&time_stamp,NULL);												//log time when this thread starts
 
@@ -112,11 +113,92 @@ void *child_1Service(void *tinfo)
 	fprintf(logfile_ptr, "POSIXID: %lu\n", pthread_self());
 	fprintf(logfile_ptr, "LINUXID: %d\n", getpid());
 	fprintf(logfile_ptr, "TIMESTAMP: child1_Service thread start %ld.%ld\n",time_stamp.tv_sec, time_stamp.tv_usec);
+	fprintf(logfile_ptr, "\n------------------------------------------------------------------- \n");
 
 	fclose(logfile_ptr);													//close file
 	pthread_mutex_unlock(&logfile_lock);
 	//------------------------------------linked list search-----------------------------------------------------------
 	signal(SIGUSR1, ch_exit);
+	
+	valentinesday_ptr = fopen("valentinesday.txt", "r");
+	if(valentinesday_ptr == NULL)
+	{
+		printf("ERROR: Unable to open valentinesday.txt - child1_Struct\n");
+		fclose(valentinesday_ptr);
+		return NULL;
+	}
+	
+	node_t* head;
+	node_t* anode;
+	info_t* node_addr;
+	char found = 0;
+	int letter;
+	letter = fgetc(valentinesday_ptr);
+	if(letter > 64 && letter < 91)												//convert to lower case
+		letter = letter + 32;
+
+	anode = insert_at_end(NULL, (char)letter);										//create head of the list
+	node_addr = GET_LIST_CONTAINER(anode, info_t, list);
+	node_addr->count = 1;
+	head = anode;	
+	
+	
+	while(1){
+		letter = fgetc(valentinesday_ptr);
+		if(letter > 64 && letter < 91)											//convert to lower case
+			letter = letter + 32;
+
+		if(letter == EOF)
+			break;
+		else
+		{
+			while(found == 0)
+			{			
+				if(letter == node_addr->data)
+				{
+					node_addr->count++;
+					found = 1;	
+				}
+				else if(anode->next == NULL)
+				{
+					anode = insert_at_end(head, (char)letter);
+					while(anode->next != NULL)			
+						anode = anode->next;								//goto end
+					node_addr = GET_LIST_CONTAINER(anode, info_t, list);					//get address of last node		
+					node_addr->count++;
+					found = 1;
+				}
+				else
+				{	
+					anode = anode->next;
+					node_addr = GET_LIST_CONTAINER(anode, info_t, list);
+				}
+			}
+		}
+
+		anode = head;													//reset pointer back to head
+		node_addr = GET_LIST_CONTAINER(anode, info_t, list);
+		found = 0;	
+	}
+	fclose(valentinesday_ptr);
+	//print_mylist(head);
+
+	pthread_mutex_lock(&logfile_lock);
+	logfile_ptr = fopen(child1_Struct->logfile, "a+");
+
+	fprintf(logfile_ptr,"Characters with only 3 occurences in valentinesday.txt file\n");
+	anode = head;
+	while(anode != NULL)													//character with only 3 occurences
+	{
+		node_addr = GET_LIST_CONTAINER(anode, info_t, list);
+		if(node_addr->count == NUM_CHAR)
+			fprintf(logfile_ptr,"%c\n", node_addr->data);
+		anode = anode->next;
+	}
+	fprintf(logfile_ptr, "\n------------------------------------------------------------------- \n");
+	fclose(logfile_ptr);	
+	pthread_mutex_unlock(&logfile_lock);
+
 	while(continue_ch1)	sleep(1);											//"continue_ch1" bool will be unset through user signal USR1
 	//-----------------------------------------exit logging------------------------------------------------------------
 	pthread_mutex_lock(&logfile_lock);
@@ -152,6 +234,7 @@ void *child_2Service(void *tinfo)
 	fprintf(logfile_ptr, "POSIXID: %lu\n", pthread_self());
 	fprintf(logfile_ptr, "LINUXID: %d\n", getpid());
 	fprintf(logfile_ptr, "TIMESTAMP: child2_Service thread start %ld.%ld\n",time_stamp.tv_sec, time_stamp.tv_usec);
+	fprintf(logfile_ptr, "\n------------------------------------------------------------------- \n");
 
 	fclose(logfile_ptr);													//close file
 	pthread_mutex_unlock(&logfile_lock);
@@ -162,7 +245,7 @@ void *child_2Service(void *tinfo)
 	
 	while(continue_ch2)	sleep(1);											//"continue_ch2" bool will be unset through user signal USR2
 
-	//stop the timer
+	init_timer(0, tinfo);													//stop the timer - set period to zero
 
 	//-----------------------------------------exit logging---------------------------------------------------------------
 	pthread_mutex_lock(&logfile_lock);
