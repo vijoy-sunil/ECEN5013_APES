@@ -1,3 +1,32 @@
+/***************************************************************
+* AUTHOR	: Vijoy Sunil Kumar
+* DATE		: 02/18/2018
+* DESCRITPTION	: The program consists of 3 pthreads - 
+		  masterService, child1_service, child2_Service
+		  (all_threads.c)
+
+		  masterService creates the two child services.
+ 		  child1_Service - reads in valentinesday.txt
+		  file and uses linkedlist to search through and
+		  track number of occurences of alphabets.
+
+		  Finally, logs those alphabets with exactly 3
+		  occurences.
+
+		  child2_Service - reports CPU utilization to the
+		  log file every 100 ms using a timer.
+
+		  All 3 threads writes these into log file:
+		  1. timestamp on entry and exit
+		  2. thread identifiers - posix id, linux id
+
+		  The two child threads are implemented in a way 
+		  that user can exit them using USR1 and USR2 signals
+
+		  The log file access from all 3 threads are protected
+		  using mutex lock.
+		  
+****************************************************************/
 #include "main.h"
 #include "all_threads.h"
 #include "my_timer.h"
@@ -5,6 +34,9 @@
 
 bool continue_ch1 = true;
 bool continue_ch2 = true;
+
+																//signal handler to set boolean used
+																// to exit child threads
 void ch_exit(int signum)
 {
 	if(signum == SIGUSR1)
@@ -13,6 +45,7 @@ void ch_exit(int signum)
 		continue_ch2 = false;
 }
 
+																//masterService thread
 void *masterService(void *tinfo)
 {
 	struct timeval time_stamp;
