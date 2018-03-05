@@ -1,0 +1,1 @@
+cmd_/home/vijoy/Desktop/ECEN-5013/HW4/tree_info_module.ko := ld -r -m elf_x86_64 -T ./scripts/module-common.lds --build-id  -o /home/vijoy/Desktop/ECEN-5013/HW4/tree_info_module.ko /home/vijoy/Desktop/ECEN-5013/HW4/tree_info_module.o /home/vijoy/Desktop/ECEN-5013/HW4/tree_info_module.mod.o ;  true
