@@ -1,0 +1,1 @@
+cmd_/home/vijoy/Desktop/ECEN-5013/HW4/q4/mykthreads.ko := ld -r -m elf_x86_64 -T ./scripts/module-common.lds --build-id  -o /home/vijoy/Desktop/ECEN-5013/HW4/q4/mykthreads.ko /home/vijoy/Desktop/ECEN-5013/HW4/q4/mykthreads.o /home/vijoy/Desktop/ECEN-5013/HW4/q4/mykthreads.mod.o ;  true
