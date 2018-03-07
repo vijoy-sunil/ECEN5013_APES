@@ -401,8 +401,8 @@ int main()
 				return 0;
 			}
 
-			for(;;) 
-			{
+			//for(;;) 
+			//{
 		        	printf("Waiting for a connection...\n");
 			    	t = sizeof(remote);
 			    	if ((s2 = accept(s, (struct sockaddr *)&remote, &t)) == -1) 
@@ -439,7 +439,7 @@ int main()
 		    		}
 
 		    		close(s2);
-		    }
+		   // }
 		break;
 		case -1:
 		        printf("ERROR: fork() fail\n"); 

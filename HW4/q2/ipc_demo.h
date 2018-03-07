@@ -37,8 +37,8 @@ typedef struct
 #define PORT 8080
 //Reference: https://elinux.org/EBC_Exercise_10_Flashing_an_LED
 #define READY_LED 	(system("echo none >/sys/class/leds/beaglebone:green:usr0/trigger"))
-#define ON 		(system("1 > /sys/class/leds/beaglebone:green:usr0/brightness"))
-#define OFF 		(system("0 > /sys/class/leds/beaglebone:green:usr0/brightness"))
+#define ON 		(system("echo 1 > /sys/class/leds/beaglebone:green:usr0/brightness"))
+#define OFF 		(system("echo 0 > /sys/class/leds/beaglebone:green:usr0/brightness"))
 
 #define SET_LED(state) {if(state == 1) ON; \
                          if(state == 0) OFF; }
