@@ -10,56 +10,70 @@
 #include "i2c_wrap.h"
 
 
-// // The Pointer Register uses the two least-significant bytes (LSBs) to identify
-// // which of the data registers must respond to a read or write command.
-// void tlow_read(int file_handler, char *buffer)
-// {
-// 	char p1_p0[1] = {0, 1};
+// The Pointer Register uses the two least-significant bytes (LSBs) to identify
+// which of the data registers must respond to a read or write command.
+void tlow_read(int file_handler, char *buffer)
+{
+	char p1_p0= TEMP_TLOW_REG;
+	
+	i2c_write(file_handler, &p1_p0, 1);
+	i2c_read(file_handler, buffer,2);
+}
 
-// 	i2c_write(file_handler, p1_p0, 2);
-// 	i2c_read(file_handler, buffer,2);	
-// }
+void thigh_read(int file_handler, char *buffer)
+{
+	char p1_p0= TEMP_THIGH_REG;
+	
+	i2c_write(file_handler, &p1_p0, 1);
+	i2c_read(file_handler, buffer,2);
+}
 
-// void thigh_read(int file_handler, char *buffer)
-// {
-// 	char p1_p0[1] = {1, 1};
+void tlow_write(int file_handler, char *buffer)
+{
+	buffer[0]= TEMP_TLOW_REG;
+	buffer[1]= TEMP_TLOW_VAL;
+	i2c_write(file_handler, buffer, 2);
+}
 
-// 	i2c_write(file_handler, p1_p0, 2);
-// 	i2c_read(file_handler, buffer,2);
-// }
+void thigh_write(int file_handler, char *buffer)
+{
+	buffer[0]= TEMP_THIGH_REG;
+	buffer[1]= TEMP_THIGH_VAL;
+	i2c_write(file_handler, buffer, 2);
+}
 
 // Two bytes must be read to obtain data, byte 1 is the most significant byte, followed by byte 2, 
 // the least significant byte. The first 12 bits are used to indicate temperature.
 void temperature_read(int file_handler, char *buffer)
 {
+	char p1_p0= TEMP_READ_REG;
+	
+	i2c_write(file_handler, &p1_p0, 1);
 	i2c_read(file_handler, buffer,2);
 }
 
 int initialize_temp()
 {
 	int temp;
-	temp=i2c_init("/dev/i2c-2",temp,72);
+	temp=i2c_init("/dev/i2c-2",temp,TEMP_ADDR);
 	return temp;
 }
 
-// void ptrreg_write(int file_handler, char *buffer)
-// {
-// 	i2c_write(file_handler, buffer, 2);
-// }
 
-// void configreg_write(int file_handler, char *buffer)
-// {
-// 	char p1_p0[1] = {1, 0};
+void configreg_write(int file_handler, char *buffer)
+{
+	buffer[0]= TEMP_CONFIG_REG;
+	buffer[1]= TEMP_CONFIG_VAL;
+	i2c_write(file_handler, buffer, 2);
+}
 
-// 	i2c_write(file_handler, p1_p0, 2);
-// }
+void configreg_read(int file_handler, char *buffer)
+{
+	char p1_p0 = TEMP_CONFIG_REG;
 
-// void configreg_read(int file_handler, char *buffer)
-// {
-// 	char p1_p0[1] = {1, 0};
-
-// 	i2c_write(file_handler, p1_p0, 2);
-// }
+	i2c_write(file_handler, &p1_p0, 1);
+	i2c_read(file_handler, buffer,2);
+}
 
 // unit -> CELCIUS, FARANHEIT, KELVIN
 // buffer -> buffer[0], buffer[1]
