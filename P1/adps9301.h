@@ -7,6 +7,7 @@
 ****************************************************************/
 
 #include "i2c_wrap.h"
+#include <math.h>
 
 //slave address
 #define LIGHT_ADDR	0x39
@@ -20,11 +21,11 @@ typedef enum{
 	THRESHHIGHLOW,
 	THRESHHIGHIGH,
 	INTERRUPT,
-	RESERVED,
+	RES0,
 	CRC,
-	RESERVED,
+	RES1,
 	ID,
-	RESERVED,
+	RES2,
 	DATA0LOW,
 	DATA0HIGH,
 	DATA1LOW,
@@ -70,9 +71,9 @@ typedef enum{
 	DAY
 }tod_t;
 
-tod_t report_tod(void);
+tod_t report_tod(int file_handler);
 
-#define lum_DAY 
+#define lum_NIGHT 10
 
 
 

@@ -11,7 +11,7 @@
 int initialize_light(void)
 {
 	int light;
-	temp = i2c_init("/dev/i2c-2", light, LIGHT_ADDR);
+	light = i2c_init("/dev/i2c-2", light, LIGHT_ADDR);
 	return light;
 }
 
@@ -19,14 +19,15 @@ int initialize_light(void)
 // data is 8 bits
 void command_reg(int file_handler, adps9301_regs_t adps9301_reg, op_t op)
 {
-	char CMD, CLEAR, WORD, RES;
+	char CMD, CLEAR, WORDS, RES;
 
 	CMD = 1;
-	CLEAR = 1;
-	WORD = op;	// read or write
+	CLEAR = 0;
+	WORDS = 0;	// read or write
 	RES = 0;
 
-	char data = CMD << 7 | CLEAR << 6 | WORD << 5 | RES << 4 | adps9301_reg;
+	char data = CMD << 7 | CLEAR << 6 | WORDS << 5 | RES << 4 | adps9301_reg;
+	//printf("COMAMDNREG %x\n",data);
 	i2c_write(file_handler, &data , 1);
 }
 
@@ -60,20 +61,20 @@ void control_reg(int file_handler, op_t op1, op_t op2, char *buffer)
 // buffer is 8 bits
 void timing_reg(int file_handler, op_t op1, op_t op2, op_t op3, char *buffer )
 {
-	char data, GAIN, INTEG;
+	char GAIN, INTEG;
+	static char data = 0x00;
 	if(op1 == WRITE)
 	{
-		data = 0x00;
 		if(op2 == SET_GAIN)
 		{
 			if(op3 == LOW_GAIN){
 				GAIN = 0;
-				data |=  GAIN <<3;
+				data |=  GAIN <<4;
 				i2c_write(file_handler, &data , 1);
 			}
 			else if(op3 == HIGH_GAIN){
 				GAIN = 1;
-				data |= GAIN << 3;
+				data |= GAIN << 4;
 				i2c_write(file_handler, &data , 1);
 			}
 		}
@@ -161,29 +162,31 @@ void interrupt_thresh_reg(int file_handler, op_t op, char *buffer)
 // channel
 uint16_t adc_data_read(int file_handler, int channel)
 {
-	char buffer[2] ={0};
-	int adc_data;
+	char buffer[2];
+	// buffer[0]= DATA0LOW|0x80;
+	//buffer[0]=0x8c;
+	uint16_t adc_data;
 
 	if(channel == 0){
-		command_reg(file_handler, DATA0LOW, READ);
+		command_reg(file_handler, DATA0LOW, WRITE);
 		i2c_read(file_handler, &buffer[0] , 1);
 
-		command_reg(file_handler, DATA0HIGH, READ);
+		command_reg(file_handler, DATA0HIGH, WRITE);
 		i2c_read(file_handler, &buffer[1] , 1);
 	}
 
 	else if (channel == 1){
-		command_reg(file_handler, DATA1LOW, READ);
+		command_reg(file_handler, DATA1LOW, WRITE);
 		i2c_read(file_handler, &buffer[0] , 1);
 
-		command_reg(file_handler, DATA1HIGH, READ);
+		command_reg(file_handler, DATA1HIGH, WRITE);
 		i2c_read(file_handler, &buffer[1] , 1);
 	}
 
 	else
 		printf("ERROR: invalid operation\n");
 
-	
+	//printf("BUFFER %x %x\n",buffer[1],buffer[0]);
 	adc_data = (buffer[1] << 8 | buffer[0]);
 	return adc_data;
 }
@@ -191,10 +194,14 @@ uint16_t adc_data_read(int file_handler, int channel)
 float report_lumen(uint16_t adc_data_ch0, uint16_t adc_data_ch1)
 {
 	float lumen, ratio;
-	ratio = adc_data_ch1/adc_data_ch0;
+	ratio = (float)adc_data_ch1/adc_data_ch0;
+	//printf("ratio : %f\n", ratio );
 
 	if(ratio > 0 && ratio <= 0.50)
-		lumen = (0.0304 * adc_data_ch0) - (0.062 * adc_data_ch0 * (ratio)^);
+	{
+		double power=pow(ratio,1.4);
+		lumen = (0.0304 * adc_data_ch0) - (0.062 * adc_data_ch0 * power);
+	}
 	else if(ratio > 0.50 && ratio <= 0.61)
 		lumen = (0.0224 * adc_data_ch0) - (0.031 * adc_data_ch1);
 	else if(ratio > 0.61 && ratio <= 0.80)
@@ -204,23 +211,22 @@ float report_lumen(uint16_t adc_data_ch0, uint16_t adc_data_ch1)
 	else
 		lumen = 0;
 	
-	
 	return lumen;
 }
 
 tod_t report_tod(int file_handler)
 {
 	tod_t tod;
-	int adc_ch0, adc_ch1;
+	uint16_t adc_ch0, adc_ch1;
 	adc_ch0 = adc_data_read(file_handler, 0);
 	adc_ch1 = adc_data_read(file_handler, 1);
 
-	float lumen = repot_lumen(adc_ch0, adc_ch1);
+	float lumen = report_lumen(adc_ch0, adc_ch1);
 
-	if(lumen >= lum_DAY)
-		tod = DAY;
-	else
+	if(lumen <= lum_NIGHT)
 		tod = NIGHT;
+	else
+		tod = DAY;
 	return tod;
 }
 

@@ -1,5 +1,5 @@
-temp:temp.c i2c_wrap.c tmp102.c
-	gcc -g -o temp $^
+sensor:sensor.c i2c_wrap.c tmp102.c adps9301.c
+	gcc -g -o sensor $^ -lm 
 
 clean:
-	rm -f temp *.o
+	rm -f sensor *.o
