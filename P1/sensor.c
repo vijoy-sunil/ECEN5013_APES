@@ -71,7 +71,7 @@ void main()
 	//READ CHANNEL VALUES
 	ch0=adc_data_read(light,0);
 	ch1=adc_data_read(light,1);
-	//printf("CH-0 %d CH-1 %d\n",ch0,ch1);
+	//git sprintf("CH-0 %d CH-1 %d\n",ch0,ch1);
 	printf("LUMEN %f\n",report_lumen(ch0, ch1));
 
 	printf("%d\n", report_tod(light));

@@ -27,7 +27,7 @@ int i2c_init(char *path, int file_handler, int slave_addr)
 		return -1;
 	}
 
-	printf("i2c init successful\n");
+	//printf("i2c init successful\n");
 	return file_handler;
 }
 

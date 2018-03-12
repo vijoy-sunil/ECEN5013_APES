@@ -22,6 +22,8 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
+#include "i2c_wrap.h"
+
 #define TEMP_ADDR 0x48
 #define TEMP_READ_REG 0x00
 #define TEMP_CONFIG_REG 0x01

@@ -7,7 +7,7 @@
 ****************************************************************/
 
 #include "tmp102.h"
-#include "i2c_wrap.h"
+
 
 
 // The Pointer Register uses the two least-significant bytes (LSBs) to identify
