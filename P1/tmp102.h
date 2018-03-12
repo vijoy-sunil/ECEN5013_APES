@@ -51,6 +51,8 @@ typedef enum{
 #define FAULT2		0x08
 #define FAULT4		0x10
 #define FAULT6		0x18
+
+//2nd byte
 #define EMMODE		0x10
 #define CONVRATE0	0x00
 #define CONVRATE1	0x40

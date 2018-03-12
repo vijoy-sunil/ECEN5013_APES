@@ -164,6 +164,23 @@ void *tempTask(void *pthread_inf) {
 
         struct timespec now,expire;
 
+        char buffer[3];
+        configreg_read(temp,buffer);
+
+        printf("I2cccccccccccccccccc %x %x %x\n",buffer[0],buffer[1],buffer[2] );
+
+        buffer[0]=TEMP_CONFIG_REG;
+        buffer[1]=RES_9BIT;
+        // buffer[2]= EMMODE;
+        
+
+        configreg_write(temp,buffer);
+
+        buffer[0]=buffer[1]=0;
+        configreg_read(temp,buffer);
+
+        printf("I2cccccccccccccccccc %x %x %x\n",buffer[0],buffer[1],buffer[2] );
+
 /************Creating logpacket*******************/
         log_pack temp_log ={.log_level=1,.log_source = temperatue_Task};
 
