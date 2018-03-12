@@ -64,13 +64,14 @@ int initialize_temp()
 // buffer -> 16 bits
 // see macros in header file
 void configreg_write(int file_handler, char *buffer)
+{
 	char p1_p0= TEMP_CONFIG_REG;	
 	i2c_write(file_handler, &p1_p0, 1);
 
 	i2c_write(file_handler, buffer, 2);
 }
 
-void configreg_read(int file_handler, char *buffer, )
+void configreg_read(int file_handler, char *buffer )
 {
 	char p1_p0 = TEMP_CONFIG_REG;
 
