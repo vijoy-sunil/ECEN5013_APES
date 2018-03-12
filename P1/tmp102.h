@@ -39,7 +39,23 @@ typedef enum{
 	CELCIUS,
 	FARENHEIT,
 	KELVIN
-} unit_t;
+}unit_t;
+
+#define SHUTDOWN_EN 	0x01
+#define SHUTDOWN_DI	0x00
+#define RES_9BIT	0x00	
+#define RES_10BIT	0x20
+#define	RES_11BIT	0x40
+#define RES_12BIT	0x60
+#define FAULT1		0x00
+#define FAULT2		0x08
+#define FAULT4		0x10
+#define FAULT6		0x18
+#define EMMODE		0x10
+#define CONVRATE0	0x00
+#define CONVRATE1	0x40
+#define CONVRATE2	0x80
+#define CONVRATE3	0xC0
 
 float temp_conv(unit_t unit, char *buffer);	//conversion to deg celcius/ faranheit , kelvin
 void temperature_read(int file_handler, char *buffer);
