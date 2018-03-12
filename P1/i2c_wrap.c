@@ -14,7 +14,7 @@
 int i2c_init(char *path, int file_handler, int slave_addr)
 {
 	int rc;
-
+	char buffer[1];
 	file_handler = open(path, O_RDWR);
 	if (file_handler < 0){
 		err(errno, "Tried to open '%s'", path); 
@@ -27,7 +27,9 @@ int i2c_init(char *path, int file_handler, int slave_addr)
 		return -1;
 	}
 
-	//printf("i2c init successful\n");
+	//check if slave exists or not
+	if(read(file_handler, buffer, 1) != 1)
+		return -1;
 	return file_handler;
 }
 
