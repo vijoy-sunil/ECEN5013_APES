@@ -92,19 +92,38 @@ float temp_conv(unit_t unit, char *buffer)
 	MSB = buffer[0];
 	LSB = buffer[1];
 	temp_12b = ((MSB << 8) | LSB) >> 4;
+
+	int is_neg;
+	// 0 positive, 1 negative
+	is_neg = temp_12b & 0x800;
+
+	if(is_neg == 1)
+	{
+		temp_12b = ~temp_12b + 1; 
+	}
 	
 	switch(unit)
 	{
 		case CELCIUS:
 			temperature = temp_12b * 0.0625;
+			if(is_neg == 1)
+				temperature = -temperature;
 			break;
 
 		case FARENHEIT:
-			temperature = 1.8 * (temp_12b * 0.0625) + 32;
+			if(is_neg == 1)
+				temperature = -(temp_12b * 0.0625);
+			else
+				temperature = (temp_12b * 0.0625);
+			temperature = 1.8 * temperature + 32;
 			break;
 
 		case KELVIN:
-			temperature = 273.15 + (temp_12b * 0.0625);
+			if(is_neg == 1)
+				temperature = -(temp_12b * 0.0625);
+			else
+				temperature = (temp_12b * 0.0625);
+			temperature = 273.15 + (temperature);
 			break;
 
 		default:
