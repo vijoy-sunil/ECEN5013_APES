@@ -89,29 +89,33 @@ float temp_conv(unit_t unit, char *buffer)
 	// 12 bit result
 	
 	// Reference: http://bildr.org/2011/01/tmp102-arduino
+	buffer[0] = 0xE7;
+	buffer[1] = 0x00;
 	MSB = buffer[0];
 	LSB = buffer[1];
-	temp_12b = ((MSB << 8) | LSB) >> 4;
-
+	temp_12b = ((MSB << 8) | LSB);
+	
 	int is_neg;
 	// 0 positive, 1 negative
-	is_neg = temp_12b & 0x800;
+	is_neg = temp_12b & 0x8000;
+	temp_12b = temp_12b >> 4;
 
-	if(is_neg == 1)
+	if(is_neg == 0x8000)
 	{
-		temp_12b = ~temp_12b + 1; 
+		temp_12b = 0x0FFF - (temp_12b +1);
 	}
 	
+	printf("temp12b %d, %x\n",temp_12b, temp_12b);
 	switch(unit)
 	{
 		case CELCIUS:
 			temperature = temp_12b * 0.0625;
-			if(is_neg == 1)
+			if(is_neg == 0x8000)
 				temperature = -temperature;
 			break;
 
 		case FARENHEIT:
-			if(is_neg == 1)
+			if(is_neg == 0x8000)
 				temperature = -(temp_12b * 0.0625);
 			else
 				temperature = (temp_12b * 0.0625);
@@ -119,7 +123,7 @@ float temp_conv(unit_t unit, char *buffer)
 			break;
 
 		case KELVIN:
-			if(is_neg == 1)
+			if(is_neg == 0x8000)
 				temperature = -(temp_12b * 0.0625);
 			else
 				temperature = (temp_12b * 0.0625);
@@ -130,6 +134,7 @@ float temp_conv(unit_t unit, char *buffer)
 			printf("INVALID conversion unit\n");
 			temperature = 0;
 			break;
+	printf("temperature %f\n",temperature);
 	}
 	return temperature;
 }
