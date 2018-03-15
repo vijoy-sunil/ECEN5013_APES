@@ -21,6 +21,10 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
+#include <pthread.h>
+
 int i2c_init(char *path, int file_handler, int slave_addr);
 int i2c_read(int file_handler, char *buffer, int num_bytes);
 int i2c_write(int file_handler, char *buffer, int num_bytes);
+
+pthread_mutex_t i2c_mutex;
