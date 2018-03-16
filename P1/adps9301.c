@@ -177,7 +177,7 @@ uint16_t adc_data_read(int file_handler, int channel)
 
 	else if (channel == 1){
 		command_reg(file_handler, DATA1LOW, WRITE);
-		i2c_read(file_handler, &buffer[0] , 1);s
+		i2c_read(file_handler, &buffer[0] , 1);
 
 		command_reg(file_handler, DATA1HIGH, WRITE);
 		i2c_read(file_handler, &buffer[1] , 1);

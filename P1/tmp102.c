@@ -89,8 +89,8 @@ float temp_conv(unit_t unit, char *buffer)
 	// 12 bit result
 	
 	// Reference: http://bildr.org/2011/01/tmp102-arduino
-	buffer[0] = 0xE7;
-	buffer[1] = 0x00;
+	//buffer[0] = 0xE7;
+	//buffer[1] = 0x00;
 	MSB = buffer[0];
 	LSB = buffer[1];
 	temp_12b = ((MSB << 8) | LSB);
@@ -105,7 +105,7 @@ float temp_conv(unit_t unit, char *buffer)
 		temp_12b = 0x0FFF - (temp_12b +1);
 	}
 	
-	printf("temp12b %d, %x\n",temp_12b, temp_12b);
+	//printf("temp12b %d, %x\n",temp_12b, temp_12b);
 	switch(unit)
 	{
 		case CELCIUS:
