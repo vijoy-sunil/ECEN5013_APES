@@ -177,7 +177,7 @@ uint16_t adc_data_read(int file_handler, int channel)
 
 	else if (channel == 1){
 		command_reg(file_handler, DATA1LOW, WRITE);
-		i2c_read(file_handler, &buffer[0] , 1);
+		i2c_read(file_handler, &buffer[0] , 1);s
 
 		command_reg(file_handler, DATA1HIGH, WRITE);
 		i2c_read(file_handler, &buffer[1] , 1);
@@ -194,8 +194,9 @@ uint16_t adc_data_read(int file_handler, int channel)
 float report_lumen(uint16_t adc_data_ch0, uint16_t adc_data_ch1)
 {
 	float lumen, ratio;
+	
 	ratio = (float)adc_data_ch1/adc_data_ch0;
-	//printf("ratio : %f\n", ratio );
+	printf("ch0 %d, ch1 %d\n", adc_data_ch0, adc_data_ch1);
 
 	if(ratio > 0 && ratio <= 0.50)
 	{

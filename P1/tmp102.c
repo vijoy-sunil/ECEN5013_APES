@@ -134,7 +134,7 @@ float temp_conv(unit_t unit, char *buffer)
 			printf("INVALID conversion unit\n");
 			temperature = 0;
 			break;
-	printf("temperature %f\n",temperature);
+	
 	}
 	return temperature;
 }
