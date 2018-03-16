@@ -165,21 +165,47 @@ void *tempTask(void *pthread_inf) {
         struct timespec now,expire;
 
         char buffer[3];
-        configreg_read(temp,buffer);
 
-        printf("I2cccccccccccccccccc %x %x %x\n",buffer[0],buffer[1],buffer[2] );
+        tlow_read(temp,buffer);
+        printf("TEMP SENSOR TLOW READ %x %x \n",buffer[0],buffer[1] );
+
+        thigh_write(temp,buffer);
+        buffer[0]=buffer[1]=0;
+        thigh_read(temp,buffer);
+        printf("TEMP SENSOR THIGH READ %x %x \n",buffer[0],buffer[1] );
 
         buffer[0]=TEMP_CONFIG_REG;
-        buffer[1]=RES_9BIT;
-        // buffer[2]= EMMODE;
-        
+        buffer[1]=SHUTDOWN_DI;
+        configreg_write(temp,buffer);
+
+        printf("TEMP SENSOR BEFORE SHUTDOWN %x %x \n",buffer[0],buffer[1] );
+
+        buffer[0]=TEMP_CONFIG_REG;
+        buffer[1]=SHUTDOWN_EN;
 
         configreg_write(temp,buffer);
 
         buffer[0]=buffer[1]=0;
         configreg_read(temp,buffer);
 
-        printf("I2cccccccccccccccccc %x %x %x\n",buffer[0],buffer[1],buffer[2] );
+        printf("TEMP SENSOR AFTER SHUTDOWN %x %x \n",buffer[0],buffer[1] );
+
+        buffer[0]=TEMP_CONFIG_REG;
+        buffer[1]=SHUTDOWN_DI;
+        configreg_write(temp,buffer);
+
+        buffer[0]=TEMP_CONFIG_REG;
+        buffer[1]=RES_10BIT;
+        buffer[2]= EMMODE|CONVRATE3;
+
+        configreg_write(temp,buffer);
+
+        buffer[0]=buffer[1]=0;
+        configreg_read(temp,buffer);
+
+        printf("TEMPSENSOR 10 BIT RESOLUTION, EMMODE AND CONV RATE 8Hz- %x %x \n",buffer[0],buffer[1] );
+
+        printf("FAULT BITS ARE %d %d\n",(buffer[0]&0x08)>>3,(buffer[0]&0x10)>>4);
 
 /************Creating logpacket*******************/
         log_pack temp_log ={.log_level=1,.log_source = temperatue_Task};

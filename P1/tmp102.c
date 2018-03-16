@@ -8,8 +8,6 @@
 
 #include "tmp102.h"
 
-
-
 // The Pointer Register uses the two least-significant bytes (LSBs) to identify
 // which of the data registers must respond to a read or write command.
 void tlow_read(int file_handler, char *buffer)
@@ -25,7 +23,7 @@ void thigh_read(int file_handler, char *buffer)
 	char p1_p0= TEMP_THIGH_REG;
 	
 	i2c_write(file_handler, &p1_p0, 1);
-	i2c_read(file_handler, buffer,2);
+	i2c_read(file_handler, buffer,1);
 }
 
 void tlow_write(int file_handler, char *buffer)

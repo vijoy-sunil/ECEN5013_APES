@@ -196,8 +196,7 @@ float report_lumen(uint16_t adc_data_ch0, uint16_t adc_data_ch1)
 	float lumen, ratio;
 	
 	ratio = (float)adc_data_ch1/adc_data_ch0;
-	//printf("ch0 %d, ch1 %d\n", adc_data_ch0, adc_data_ch1);
-
+	
 	if(ratio > 0 && ratio <= 0.50)
 	{
 		double power=pow(ratio,1.4);

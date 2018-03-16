@@ -29,7 +29,7 @@
 #define TEMP_CONFIG_REG 0x01
 #define TEMP_TLOW_REG 0x10
 #define TEMP_THIGH_REG 0x11
-#define TEMP_THIGH_VAL 0x15
+#define TEMP_THIGH_VAL 0xFF
 #define TEMP_TLOW_VAL 0x10
 
 #define TEMP_CONFIG_VAL 0x60
