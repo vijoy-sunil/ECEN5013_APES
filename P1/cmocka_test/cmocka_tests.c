@@ -17,7 +17,18 @@ void test_temperature_conv(void **state)
 	buffer[1] = 0x00;
 
 	float expected = 50.0;
+	printf("*** testing celcius conversion ***\n");
 	float result = temp_conv(CELCIUS, buffer);
+	assert_int_equal((int)expected, (int)result);
+
+	expected = 122.0;
+	printf("*** testing farenheit conversion ***\n");
+	result = temp_conv(FARENHEIT, buffer);
+	assert_int_equal((int)expected, (int)result);
+
+	expected = 323.15;
+	printf("*** testing kelvin conversion ***\n");
+	result = temp_conv(KELVIN, buffer);
 	assert_int_equal((int)expected, (int)result);
 }
 
