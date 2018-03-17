@@ -19,8 +19,8 @@ int main()
 
 //Setup error msg
         mqd_t messagequeue_error;
-        int msg_prio_err = MESSAGE_PRIORITY_ERR;
-        int num_bytes_err;
+        int message_priority_err = MESSAGE_PRIORITY_ERR;
+        int error_size;
         struct mq_attr messagequeue_attr_error = {.mq_maxmsg = MAX_QUE_MSGSIZE, //max # msg in queue
                                         .mq_msgsize = BUFFER_SIZE,//max size of msg in bytes
                                         .mq_flags = 0};
@@ -31,11 +31,11 @@ int main()
                            &messagequeue_attr_error); //attribute
         if(messagequeue_error < 0) 
         {
-            perror("mq_open-error_mq-tempTask "); 
+            perror("mq_open-error_mq-TemperatureTask "); 
             return -1;
         }
         else 
-            printf("Messgae Que Opened in tempTask\n");
+            printf("Messgae Que Opened in TemperatureTask\n");
 
         //Close program by pressing Ctrl+C
         signal(SIGINT,Signal_interrupt);
@@ -98,7 +98,7 @@ int main()
 
         rc = pthread_create(  &temp,
                                ((void *)0),
-                               tempTask,
+                               TemperatureTask,
                                (void *)&(temp_info) );
         if (rc != 0) {  printf("Error:%s\n",strerror(errno)); return -1;}
 

@@ -13,6 +13,6 @@
 
 err_message_packet *message_packet;
 
-void ErrorHandler(char* msg,mqd_t messagequeue_error,mqd_t msgq_log,msg_type type);
+void ErrorHandler(char* msg,mqd_t messagequeue_error,mqd_t message_queue_log,msg_type type);
 struct sigevent event_error;
 void ErrorNotify(union sigval sv);

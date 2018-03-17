@@ -45,12 +45,12 @@ int i2c_init(char *path, int file_handler, int slave_addr)
 // file_handler -> temp_file or light_file
 // check return codes when calling this function -> 0: success -1: fail
 
-int i2c_read(int file_handler, char *buffer, int num_bytes)
+int i2c_read(int file_handler, char *buffer, int nbytes)
 {
 	int rt = 0;
 
 	pthread_mutex_lock(&i2c_mutex);
-	if( read(file_handler, buffer, num_bytes) != num_bytes){
+	if( read(file_handler, buffer, nbytes) != nbytes){
 		printf("READ ERROR: i2c transcation failed\n");
 		rt = -1;
 	}	
@@ -61,11 +61,11 @@ int i2c_read(int file_handler, char *buffer, int num_bytes)
 // file_handler -> temp_file or light_file
 // check return codes when calling this function -> 0: success. -1: fail
 
-int i2c_write(int file_handler, char *buffer, int num_bytes)
+int i2c_write(int file_handler, char *buffer, int nbytes)
 {
 	int rt = 0;
 	pthread_mutex_lock(&i2c_mutex);
-	if( write(file_handler, buffer, num_bytes) != num_bytes){
+	if( write(file_handler, buffer, nbytes) != nbytes){
 		printf("WRITE ERROR: i2c transcation failed\n");
 		rt = -1;
 	}

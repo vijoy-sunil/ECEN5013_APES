@@ -1,4 +1,4 @@
-main.elf:main.c lightTask.o tempTask.o notify.o logTask.o errorhandling.o packetdefinition.h tmp102.o adps9301.o i2c_wrap.o
+main.elf:main.c lightTask.o TemperatureTask.o notify.o logTask.o errorhandling.o packetdefinition.h tmp102.o adps9301.o i2c_wrap.o
 	gcc -g -o $@ $^ -lpthread -lrt -lm
 
 notify.o:notify.c
@@ -10,7 +10,7 @@ logTask.o:logTask.c queue.h packetdefinition.h
 lightTask.o:lightTask.c queue.h packetdefinition.h
 	gcc -c -o $@ $<  -lpthread -lrt
 
-tempTask.o:tempTask.c queue.h packetdefinition.h
+TemperatureTask.o:TemperatureTask.c queue.h packetdefinition.h
 	gcc -c -o $@ $<  -lpthread -lrt
 
 errorhandling.o:errorhandling.c queue.h packetdefinition.h
