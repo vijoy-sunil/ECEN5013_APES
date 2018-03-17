@@ -1,6 +1,6 @@
 
-#ifndef includes_H
-#define includes_H
+#ifndef packetdefinition_H
+#define packetdefinition_H
 
 #include <stdint.h>
 #include "messageQue.h"

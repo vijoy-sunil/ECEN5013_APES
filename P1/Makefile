@@ -1,19 +1,19 @@
-main.elf:main.c lightTask.o tempTask.o notify.o logTask.o errorhandling.o includes.h tmp102.o adps9301.o i2c_wrap.o
+main.elf:main.c lightTask.o tempTask.o notify.o logTask.o errorhandling.o packetdefinition.h tmp102.o adps9301.o i2c_wrap.o
 	gcc -g -o $@ $^ -lpthread -lrt -lm
 
 notify.o:notify.c
 	gcc -c -o $@ $<
 
-logTask.o:logTask.c messageQue.h includes.h
+logTask.o:logTask.c messageQue.h packetdefinition.h
 	gcc -c -o $@ $<  -lpthread
 
-lightTask.o:lightTask.c messageQue.h includes.h
+lightTask.o:lightTask.c messageQue.h packetdefinition.h
 	gcc -c -o $@ $<  -lpthread -lrt
 
-tempTask.o:tempTask.c messageQue.h includes.h
+tempTask.o:tempTask.c messageQue.h packetdefinition.h
 	gcc -c -o $@ $<  -lpthread -lrt
 
-errorhandling.o:errorhandling.c messageQue.h includes.h
+errorhandling.o:errorhandling.c messageQue.h packetdefinition.h
 	gcc -c -o $@ $<  -lpthread -lrt
 
 tmp102.o:tmp102.c i2c_wrap.o
