@@ -1,7 +1,3 @@
-
-#ifndef SIGNALS_H
-#define SIGNALS_H
-
 #include <stdio.h>
 #include <errno.h>
 #include <pthread.h>
@@ -35,7 +31,4 @@ sig_atomic_t light_close;
 sig_atomic_t logger_close;
 sig_atomic_t temp_close;
 sig_atomic_t app_close;
-
-
-
-#endif
+	

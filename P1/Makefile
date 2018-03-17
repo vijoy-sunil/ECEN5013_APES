@@ -1,7 +1,7 @@
-main.elf:main.c lightTask.o tempTask.o signals.o logTask.o errorhandling.o includes.h tmp102.o adps9301.o i2c_wrap.o
+main.elf:main.c lightTask.o tempTask.o notify.o logTask.o errorhandling.o includes.h tmp102.o adps9301.o i2c_wrap.o
 	gcc -g -o $@ $^ -lpthread -lrt -lm
 
-signals.o:signals.c
+notify.o:notify.c
 	gcc -c -o $@ $<
 
 logTask.o:logTask.c messageQue.h includes.h

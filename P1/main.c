@@ -70,9 +70,9 @@ int main()
         if(rc == -1) { printf("Error:%s\n",strerror(errno)); return -1; }
 
         pthread_t temp,light,log;
-        threadInfo temp_info; temp_info.thread_id = 1; temp_info.main=pthread_self();
-        threadInfo light_info; light_info.thread_id = 2; light_info.main=pthread_self();
-        threadInfo log_info; log_info.thread_id = 3; log_info.main=pthread_self();
+        threadPckt temp_info; temp_info.t_id = 1; temp_info.main_task=pthread_self();
+        threadPckt light_info; light_info.t_id = 2; light_info.main_task=pthread_self();
+        threadPckt log_info; log_info.t_id = 3; log_info.main_task=pthread_self();
 
 //Register Light HB signal
         struct sigaction action;
@@ -97,19 +97,19 @@ int main()
 
 
         rc = pthread_create(  &temp,
-                               DEFAULT_THREAD_ATTR,
+                               ((void *)0),
                                tempTask,
                                (void *)&(temp_info) );
         if (rc != 0) {  printf("Error:%s\n",strerror(errno)); return -1;}
 
         rc = pthread_create(  &light,
-                               DEFAULT_THREAD_ATTR,
+                               ((void *)0),
                                lightTask,
                                (void *)&(light_info) );
         if (rc != 0) {  printf("Error:%s\n",strerror(errno)); return -1;}
 
         rc = pthread_create(  &log,
-                               DEFAULT_THREAD_ATTR,
+                               ((void *)0),
                                logTask,
                                (void *)&(log_info) );
         if (rc != 0) {  printf("Error:%s\n",strerror(errno)); return -1;}

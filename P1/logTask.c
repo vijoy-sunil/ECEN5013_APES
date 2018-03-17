@@ -5,11 +5,11 @@
 #include <string.h>
 #include <pthread.h>
 #include <unistd.h>
-#include "threads.h"
+#include "tasks.h"
 #include "messageQue.h"
 #include <mqueue.h>
 #include "includes.h"
-#include "signals.h"
+#include "notify.h"
 #include "errorhandling.h"
 
 // void LogQNotifyhandler(int sig){
@@ -23,7 +23,7 @@ sig_atomic_t log_data_flag;
 void *logTask(void *pthread_inf) {
         int rc;
 //log_data_flag=0;
-        threadInfo *ppthread_info = (threadInfo *)pthread_inf;
+        threadPckt *ppthread_info = (threadPckt *)pthread_inf;
 /*****************Mask SIGNALS********************/
         sigset_t mask; //set of signals
         sigemptyset(&mask);
@@ -129,7 +129,7 @@ void *logTask(void *pthread_inf) {
         while(logger_close & app_close)
         {
 
-                pthread_kill(ppthread_info->main,LOGGER_HB_SIG);//send HB
+                pthread_kill(ppthread_info->main_task,LOGGER_HB_SIG);//send HB
 //empty the message que
                 do {
                         //read from queue

@@ -1,6 +1,6 @@
 #include "includes.h"
-#include "threads.h"
-#include "signals.h"
+#include "tasks.h"
+#include "notify.h"
 #include "messageQue.h"
 #include <stdio.h>
 #include <stdlib.h>

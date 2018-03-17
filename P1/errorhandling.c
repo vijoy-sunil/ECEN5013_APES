@@ -7,12 +7,11 @@
 #include <signal.h>
 #include <unistd.h>
 #include "includes.h"
-#include "threads.h"
-#include "signals.h"
+#include "tasks.h"
+#include "notify.h"
 #include "messageQue.h"
 #include <mqueue.h>
 #include "errorhandling.h"
-
 
 void handle_err(char* arg_msg,mqd_t messagequeue_error,mqd_t msgq,msg_type type){
 //log on error msg q

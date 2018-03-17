@@ -5,8 +5,8 @@
 #include <pthread.h>
 #include <signal.h>
 #include <unistd.h>
-#include "threads.h"
-#include "signals.h"
+#include "tasks.h"
+#include "notify.h"
 #include "messageQue.h"
 #include <mqueue.h>
 #include "includes.h"
@@ -31,7 +31,7 @@ void *tempTask(void *pthread_inf) {
 
         temp_IPC_flag = 0;
         int rc;
-        threadInfo *ppthread_info = (threadInfo *)pthread_inf;
+        threadPckt *ppthread_info = (threadPckt *)pthread_inf;
 
 
 
@@ -213,7 +213,7 @@ void *tempTask(void *pthread_inf) {
 /****************Do this periodically*******************************/
         while(temp_close & app_close) {
 
-                pthread_kill(ppthread_info->main,TEMPERATURE_HB_SIG);//send HB
+                pthread_kill(ppthread_info->main_task,TEMPERATURE_HB_SIG);//send HB
                 pthread_mutex_lock(&temperature_mutex);
                 while(temperature_flag == 0) {
                         pthread_cond_wait(&temperature_cond_var,&temperature_mutex);
