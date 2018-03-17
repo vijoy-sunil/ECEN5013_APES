@@ -19,13 +19,13 @@ int main()
 
 //Setup error msg
         mqd_t messagequeue_error;
-        int msg_prio_err = MSG_PRIO_ERR;
+        int msg_prio_err = MESSAGE_PRIORITY_ERR;
         int num_bytes_err;
         struct mq_attr messagequeue_attr_error = {.mq_maxmsg = MAX_QUE_MSGSIZE, //max # msg in queue
                                         .mq_msgsize = BUFFER_SIZE,//max size of msg in bytes
                                         .mq_flags = 0};
 
-        messagequeue_error = mq_open(MY_MQ_ERR, //name
+        messagequeue_error = mq_open(MESSAGE_Q_ERR, //name
                            O_CREAT | O_RDWR,//flags. create a new if dosent already exist
                            S_IRWXU, //mode-read,write and execute permission
                            &messagequeue_attr_error); //attribute
@@ -42,13 +42,13 @@ int main()
 
 //set up notification for this error
 
-        sig_ev_err.sigev_notify=SIGEV_THREAD;      //notify by signal in sigev_signo
-        sig_ev_err.sigev_notify_function = errorFunction;
-        sig_ev_err.sigev_notify_attributes=NULL;
-        sig_ev_err.sigev_value.sival_ptr=&messagequeue_error;  //data passed with notification
+        event_error.sigev_notify=SIGEV_THREAD;      //notify by signal in sigev_signo
+        event_error.sigev_notify_function = ErrorNotify;
+        event_error.sigev_notify_attributes=NULL;
+        event_error.sigev_value.sival_ptr=&messagequeue_error;  //data passed with notification
 
 
-        rc  = mq_notify(messagequeue_error,&sig_ev_err);
+        rc  = mq_notify(messagequeue_error,&event_error);
         if(rc == -1) {perror("mq_notify-main"); return -1;}
 
 
@@ -183,10 +183,10 @@ int main()
         mq_close(messagequeue_error);
 
 /*********destroy message Ques***********************/
-        mq_unlink(IPC_TEMP_MQ);
-        mq_unlink(IPC_LIGHT_MQ);
-        mq_unlink(MY_MQ);
-        mq_unlink(MY_MQ_ERR);
+        mq_unlink(TEMPERATURE_MESSAGE_Q);
+        mq_unlink(LIGHT_MESSAGE_Q);
+        mq_unlink(MESSAGE_Q);
+        mq_unlink(MESSAGE_Q_ERR);
         free(message_packet);
 
         printf("All tasks closed and queues closed\n");

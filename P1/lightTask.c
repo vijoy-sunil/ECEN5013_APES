@@ -7,7 +7,7 @@
 #include <unistd.h>
 #include "tasks.h"
 #include "notify.h"
-#include "messageQue.h"
+#include "queue.h"
 #include <mqueue.h>
 #include "packetdefinition.h"
 #include "errorhandling.h"
@@ -42,13 +42,13 @@ void *lightTask(void *pthread_inf) {
 
 /*******Initialize ERROR Message Que*****************/
         mqd_t messagequeue_error;
-        int msg_prio_err = MSG_PRIO_ERR;
+        int msg_prio_err = MESSAGE_PRIORITY_ERR;
         int num_bytes_err;
         struct mq_attr messagequeue_attr_error = {.mq_maxmsg = MAX_QUE_MSGSIZE, //max # msg in queue
                                         .mq_msgsize = BUFFER_SIZE,//max size of msg in bytes
                                         .mq_flags = 0};
 
-        messagequeue_error = mq_open(MY_MQ_ERR, //name
+        messagequeue_error = mq_open(MESSAGE_Q_ERR, //name
                            O_CREAT | O_RDWR,//flags. create a new if dosent already exist
                            S_IRWXU, //mode-read,write and execute permission
                            &messagequeue_attr_error); //attribute
@@ -67,14 +67,14 @@ void *lightTask(void *pthread_inf) {
 
 /*******Initialize Logger Message Que*****************/
         mqd_t msgq;
-        int msg_prio = MSG_PRIO;
+        int msg_prio = MESSAGE_PRIORITY;
         int num_bytes;
         char message[BUFFER_SIZE];
         struct mq_attr msgq_attr = {.mq_maxmsg = MAX_QUE_MSGSIZE, //max # msg in queue
                                     .mq_msgsize = BUFFER_SIZE,//max size of msg in bytes
                                     .mq_flags = 0};
 
-        msgq = mq_open(MY_MQ, //name
+        msgq = mq_open(MESSAGE_Q, //name
                        O_CREAT | O_RDWR,//flags. create a new if dosent already exist
                        S_IRWXU, //mode-read,write and execute permission
                        &msgq_attr); //attribute
@@ -90,7 +90,7 @@ void *lightTask(void *pthread_inf) {
                                        .mq_msgsize = BUFFER_SIZE, //max size of msg in bytes
                                        .mq_flags = 0};
 
-        IPCmsgq = mq_open(IPC_LIGHT_MQ, //name
+        IPCmsgq = mq_open(LIGHT_MESSAGE_Q, //name
                           O_CREAT | O_RDWR, //flags. create a new if dosent already exist
                           S_IRWXU, //mode-read,write and execute permission
                           &IPCmsgq_attr); //attribute
@@ -106,7 +106,7 @@ void *lightTask(void *pthread_inf) {
         printf("pid:%d\n",getpid());
 
 /************Creating logpacket*******************/
-        log_pack light_log ={.log_level=1,.log_source = light_Task};
+        log_pack light_log ={.log_level=1,.log_source = LightTask};
         struct timespec now,expire;
 
 /************Init light sensor********************/
@@ -149,7 +149,7 @@ void *lightTask(void *pthread_inf) {
                                          sizeof(log_pack),
                                          msg_prio,
                                          &expire);
-                if(num_bytes<0) {handle_err("mq_send-Log Q-lightTask",messagequeue_error,msgq,error);}
+                if(num_bytes<0) {ErrorHandler("mq_send-Log Q-lightTask",messagequeue_error,msgq,error);}
 /******Log data on IPC Que if requested******/
 
                 if(light_IPC_flag == 1) {
@@ -164,7 +164,7 @@ void *lightTask(void *pthread_inf) {
                                                  sizeof(log_pack),
                                                  IPCmsg_prio,
                                                  &expire);
-                        if(num_bytes<0) {handle_err("mq_send-IPC-lightTask Error",messagequeue_error,msgq,error);}
+                        if(num_bytes<0) {ErrorHandler("mq_send-IPC-lightTask Error",messagequeue_error,msgq,error);}
                         else printf("data put on IPC msg Q\n");
                 }
 

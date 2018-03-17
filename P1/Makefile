@@ -4,16 +4,16 @@ main.elf:main.c lightTask.o tempTask.o notify.o logTask.o errorhandling.o packet
 notify.o:notify.c
 	gcc -c -o $@ $<
 
-logTask.o:logTask.c messageQue.h packetdefinition.h
+logTask.o:logTask.c queue.h packetdefinition.h
 	gcc -c -o $@ $<  -lpthread
 
-lightTask.o:lightTask.c messageQue.h packetdefinition.h
+lightTask.o:lightTask.c queue.h packetdefinition.h
 	gcc -c -o $@ $<  -lpthread -lrt
 
-tempTask.o:tempTask.c messageQue.h packetdefinition.h
+tempTask.o:tempTask.c queue.h packetdefinition.h
 	gcc -c -o $@ $<  -lpthread -lrt
 
-errorhandling.o:errorhandling.c messageQue.h packetdefinition.h
+errorhandling.o:errorhandling.c queue.h packetdefinition.h
 	gcc -c -o $@ $<  -lpthread -lrt
 
 tmp102.o:tmp102.c i2c_wrap.o

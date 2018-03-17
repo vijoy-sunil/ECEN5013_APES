@@ -6,7 +6,7 @@
 #include <pthread.h>
 #include <unistd.h>
 #include "tasks.h"
-#include "messageQue.h"
+#include "queue.h"
 #include <mqueue.h>
 #include "packetdefinition.h"
 #include "notify.h"
@@ -41,13 +41,13 @@ void *logTask(void *pthread_inf) {
 
 /*******Initialize ERROR Message Que*****************/
         mqd_t messagequeue_error;
-        int msg_prio_err = MSG_PRIO_ERR;
+        int msg_prio_err = MESSAGE_PRIORITY_ERR;
         int num_bytes_err;
         struct mq_attr messagequeue_attr_error = {.mq_maxmsg = MAX_QUE_MSGSIZE, //max # msg in queue
                                         .mq_msgsize = BUFFER_SIZE,//max size of msg in bytes
                                         .mq_flags = 0};
 
-        messagequeue_error = mq_open(MY_MQ_ERR, //name
+        messagequeue_error = mq_open(MESSAGE_Q_ERR, //name
                            O_CREAT | O_RDWR,//flags. create a new if dosent already exist
                            S_IRWXU, //mode-read,write and execute permission
                            &messagequeue_attr_error); //attribute
@@ -67,7 +67,7 @@ void *logTask(void *pthread_inf) {
                                     .mq_msgsize = BUFFER_SIZE,//max size of msg in bytes
                                     .mq_flags = 0};
 
-        msgq = mq_open(MY_MQ, //name
+        msgq = mq_open(MESSAGE_Q, //name
                        O_CREAT | O_RDWR,//flags. create a new if dosent already exist
                        S_IRWXU, //mode-read,write and execute permission
                        &msgq_attr); //attribute
@@ -110,14 +110,14 @@ void *logTask(void *pthread_inf) {
                                        .mq_msgsize = BUFFER_SIZE, //max size of msg in bytes
                                        .mq_flags = 0};
 //temp
-        IPCmsgqT = mq_open(IPC_TEMP_MQ, //name
+        IPCmsgqT = mq_open(TEMPERATURE_MESSAGE_Q, //name
                            O_CREAT | O_RDWR, //flags. create a new if dosent already exist
                            S_IRWXU, //mode-read,write and execute permission
                            &IPCmsgq_attr); //attribute
         if(IPCmsgqT < 0) {perror("mq_open-logTask Error:"); return NULL;}
         else printf("IPC temp Messgae Que Opened in logTask\n");
 //light
-        IPCmsgqL = mq_open(IPC_LIGHT_MQ, //name
+        IPCmsgqL = mq_open(LIGHT_MESSAGE_Q, //name
                            O_CREAT | O_RDWR, //flags. create a new if dosent already exist
                            S_IRWXU, //mode-read,write and execute permission
                            &IPCmsgq_attr); //attribute

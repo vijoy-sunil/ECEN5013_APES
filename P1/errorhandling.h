@@ -1,16 +1,18 @@
-#ifndef ERRORHANDLING_H
-#define ERRORHANDLING_H
-
-#include"packetdefinition.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include <errno.h>
+#include <string.h>
+#include <pthread.h>
+#include <signal.h>
+#include <unistd.h>
+#include "packetdefinition.h"
+#include "notify.h"
+#include "queue.h"
+#include <mqueue.h>
 
 err_message_packet *message_packet;
 
-struct sigevent sig_ev_err;
-
-
-//this thread is created for mq_notify event on error message que
-void errorFunction(union sigval sv);
-
-void handle_err(char* msg,mqd_t messagequeue_error,mqd_t msgq_log,msg_type type);
-
-#endif
+void ErrorHandler(char* msg,mqd_t messagequeue_error,mqd_t msgq_log,msg_type type);
+struct sigevent event_error;
+void ErrorNotify(union sigval sv);
