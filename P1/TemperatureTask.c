@@ -9,6 +9,17 @@ static void IPC_Handler(int sig){
     }
 }
 
+
+// void pwrdn_sighandler(int signo)
+// {
+//     printf("\n sighandler called \n");
+//     if (signo==SIGIO) {
+//         printf("\t**************** GPIO interrupt raised! *********************\n");
+//         // led here
+//     }
+//     return;
+// }
+
 void *TemperatureTask(void *pthread_pckt) {
 
         uint8_t initialize = 0;
@@ -47,6 +58,10 @@ void *TemperatureTask(void *pthread_pckt) {
                 initialize =0;
                 sprintf(&(initialize_message[1][0]),"Temp task mutex failed %s\n",strerror(errno));
         }
+        else
+        {
+                initialize =0;
+        }
 
         mqd_t message_queue;
         int message_priority = 30;
@@ -59,6 +74,10 @@ void *TemperatureTask(void *pthread_pckt) {
         if(message_queue < 0) {
                 initialize =0;
                 sprintf(&(initialize_message[2][0]),"Log msgq failed %s\n",strerror(errno));
+        }
+        else
+        {
+                initialize =0;
         }
 
         mqd_t IPCmessage_queue;
@@ -159,7 +178,28 @@ void *TemperatureTask(void *pthread_pckt) {
         printf("TEMPSENSOR 10 BIT RESOLUTION, EMMODE AND CONV RATE 8Hz- %x %x \n",buffer[0],buffer[1] );
 
         printf("FAULT BITS ARE %d %d\n",(buffer[0]&0x08)>>3,(buffer[0]&0x10)>>4);
+        //interrupt
+        // int pwrdn_fd;
+        // int count;
+        // struct sigaction temp_int_action;
+        // char input;
+        // memset(&action, 0, sizeof(temp_int_action));
+        // action.sa_handler = pwrdn_sighandler;
+        // action.sa_flags = 0;
 
+        // sigaction(SIGIO, &temp_int_action, NULL);
+
+        // pwrdn_fd = open("/dev/gpio_int", O_RDWR);
+
+        // if (pwrdn_fd < 0) {
+        // perror("Failed to open device\n");
+        // //return 1;
+        // }
+
+        // fcntl(pwrdn_fd, F_SETOWN, getpid());
+        // fcntl(pwrdn_fd, F_SETFL, fcntl(pwrdn_fd, F_GETFL) | FASYNC);
+
+        //-----------------
         log_pack temp_log ={.log_level=1,.log_source = TempTask};
 
         while(temp_close & app_close) {
