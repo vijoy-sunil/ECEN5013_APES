@@ -7,13 +7,13 @@
 
 #define DEFAULT_THREAD_ATTR ((void *)0)
 
-pthread_mutex_t gtemp_mutex ;//= PTHREAD_MUTEX_INITIALIZER;
-pthread_cond_t gtemp_condition;
-sig_atomic_t gtemp_flag;
+pthread_mutex_t temperature_mutex ;//= PTHREAD_MUTEX_INITIALIZER;
+pthread_cond_t temperature_cond_var;
+sig_atomic_t temperature_flag;
 
-pthread_mutex_t glight_mutex ;//= PTHREAD_MUTEX_INITIALIZER;
-pthread_cond_t glight_condition;
-sig_atomic_t glight_flag;
+pthread_mutex_t light_mutex ;//= PTHREAD_MUTEX_INITIALIZER;
+pthread_cond_t light_cond_var;
+sig_atomic_t light_flag;
 
 /**
 *structure to pass arguments and data to thread function

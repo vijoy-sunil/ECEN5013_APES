@@ -18,7 +18,7 @@
 sig_atomic_t temp_IPC_flag;
 
 void TemptIPChandler(int sig){
-        if(sig == SIGTEMP_IPC)
+        if(sig == TEMPERATURE_SIGNAL_IPC)
         {printf("Caught signal TemptIPChandler\n");
          temp_IPC_flag = 1;}
 }
@@ -30,7 +30,7 @@ void *tempTask(void *pthread_inf) {
 
 
         temp_IPC_flag = 0;
-        int ret;
+        int rc;
         threadInfo *ppthread_info = (threadInfo *)pthread_inf;
 
 
@@ -62,12 +62,12 @@ void *tempTask(void *pthread_inf) {
 
 
 /******set periodic timer**************/
-        ret = setTempTimer(); //sets up timer to periodically signal and wake this thread
-        if(ret ==-1) return NULL;
+        rc = ConfigTimerTemp(); //sets up timer to periodically signal and wake this thread
+        if(rc ==-1) return NULL;
         else printf("Periodic Timer set for Temperature Task\n");
 
-        ret = pthread_mutex_init(&gtemp_mutex,NULL);
-        if(ret == -1) {
+        rc = pthread_mutex_init(&temperature_mutex,NULL);
+        if(rc == -1) {
                 init_state =0;
                 sprintf(&(init_message[1][0]),"temptask-pthread_mutex_init %s\n",strerror(errno));
         }
@@ -129,9 +129,9 @@ void *tempTask(void *pthread_inf) {
         struct sigaction action;
         sigemptyset(&action.sa_mask);
         action.sa_handler = TemptIPChandler;
-        ret = sigaction(SIGTEMP_IPC,&action,NULL);
+        rc = sigaction(TEMPERATURE_SIGNAL_IPC,&action,NULL);
 
-        if(ret  == -1) {
+        if(rc  == -1) {
                 init_state =0;
                 sprintf(&(init_message[4][0]),"sigaction temptask %s\n",strerror(errno));
         }
@@ -211,16 +211,16 @@ void *tempTask(void *pthread_inf) {
         log_pack temp_log ={.log_level=1,.log_source = temperatue_Task};
 
 /****************Do this periodically*******************************/
-        while(gclose_temp & gclose_app) {
+        while(temp_close & app_close) {
 
                 pthread_kill(ppthread_info->main,TEMPERATURE_HB_SIG);//send HB
-                pthread_mutex_lock(&gtemp_mutex);
-                while(gtemp_flag == 0) {
-                        pthread_cond_wait(&gtemp_condition,&gtemp_mutex);
+                pthread_mutex_lock(&temperature_mutex);
+                while(temperature_flag == 0) {
+                        pthread_cond_wait(&temperature_cond_var,&temperature_mutex);
                 }
 
-                pthread_mutex_unlock(&gtemp_mutex);
-                gtemp_flag = 0;
+                pthread_mutex_unlock(&temperature_mutex);
+                temperature_flag = 0;
 //collect temperatue
                 temperature_read(temp,temp_data); 
                 data_cel = temp_conv(CELCIUS,temp_data);

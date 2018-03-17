@@ -2,63 +2,40 @@
 #ifndef SIGNALS_H
 #define SIGNALS_H
 
-#define SIGTEMP     (SIGRTMAX)
-#define SIGLIGHT    (SIGRTMAX-1)
+#include <stdio.h>
+#include <errno.h>
+#include <pthread.h>
+#include <signal.h>
+#include <unistd.h>
+#include <string.h>
+
+int ConfigTimerTemp();
+int ConfigLightSetup();
+void Signal_interrupt(int sig);
+void temperature_signal(int sig);
+void light_signal(int sig);
+
+#define TEMPERATURE_SIGNAL     (SIGRTMAX)
+#define LIGHT_SIGNAL    (SIGRTMAX-1)
 
 #define LIGHT_HB_SIG (SIGRTMAX-2)
 #define TEMPERATURE_HB_SIG  (SIGRTMAX-3)
 #define LOGGER_HB_SIG  (SIGRTMAX-4)
 
-#define SIGTEMP_IPC (SIGRTMAX-5)
-#define SIGLIGHT_IPC (SIGRTMAX-6)
+#define NSEC_FREQUENCY (1000000000)
 
-#define SIGLOG (SIGRTMAX-7)
+#define TEMPERATURE_SIGNAL_IPC (SIGRTMAX-5)
+#define LIGHT_SIGNAL_IPC (SIGRTMAX-6)
 
-
-sig_atomic_t gclose_light;
-sig_atomic_t gclose_log;
-sig_atomic_t gclose_temp;
-sig_atomic_t gclose_app;
-
-/**
-*@brief:Signal handler for SIGINT
-*clears the global flag atomically to allow tasks to exit from while(1) loop and close *ques, file descriptors etc before exiting
-*@param:signal no.
-*@return: no returns
-*/
-void SIGINT_handler(int sig);
+#define LOGGER_SIGNAL (SIGRTMAX-7)
 
 
-/**
-*@brief:sets timer and signal handler for timer notification for temp task
-*@param:void
-*@return: int success/failure
-*/
-int setTempTimer();
 
-/**
-*@brief:sets timer and signal handler for light task
-*@param:void
-*@return: int success/failure
-*/
-int setLightTimer();
+sig_atomic_t light_close;
+sig_atomic_t logger_close;
+sig_atomic_t temp_close;
+sig_atomic_t app_close;
 
-
-/**
-*@brief:Signal handler for temp task
-*sets the global flag atomically and signals the temp task throught a condition *variable to read next data
-*@param:signal no.
-*@return: no returns
-*/
-void temp_sig_handler(int sig);
-
-/**
-*@brief:Signal handler for light task
-*sets the global flag atomically and signals the light task throught a *condition variable to read next data
-*@param:signal no.
-*@return: no returns
-*/
-void light_sig_handler(int sig);
 
 
 #endif

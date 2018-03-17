@@ -13,7 +13,7 @@
 #include "errorhandling.h"
 
 // void LogQNotifyhandler(int sig){
-//         if(sig == SIGLOG)
+//         if(sig == LOGGER_SIGNAL)
 //                 printf("received data\n");
 //
 // }
@@ -21,21 +21,21 @@
 sig_atomic_t log_data_flag;
 
 void *logTask(void *pthread_inf) {
-        int ret;
+        int rc;
 //log_data_flag=0;
         threadInfo *ppthread_info = (threadInfo *)pthread_inf;
 /*****************Mask SIGNALS********************/
         sigset_t mask; //set of signals
         sigemptyset(&mask);
-        sigaddset(&mask,SIGLIGHT); sigaddset(&mask,LIGHT_HB_SIG);
+        sigaddset(&mask,LIGHT_SIGNAL); sigaddset(&mask,LIGHT_HB_SIG);
         sigaddset(&mask,LOGGER_HB_SIG); sigaddset(&mask,TEMPERATURE_HB_SIG);
-        sigaddset(&mask,SIGLOG);
+        sigaddset(&mask,LOGGER_SIGNAL);
 
-        ret = pthread_sigmask(
+        rc = pthread_sigmask(
                 SIG_SETMASK, //block the signals in the set argument
                 &mask, //set argument has list of blocked signals
                 NULL); //if non NULL prev val of signal mask stored here
-        if(ret == -1) { printf("Error:%s\n",strerror(errno)); return NULL; }
+        if(rc == -1) { printf("Error:%s\n",strerror(errno)); return NULL; }
 
 
 
@@ -79,18 +79,18 @@ void *logTask(void *pthread_inf) {
 //         struct sigaction action;
 //         action.sa_mask = mask;
 //         action.sa_handler = LogQNotifyhandler;
-//         ret = sigaction(SIGLOG,&action,NULL);
-//         if(ret == -1) { perror("sigaction temptask"); return NULL; }
+//         rc = sigaction(LOGGER_SIGNAL,&action,NULL);
+//         if(rc == -1) { perror("sigaction temptask"); return NULL; }
 // //        printf("pid:%d\n",getpid());
 //
 //         struct sigevent sig_ev ={
 //                 .sigev_notify=SIGEV_SIGNAL,    //notify by signal in sigev_signo
-//                 .sigev_signo = SIGLOG,    //Notification Signal
-//                 //.sigev_value.sival_ptr=&timerid    //data passed with notification
+//                 .sigev_signo = LOGGER_SIGNAL,    //Notification Signal
+//                 //.sigev_value.sival_ptr=&IDTime    //data passed with notification
 //         };
 //
-//         ret  = mq_notify(msgq,&sig_ev);
-//         if(ret == -1) {perror("mq_notify-main"); return NULL;}
+//         rc  = mq_notify(msgq,&sig_ev);
+//         if(rc == -1) {perror("mq_notify-main"); return NULL;}
 
 
 
@@ -126,7 +126,7 @@ void *logTask(void *pthread_inf) {
         struct timespec now,expire;
 
 /*******************Do this in LOOP************************************/
-        while(gclose_log & gclose_app)
+        while(logger_close & app_close)
         {
 
                 pthread_kill(ppthread_info->main,LOGGER_HB_SIG);//send HB
@@ -152,8 +152,8 @@ void *logTask(void *pthread_inf) {
                         }
                 } while(num_bytes>0);
 //reregister after emptying the que
-                // ret  = mq_notify(msgq,&sig_ev);
-// if(ret == -1) {perror("mq_notify-main"); return NULL;}
+                // rc  = mq_notify(msgq,&sig_ev);
+// if(rc == -1) {perror("mq_notify-main"); return NULL;}
 
 
 /*****&&&&&&&&&&&&&&&&&&& printing data for IPC message Q test &&&&&&&&&&&&&&&&&*******/

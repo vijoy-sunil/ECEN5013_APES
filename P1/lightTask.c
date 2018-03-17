@@ -14,31 +14,31 @@
 
 #include "adps9301.h"
 
-#define FREQ_NSEC (1000000000)
+#define NSEC_FREQUENCY (1000000000)
 
 sig_atomic_t light_IPC_flag;
 
 void LightIPChandler(int sig){
-        if(sig == SIGLIGHT_IPC)
+        if(sig == LIGHT_SIGNAL_IPC)
         {printf("Caught signal LightIPChandler\n");
          light_IPC_flag = 1;}
 }
 
 void *lightTask(void *pthread_inf) {
         light_IPC_flag = 0;
-        int ret;
+        int rc;
         threadInfo *ppthread_info = (threadInfo *)pthread_inf;
 
 /*****************Mask SIGNALS********************/
         sigset_t mask; //set of signals
-        sigemptyset(&mask); sigaddset(&mask,SIGTEMP); sigaddset(&mask,LIGHT_HB_SIG);
-        sigaddset(&mask,LOGGER_HB_SIG); sigaddset(&mask,TEMPERATURE_HB_SIG); sigaddset(&mask,SIGLOG);
+        sigemptyset(&mask); sigaddset(&mask,TEMPERATURE_SIGNAL); sigaddset(&mask,LIGHT_HB_SIG);
+        sigaddset(&mask,LOGGER_HB_SIG); sigaddset(&mask,TEMPERATURE_HB_SIG); sigaddset(&mask,LOGGER_SIGNAL);
 
-        ret = pthread_sigmask(
+        rc = pthread_sigmask(
                 SIG_SETMASK, //block the signals in the set argument
                 &mask, //set argument has list of blocked signals
                 NULL); //if non NULL prev val of signal mask stored here
-        if(ret == -1) { printf("Error:%s\n",strerror(errno)); return NULL; }
+        if(rc == -1) { printf("Error:%s\n",strerror(errno)); return NULL; }
 
 /*******Initialize ERROR Message Que*****************/
         mqd_t messagequeue_error;
@@ -58,12 +58,12 @@ void *lightTask(void *pthread_inf) {
 
 
 /********set periodic timer**********/
-        ret = setLightTimer();
-        if(ret ==-1) return NULL;
+        rc = ConfigLightSetup();
+        if(rc ==-1) return NULL;
         else printf("Periodic Timer set for Light Task\n");
 
-        ret = pthread_mutex_init(&glight_mutex,NULL);
-        if(ret == -1) { printf("Error:%s\n",strerror(errno)); return NULL; }
+        rc = pthread_mutex_init(&light_mutex,NULL);
+        if(rc == -1) { printf("Error:%s\n",strerror(errno)); return NULL; }
 
 /*******Initialize Logger Message Que*****************/
         mqd_t msgq;
@@ -101,8 +101,8 @@ void *lightTask(void *pthread_inf) {
         struct sigaction action;
         sigemptyset(&action.sa_mask);
         action.sa_handler = LightIPChandler;
-        ret = sigaction(SIGLIGHT_IPC,&action,NULL);
-        if(ret == -1) { perror("sigaction lightTask"); return NULL; }
+        rc = sigaction(LIGHT_SIGNAL_IPC,&action,NULL);
+        if(rc == -1) { perror("sigaction lightTask"); return NULL; }
         printf("pid:%d\n",getpid());
 
 /************Creating logpacket*******************/
@@ -119,16 +119,16 @@ void *lightTask(void *pthread_inf) {
         char data_lumen_str[8];
         uint16_t ch0,ch1;
 /****************Do this periodically*******************************/
-        while(gclose_light & gclose_app) {
+        while(light_close & app_close) {
 
                 pthread_kill(ppthread_info->main,LIGHT_HB_SIG);//send HB
 
-                pthread_mutex_lock(&glight_mutex);
-                while(glight_flag == 0) {
-                        pthread_cond_wait(&glight_condition,&glight_mutex);
+                pthread_mutex_lock(&light_mutex);
+                while(light_flag == 0) {
+                        pthread_cond_wait(&light_cond_var,&light_mutex);
                 }
-                pthread_mutex_unlock(&glight_mutex);
-                glight_flag = 0;
+                pthread_mutex_unlock(&light_mutex);
+                light_flag = 0;
 /*************collect data*****************/
                 ch0=adc_data_read(light,0);
                 ch1=adc_data_read(light,1);

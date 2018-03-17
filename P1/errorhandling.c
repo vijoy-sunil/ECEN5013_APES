@@ -80,8 +80,8 @@ void errorFunction(union sigval sv){
 
         } while(num_bytes>0);
 //reregister for notification
-        int ret  = mq_notify(messagequeue_error,&sig_ev_err);
-        if(ret == -1) {perror("mq_notify-errorFunction"); return;}
+        int rc  = mq_notify(messagequeue_error,&sig_ev_err);
+        if(rc == -1) {perror("mq_notify-errorFunction"); return;}
 //what are we supposed to do if initializatio complete
 //change led status???????????????????????????
 //left to do based on err_pack type
