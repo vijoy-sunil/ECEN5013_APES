@@ -53,7 +53,7 @@ typedef enum{
 *@param:
 *@return:
 */
-int initializeLight(void);
+int init_light_sensor(void);
 
 /**
 *@brief:

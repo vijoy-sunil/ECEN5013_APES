@@ -2,7 +2,7 @@
 #include "adps9301.h"
 #include <pthread.h>
 
-int initializeLight(void) {
+int init_light_sensor(void) {
   int light;
   light = i2cInit("/dev/i2c-2", light, LIGHT_ADDR);
   return light;

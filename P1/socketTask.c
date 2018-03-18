@@ -171,7 +171,7 @@ void *socketTask(void *pthread_inf) {
   char temp_data[2], data_cel_str[BUFFER_SIZE - 200];
   float data_cel;
 
-  int light_handle = initializeLight(); // Get the handler
+  int light_handle = init_light_sensor(); // Get the handler
   char lightbuffer[1];
   commandReg(light_handle, CONTROL, WRITE);
   controlReg(light_handle, WRITE, ENABLE, lightbuffer);

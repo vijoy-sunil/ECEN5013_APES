@@ -90,7 +90,7 @@ void *TemperatureTask(void *pthread_inf) {
             strerror(errno));
   }
   /***************setting logtask_msg_que for IPC data Request******************/
-  mqd_t IPCmsgq;
+  mqd_t messageq_ipc;
   int IPCmsg_prio = 20;
   int IPCnum_bytes;
   char IPCmessage[BUFFER_SIZE];
@@ -100,12 +100,12 @@ void *TemperatureTask(void *pthread_inf) {
                                      BUFFER_SIZE, // max size of msg in bytes
                                  .mq_flags = 0};
 
-  IPCmsgq =
+  messageq_ipc =
       mq_open(TEMPERATURE_MSGQ_IPC,      // name
               O_CREAT | O_RDWR, // flags. create a new if dosent already exist
               S_IRWXU,          // mode-read,write and execute permission
               &IPCmsgq_attr);   // attribute
-  if (IPCmsgq < 0) {
+  if (messageq_ipc < 0) {
     initialize = 0;
     sprintf(&(initialize_msg[4][0]), "Temptask-mq_open-IPCQ %s\n",
             strerror(errno));
@@ -289,7 +289,7 @@ void *TemperatureTask(void *pthread_inf) {
       clock_gettime(CLOCK_MONOTONIC, &now);
       expire.tv_sec = now.tv_sec + 2;
       expire.tv_nsec = now.tv_nsec;
-      num_bytes = mq_timedsend(IPCmsgq, (const char *)&temp_log,
+      num_bytes = mq_timedsend(messageq_ipc, (const char *)&temp_log,
                                sizeof(log_pack), IPCmsg_prio, &expire);
       if (num_bytes < 0) {
         notify("mq_send-IPC Q-TemperatureTask Error", alertmsg_queue, logtask_msg_que, error);
@@ -301,7 +301,7 @@ void *TemperatureTask(void *pthread_inf) {
   printf("exiting Temp task\n");
   mq_close(logtask_msg_que);
   mq_close(alertmsg_queue);
-  mq_close(IPCmsgq);
+  mq_close(messageq_ipc);
 
   return NULL;
 }

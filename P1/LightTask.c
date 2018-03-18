@@ -54,35 +54,31 @@ void *LightTask(void *pthread_inf) {
         struct mq_attr msgq_attr = {.mq_maxmsg = MESSAGEQ_SIZE, .mq_msgsize = BUFFER_SIZE,.mq_flags = 0};
 
         logtask_msg_que = mq_open(LOGGER_MSGQ_IPC, O_CREAT | O_RDWR,S_IRWXU,&msgq_attr); 
-        
+
         if(logtask_msg_que < 0) {
                 initialize =0;
-                sprintf(&(initialize_msg[2][0]),"LightTask-mq_open-loggerQ %s\n",strerror(errno));
+                sprintf(&(initialize_msg[2][0]),"Failure log msq open %s\n",strerror(errno));
         }
         else {
-                sprintf(&(initialize_msg[2][0]),"LightTask-mq_open-loggerQ %s\n",strerror(errno));
+                sprintf(&(initialize_msg[2][0]),"Success log msq open %s\n",strerror(errno));
         }
-/***************setting logtask_msg_que for IPC data Request******************/
-        mqd_t IPCmsgq;
+
+        mqd_t messageq_ipc;
         int IPCmsg_prio = 20;
         int IPCnum_bytes;
 
-        struct mq_attr IPCmsgq_attr = {.mq_maxmsg = MESSAGEQ_SIZE, //max # msg in queue
-                                       .mq_msgsize = BUFFER_SIZE, //max size of msg in bytes
-                                       .mq_flags = 0};
+        struct mq_attr IPCmsgq_attr = {.mq_maxmsg = MESSAGEQ_SIZE,.mq_msgsize = BUFFER_SIZE,.mq_flags = 0};
 
-        IPCmsgq = mq_open(LIGHT_MSGQ_IPC, //name
-                          O_CREAT | O_RDWR, //flags. create a new if dosent already exist
-                          S_IRWXU, //mode-read,write and execute permission
-                          &IPCmsgq_attr); //attribute
-        if(IPCmsgq < 0) {
+        messageq_ipc = mq_open(LIGHT_MSGQ_IPC,O_CREAT | O_RDWR,S_IRWXU,&IPCmsgq_attr); 
+
+        if(messageq_ipc < 0) {
                 initialize =0;
-                sprintf(&(initialize_msg[3][0]),"LightTask-mq_open-IPCQ %s\n",strerror(errno));
+                sprintf(&(initialize_msg[3][0]),"Failure msgq ipc %s\n",strerror(errno));
         }
         else {
-                sprintf(&(initialize_msg[3][0]),"LightTask-mq_open-IPCQ %s\n",strerror(errno));
+                sprintf(&(initialize_msg[3][0]),"Success msgq ipc %s\n",strerror(errno));
         }
-//set up the signal to request data
+
         struct sigaction sigactn;
         sigemptyset(&sigactn.sa_mask);
         sigactn.sa_handler = Handl_LightMsg;
@@ -95,8 +91,8 @@ void *LightTask(void *pthread_inf) {
                 sprintf(&(initialize_msg[4][0]),"LightTask sigaction %s\n",strerror(errno));
         }
 #ifdef BBB
-/************Init light sensor********************/
-        int light = initializeLight();
+
+        int light = init_light_sensor();
         if(light  == -1) {
                 initialize =0;
                 sprintf(&(initialize_msg[5][0]),"Light sensor init Failed \n");
@@ -115,8 +111,7 @@ void *LightTask(void *pthread_inf) {
 
 #endif
 
-/*****************Mask SIGNALS********************/
-        sigset_t mask; //set of signals
+        sigset_t mask; 
         sigemptyset(&mask);
         sigaddset(&mask,TEMPERATURE_SIGNAL_OPT); sigaddset(&mask,TEMPERATURE_SIG_HEARTBEAT);
         sigaddset(&mask,LOGGER_SIG); sigaddset(&mask,LIGHT_SIG_HEARTBEAT);
@@ -229,7 +224,7 @@ void *LightTask(void *pthread_inf) {
                         clock_gettime(CLOCK_MONOTONIC,&now);
                         expire.tv_sec = now.tv_sec+2;
                         expire.tv_nsec = now.tv_nsec;
-                        num_bytes = mq_timedsend(IPCmsgq,
+                        num_bytes = mq_timedsend(messageq_ipc,
                                                  (const char*)&light_log,
                                                  sizeof(log_pack),
                                                  IPCmsg_prio,
@@ -242,7 +237,7 @@ void *LightTask(void *pthread_inf) {
         printf("exiting light task\n");
         mq_close(logtask_msg_que);
         mq_close(alertmsg_queue);
-        mq_close(IPCmsgq);
+        mq_close(messageq_ipc);
         return NULL;
 
 }
