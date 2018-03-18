@@ -48,12 +48,75 @@
 #define CONVRATE3	0xC0
 
 
+/**
+*@brief:
+*
+*@param:
+*@return:
+*/
 float covert_temperature(temp_unit unit, char *buffer);
+
+/**
+*@brief:
+*byte 1 is MSB,  byte 2LSB. First 12 bits indicate temperature.
+*@param:
+*@return:
+*/
 void temperatureRead(int i2c_file_handler, char *buffer);
+
+/**
+*@brief:
+*
+*@param:
+*@return:
+*/
 int Temp_sensor_init();
+
+/**
+*@brief:
+*
+*@param:
+*@return:
+*/
 void temp_CONFIG_write(int i2c_file_handler, char *buffer);
+
+/**
+*@brief:
+*
+*@param:
+*@return:
+*/
 void temp_CONFIG_read(int i2c_file_handler, char *buffer);
+
+/**
+*@brief:
+*The Pointer Register uses the two least-significant bytes (LSBs) to identify
+*which of the data registers must respond to a read or write command.
+*@param:
+*@return:
+*/
 void tlowRead(int i2c_file_handler, char *buffer);
+
+/**
+*@brief:
+*
+*@param:
+*@return:
+*/
 void temp_THIGH_read(int i2c_file_handler, char *buffer);
+
+/**
+*@brief:
+*
+*@param:
+*@return:
+*/
 void temp_THIGH_write(int i2c_file_handler);
+
+/**
+*@brief:
+*
+*@param:
+*@return:
+*/
 void temp_TLOW_write(int i2c_file_handler);

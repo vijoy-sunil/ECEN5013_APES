@@ -62,14 +62,12 @@ int main(int argc, char *argv[]) {
 
   message_packet = (alert_message *)malloc(sizeof(alert_message));
 
-#ifdef BBB
   ret = system("echo none >/sys/class/leds/beaglebone:green:usr0/trigger");
   if (ret == -1)
     perror("LED CONTROL ERROR\n");
   else
     perror("LED OFF FROM HB \n");
   LED_OPTION(0);
-#endif
 
 
   ret = pthread_mutex_init(&light_lock, NULL);
