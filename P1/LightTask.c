@@ -64,7 +64,7 @@ void *LightTask(void *pthread_inf) {
         }
 
         mqd_t messageq_ipc;
-        int IPCmsg_prio = 20;
+        int msgprio_ipc = 20;
         int IPCnum_bytes;
 
         struct mq_attr IPCmsgq_attr = {.mq_maxmsg = MESSAGEQ_SIZE,.mq_msgsize = BUFFER_SIZE,.mq_flags = 0};
@@ -210,7 +210,7 @@ void *LightTask(void *pthread_inf) {
                     clock_gettime(CLOCK_MONOTONIC,&current);
                     expire.tv_sec = current.tv_sec+2;
                     expire.tv_nsec = current.tv_nsec;
-                    num_bytes = mq_timedsend(messageq_ipc,(const char*)&light_logmsg,sizeof(logger_pckt),IPCmsg_prio,&expire);
+                    num_bytes = mq_timedsend(messageq_ipc,(const char*)&light_logmsg,sizeof(logger_pckt),msgprio_ipc,&expire);
 
                     if(num_bytes<0) 
                     {

@@ -91,7 +91,7 @@ void *TemperatureTask(void *pthread_inf) {
   }
   /***************setting logtask_msg_que for IPC data Request******************/
   mqd_t messageq_ipc;
-  int IPCmsg_prio = 20;
+  int msgprio_ipc = 20;
   int IPCnum_bytes;
   char IPCmessage[BUFFER_SIZE];
 
@@ -290,7 +290,7 @@ void *TemperatureTask(void *pthread_inf) {
       expire.tv_sec = current.tv_sec + 2;
       expire.tv_nsec = current.tv_nsec;
       num_bytes = mq_timedsend(messageq_ipc, (const char *)&temp_log,
-                               sizeof(logger_pckt), IPCmsg_prio, &expire);
+                               sizeof(logger_pckt), msgprio_ipc, &expire);
       if (num_bytes < 0) {
         alert("mq_send-IPC Q-TemperatureTask Error", alertmsg_queue, logtask_msg_que, error);
       }
