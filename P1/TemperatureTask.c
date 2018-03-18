@@ -8,7 +8,7 @@
 sig_atomic_t temp_IPC_flag;
 
 void TemptIPChandler(int sig) {
-  if (sig == SIGTEMP_IPC) {
+  if (sig == TEMPSIGNAL_PACKET) {
     printf("Caught signal TemptIPChandler\n");
     temp_IPC_flag = 1;
   }
@@ -32,7 +32,7 @@ void *TemperatureTask(void *pthread_inf) {
                                   .mq_flags = 0};
 
   alertmsg_queue =
-      mq_open(MSGQ_ALERT,        // name
+      mq_open(ALERT_MSGQ_PCKT,        // name
               O_CREAT | O_RDWR, // flags. create a new if dosent already exist
               S_IRWXU,          // mode-read,write and execute permission
               &msgq_attr_err);  // attribute
@@ -76,7 +76,7 @@ void *TemperatureTask(void *pthread_inf) {
                               .mq_flags = 0};
 
   logger_msgq =
-      mq_open(LOGGER_MQ,        // name
+      mq_open(LOGGER_MSGQ_IPC,        // name
               O_CREAT | O_RDWR, // flags. create a new if dosent already exist
               S_IRWXU,          // mode-read,write and execute permission
               &msgq_attr);      // attribute
@@ -101,7 +101,7 @@ void *TemperatureTask(void *pthread_inf) {
                                  .mq_flags = 0};
 
   IPCmsgq =
-      mq_open(IPC_TEMP_MQ,      // name
+      mq_open(TEMPERATURE_MSGQ_IPC,      // name
               O_CREAT | O_RDWR, // flags. create a new if dosent already exist
               S_IRWXU,          // mode-read,write and execute permission
               &IPCmsgq_attr);   // attribute
@@ -117,7 +117,7 @@ void *TemperatureTask(void *pthread_inf) {
   struct sigaction sigactn;
   sigemptyset(&sigactn.sa_mask);
   sigactn.sa_handler = TemptIPChandler;
-  ret = sigaction(SIGTEMP_IPC, &sigactn, NULL);
+  ret = sigaction(TEMPSIGNAL_PACKET, &sigactn, NULL);
 
   if (ret == -1) {
     init_state = 0;
@@ -143,11 +143,11 @@ void *TemperatureTask(void *pthread_inf) {
   /*****************Mask SIGNALS********************/
   sigset_t mask; // set of signals
   sigemptyset(&mask);
-  sigaddset(&mask, SIGLIGHT);
+  sigaddset(&mask, LIGHT_SIGNAL_OPT);
   sigaddset(&mask, LIGHT_SIG_HEARTBEAT);
   sigaddset(&mask, LOGGER_SIG_HEARTBEAT);
   sigaddset(&mask, TEMPERATURE_SIG_HEARTBEAT);
-  sigaddset(&mask, SIGLOG);
+  sigaddset(&mask, LOGGER_SIG);
   sigaddset(&mask, SIGCONT);
   sigaddset(&mask, SOCKET_SIG_HEARTBEAT);
 

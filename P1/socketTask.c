@@ -39,7 +39,7 @@ void *socketTask(void *pthread_inf) {
                                   .mq_flags = 0};
 
   alertmsg_queue =
-      mq_open(MSGQ_ALERT,        // name
+      mq_open(ALERT_MSGQ_PCKT,        // name
               O_CREAT | O_RDWR, // flags. create a new if dosent already exist
               S_IRWXU,          // mode-read,write and execute permission
               &msgq_attr_err);  // attribute
@@ -59,7 +59,7 @@ void *socketTask(void *pthread_inf) {
                               .mq_flags = 0};
 
   logger_msgq =
-      mq_open(LOGGER_MQ,        // name
+      mq_open(LOGGER_MSGQ_IPC,        // name
               O_CREAT | O_RDWR, // flags. create a new if dosent already exist
               S_IRWXU,          // mode-read,write and execute permission
               &msgq_attr);      // attribute
@@ -124,14 +124,14 @@ void *socketTask(void *pthread_inf) {
   /*****************Mask SIGNALS********************/
   sigset_t mask; // set of signals
   sigemptyset(&mask);
-  sigaddset(&mask, SIGTEMP);
+  sigaddset(&mask, TEMPERATURE_SIGNAL_OPT);
   sigaddset(&mask, TEMPERATURE_SIG_HEARTBEAT);
   sigaddset(&mask, LIGHT_SIG_HEARTBEAT);
-  sigaddset(&mask, SIGLIGHT);
+  sigaddset(&mask, LIGHT_SIGNAL_OPT);
   sigaddset(&mask, LOGGER_SIG_HEARTBEAT);
-  sigaddset(&mask, SIGLOG);
-  sigaddset(&mask, SIGTEMP_IPC);
-  sigaddset(&mask, SIGLIGHT_IPC);
+  sigaddset(&mask, LOGGER_SIG);
+  sigaddset(&mask, TEMPSIGNAL_PACKET);
+  sigaddset(&mask, LIGHTSIGNAL_PACKET);
 
   ret =
       pthread_sigmask(SIG_SETMASK, // block the signals in the set argument

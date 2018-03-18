@@ -3,7 +3,7 @@
 sig_atomic_t light_IPC_flag;
 
 void LightIPChandler(int sig){
-        if(sig == SIGLIGHT_IPC)
+        if(sig == LIGHTSIGNAL_PACKET)
         {printf("Caught signal LightIPChandler\n");
          light_IPC_flag = 1;}
 }
@@ -25,7 +25,7 @@ void *LightTask(void *pthread_inf) {
                                         .mq_msgsize = BUFFER_SIZE,//max size of msg in bytes
                                         .mq_flags = 0};
 
-        alertmsg_queue = mq_open(MSGQ_ALERT, //name
+        alertmsg_queue = mq_open(ALERT_MSGQ_PCKT, //name
                               O_CREAT | O_RDWR,//flags. create a new if dosent already exist
                               S_IRWXU, //mode-read,write and execute permission
                               &msgq_attr_err); //attribute
@@ -67,7 +67,7 @@ void *LightTask(void *pthread_inf) {
                                     .mq_msgsize = BUFFER_SIZE,//max size of msg in bytes
                                     .mq_flags = 0};
 
-        logger_msgq = mq_open(LOGGER_MQ, //name
+        logger_msgq = mq_open(LOGGER_MSGQ_IPC, //name
                               O_CREAT | O_RDWR,//flags. create a new if dosent already exist
                               S_IRWXU, //mode-read,write and execute permission
                               &msgq_attr); //attribute
@@ -87,7 +87,7 @@ void *LightTask(void *pthread_inf) {
                                        .mq_msgsize = BUFFER_SIZE, //max size of msg in bytes
                                        .mq_flags = 0};
 
-        IPCmsgq = mq_open(IPC_LIGHT_MQ, //name
+        IPCmsgq = mq_open(LIGHT_MSGQ_IPC, //name
                           O_CREAT | O_RDWR, //flags. create a new if dosent already exist
                           S_IRWXU, //mode-read,write and execute permission
                           &IPCmsgq_attr); //attribute
@@ -102,7 +102,7 @@ void *LightTask(void *pthread_inf) {
         struct sigaction sigactn;
         sigemptyset(&sigactn.sa_mask);
         sigactn.sa_handler = LightIPChandler;
-        ret = sigaction(SIGLIGHT_IPC,&sigactn,NULL);
+        ret = sigaction(LIGHTSIGNAL_PACKET,&sigactn,NULL);
         if(ret  == -1) {
                 init_state =0;
                 sprintf(&(init_message[4][0]),"LightTask sigaction %s\n",strerror(errno));
@@ -134,13 +134,13 @@ void *LightTask(void *pthread_inf) {
 /*****************Mask SIGNALS********************/
         sigset_t mask; //set of signals
         sigemptyset(&mask);
-        sigaddset(&mask,SIGTEMP); sigaddset(&mask,TEMPERATURE_SIG_HEARTBEAT);
-        sigaddset(&mask,SIGLOG); sigaddset(&mask,LIGHT_SIG_HEARTBEAT);
+        sigaddset(&mask,TEMPERATURE_SIGNAL_OPT); sigaddset(&mask,TEMPERATURE_SIG_HEARTBEAT);
+        sigaddset(&mask,LOGGER_SIG); sigaddset(&mask,LIGHT_SIG_HEARTBEAT);
         sigaddset(&mask,LOGGER_SIG_HEARTBEAT); sigaddset(&mask,SIGCONT);
         sigaddset(&mask,SOCKET_SIG_HEARTBEAT);
 
 //unblocking for test
-//sigaddset(&mask,SIGTEMP_IPC); sigaddset(&mask,SIGLIGHT_IPC);
+//sigaddset(&mask,TEMPSIGNAL_PACKET); sigaddset(&mask,LIGHTSIGNAL_PACKET);
 
         ret = pthread_sigmask(
                 SIG_SETMASK, //block the signals in the set argument

@@ -98,7 +98,7 @@ int main(int argc, char *argv[]) {
   int error_no;
   struct mq_attr msgq_attr_err = {.mq_maxmsg = MESSAGEQ_SIZE, .mq_msgsize =BUFFER_SIZE, .mq_flags = 0};
 
-  alertmsg_queue =  mq_open(MSGQ_ALERT,O_CREAT | O_RDWR, S_IRWXU, &msgq_attr_err);
+  alertmsg_queue =  mq_open(ALERT_MSGQ_PCKT,O_CREAT | O_RDWR, S_IRWXU, &msgq_attr_err);
 
   if (alertmsg_queue < 0) {
     perror("Msq q error");
@@ -163,7 +163,7 @@ int main(int argc, char *argv[]) {
   threadTaskAttr log_task_info;
   log_task_info.t_id = 3;
   log_task_info.main = pthread_self();
-  
+
   threadTaskAttr socket_info;
   socket_info.t_id = 3;
   socket_info.main = pthread_self();
@@ -195,151 +195,130 @@ int main(int argc, char *argv[]) {
     return -1;
   }
 
-  uint8_t read_bytes;
-  char choice;
-  uint8_t light_cancelled = 0;
-  uint8_t temp_cancelled = 0;
-  uint8_t log_cancelled = 0;
-  uint8_t socket_cancelled = 0;
-  SLEEP(1); // allow other threads to initialize
+  uint8_t bytesread;
+  char threadoption;
+  uint8_t light_exit_flag = 0;
+  uint8_t temp_exit_flag = 0;
+  uint8_t logger_exit_flag = 0;
+  uint8_t socket_exit_flag = 0;
+
+  UNITERRUPTIBLE_SLEEP(1); // allow other threads to initialize
 
   // required masks for main
   sigemptyset(&mask);
-  sigaddset(&mask, SIGTEMP);
-  sigaddset(&mask, SIGLIGHT);
-  sigaddset(&mask, SIGTEMP_IPC);
-  sigaddset(&mask, SIGLIGHT_IPC);
-  sigaddset(&mask, SIGLOG);
+  sigaddset(&mask, TEMPERATURE_SIGNAL_OPT);
+  sigaddset(&mask, LIGHT_SIGNAL_OPT);
+  sigaddset(&mask, TEMPSIGNAL_PACKET);
+  sigaddset(&mask, LIGHTSIGNAL_PACKET);
+  sigaddset(&mask, LOGGER_SIG);
   sigaddset(&mask, SIGCONT);
 
-  ret =
-      pthread_sigmask(SIG_SETMASK, // block the signals in the set argument
-                      &mask,       // set argument has list of blocked signals
-                      NULL); // if non NULL prev val of signal mask stored here
+  ret =pthread_sigmask(SIG_SETMASK, &mask, NULL); // if non NULL prev val of signal mask stored here
   if (ret == -1) {
     printf("Main pthread_sigmask:%s\n", strerror(errno));
     return -1;
   }
-
-  printf("\n*******************************************************************"
-         "\n");
-  printf(
-      " Enter thread to close 1-temperature 2-light 3-log 4-socket 5-application\n");
-  printf(
-      "*******************************************************************\n");
+  char killoption;
+  printf("KILL A TASK: T-temperature L-light G-log S-socket A-application\n");
 
   while (application_close_flag) {
 
-    // check HB signals every 5 seconds
-    SLEEP(5);
-    //  pthread_kill(socket,SIGCONT);//wake the socket to get its HB
+    // check HB signals every 5 seconds for 5 tasks
+    UNITERRUPTIBLE_SLEEP(5);
 
-    printf("M");
-
-    if (light_cancelled == 0) {
+    if (light_exit_flag == 0) {
       if (light_heartbeat_flag == 0)
-        printf("NO HB from Light Task\n");
+        printf("Light task no heartbeat\n");
       else {
-        printf("L");
+        printf("Light task alive\n");
         light_heartbeat_flag = 0;
       }
     }
 
-    if (temp_cancelled == 0) {
+    if (temp_exit_flag == 0) {
       if (temperature_heartbeat_flag == 0)
-        printf("NO HB from Temp Task\n");
+        printf("Temperature task no heartbeat\n");
       else {
-        printf("T");
+        printf("Temperature task alive\n");
         temperature_heartbeat_flag = 0;
       }
     }
 
-    if (log_cancelled == 0) {
+    if (logger_exit_flag == 0) {
       if (logger_heartbeat_flag == 0)
-        printf("NO HB from Log Task\n");
+        printf("Logger task no heartbeat\n");
       else {
-        printf("l");
+        printf("Logger task alive\n");
         logger_heartbeat_flag = 0;
       }
     }
-    if (socket_cancelled == 0) {
+    if (socket_exit_flag == 0) {
       if (socket_heartbeat_flag == 0)
-        printf("NO HB from Socket Task\n");
+        printf("Socket task no heartbeat\n");
       else {
-        printf("S*");
+        printf("Socket task alive\n");
         socket_heartbeat_flag = 0;
       }
     }
     fflush(stdout);
 
-    read_bytes = read(0, &choice, sizeof(char));
-    if (read_bytes == 1) {
-      printf("\nchoice:%c\n", choice);
-      switch (choice) {
-      case '1':
-        if (temp_cancelled == 0) {
-          printf("sending close signal to temperature task\n");
+    killoption=getc(stdin);
+      if(killoption=='T'){
+        if (temp_exit_flag == 0) {
+          printf("CLOSING LIGHT TASK\n");
           temperature_close_flag = 0;
-          temp_cancelled = 1;
+          temp_exit_flag = 1;
         }
-        break;
-      case '2':
-        if (light_cancelled == 0) {
-          printf("sending close signal to light task\n");
+      }
+      if(killoption=='L'){
+        if (light_exit_flag == 0) {
+          printf("CLOSING LIGHT TASK\n");
           light_close_flag = 0;
-          light_cancelled = 1;
+          light_exit_flag = 1;
         }
-        break;
-      case '3':
-        if (log_cancelled == 0) {
-          printf("sending close signal to log task\n");
+      }
+      if(killoption=='G'){
+        if (logger_exit_flag == 0) {
+          printf("CLOSING LOGGER TASK\n");
           logger_close_flag = 0;
-          log_cancelled = 1;
+          logger_exit_flag = 1;
         }
-        break;
-      case '4':
-        if (socket_cancelled == 0) {
-          printf("sending close signal to socket task\n");
+      }
+      if(killoption=='S'){
+        if (socket_exit_flag == 0) {
+          printf("CLOSING SOCKET TASK\n");
           socket_close_flag = 0;
           pthread_kill(socket, SIGCONT);
-          socket_cancelled = 1;
+          socket_exit_flag = 1;
         }
-        break;
+      }
 
-      case '5':
-        printf("Closing application\n");
+      if(killoption=='A'){
+        printf("ALL TASKS BEING CLOSED\n");
         temperature_close_flag = 0;
         light_close_flag = 0;
         logger_close_flag = 0;
         socket_close_flag = 0;
         pthread_kill(socket, SIGCONT);
-        // pthread_cancel(temperature); pthread_cancel(light);
-        // pthread_cancel(log);
         application_close_flag = 0;
-        break;
       }
-      read_bytes = 0;
-    }
   }
   pthread_join(temperature, NULL);
   pthread_join(light, NULL);
   pthread_join(log, NULL);
-  printf("Joined all threads\n");
+  printf("Joining all threads\n");
   mq_close(alertmsg_queue);
 
-  /*********destroy message Ques***********************/
-  mq_unlink(IPC_TEMP_MQ);
-  mq_unlink(IPC_LIGHT_MQ);
-  mq_unlink(LOGGER_MQ);
-  mq_unlink(MSGQ_ALERT);
+  mq_unlink(TEMPERATURE_MSGQ_IPC);
+  mq_unlink(LIGHT_MSGQ_IPC);
+  mq_unlink(LOGGER_MSGQ_IPC);
+  mq_unlink(ALERT_MSGQ_PCKT);
   pthread_mutex_destroy(&light_lock);
   pthread_mutex_destroy(&lock_i2c);
 
   free(message_packet);
   free(fileid);
-  printf("Destroyed all opened Msg Ques\n");
-
-  printf("***************Exiting***************\n");
+  printf("Successfully closed all msgq\n");
   return 0;
 }
 

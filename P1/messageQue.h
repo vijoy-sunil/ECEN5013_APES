@@ -9,9 +9,9 @@
 #define MSG_PRIO_INIT 25
 #define ERROR_MESSAGE_PRIORITY 20
 
-#define LOGGER_MQ   "/logger_MQ"
-#define MSGQ_ALERT   "/error_MQ6"
-#define IPC_TEMP_MQ   "/IPC_TEMP_MQ"
-#define IPC_LIGHT_MQ   "/IPC_LIGHT_MQ"
+#define LOGGER_MSGQ_IPC   "/logger_MQ"
+#define ALERT_MSGQ_PCKT   "/error_MQ6"
+#define TEMPERATURE_MSGQ_IPC   "/TEMPERATURE_MSGQ_IPC"
+#define LIGHT_MSGQ_IPC   "/LIGHT_MSGQ_IPC"
 
 #endif

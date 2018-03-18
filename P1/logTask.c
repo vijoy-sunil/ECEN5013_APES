@@ -34,7 +34,7 @@ void *logTask(void *pthread_inf) {
                                   .mq_flags = 0};
 
   alertmsg_queue =
-      mq_open(MSGQ_ALERT,        // name
+      mq_open(ALERT_MSGQ_PCKT,        // name
               O_CREAT | O_RDWR, // flags. create a new if dosent already exist
               S_IRWXU,          // mode-read,write and execute permission
               &msgq_attr_err);  // attribute
@@ -64,7 +64,7 @@ void *logTask(void *pthread_inf) {
                               .mq_flags = 0};
 
   logger_msgq =
-      mq_open(LOGGER_MQ,        // name
+      mq_open(LOGGER_MSGQ_IPC,        // name
               O_CREAT | O_RDWR, // flags. create a new if dosent already exist
               S_IRWXU,          // mode-read,write and execute permission
               &msgq_attr);      // attribute
@@ -90,11 +90,11 @@ void *logTask(void *pthread_inf) {
   /*****************Mask SIGNALS********************/
   sigset_t mask; // set of signals
   sigemptyset(&mask);
-  sigaddset(&mask, SIGLIGHT);
+  sigaddset(&mask, LIGHT_SIGNAL_OPT);
   sigaddset(&mask, LIGHT_SIG_HEARTBEAT);
   sigaddset(&mask, LOGGER_SIG_HEARTBEAT);
   sigaddset(&mask, TEMPERATURE_SIG_HEARTBEAT);
-  sigaddset(&mask, SIGLOG);
+  sigaddset(&mask, LOGGER_SIG);
   sigaddset(&mask, SIGCONT);
   sigaddset(&mask, SOCKET_SIG_HEARTBEAT);
 
@@ -124,7 +124,7 @@ void *logTask(void *pthread_inf) {
                                  .mq_flags = 0};
   // temperature
   IPCmsgqT =
-      mq_open(IPC_TEMP_MQ,      // name
+      mq_open(TEMPERATURE_MSGQ_IPC,      // name
               O_CREAT | O_RDWR, // flags. create a new if dosent already exist
               S_IRWXU,          // mode-read,write and execute permission
               &IPCmsgq_attr);   // attribute
@@ -135,7 +135,7 @@ void *logTask(void *pthread_inf) {
     printf("IPC temperature Messgae Que Opened in logTask\n");
   // light
   IPCmsgqL =
-      mq_open(IPC_LIGHT_MQ,     // name
+      mq_open(LIGHT_MSGQ_IPC,     // name
               O_CREAT | O_RDWR, // flags. create a new if dosent already exist
               S_IRWXU,          // mode-read,write and execute permission
               &IPCmsgq_attr);   // attribute

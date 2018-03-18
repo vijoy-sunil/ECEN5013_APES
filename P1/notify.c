@@ -39,7 +39,7 @@ void light_sig_handler(int sig){
 
 int setTempTimer(){
         int ret;
-/****** creating RT signal SIGTEMP with SA_RESTART flag for which 1 parameter
+/****** creating RT signal TEMPERATURE_SIGNAL_OPT with SA_RESTART flag for which 1 parameter
  *** .sa_handler should be used for handler function(not .sa_sigaction)********/
 
         struct sigaction sig_act ={
@@ -47,7 +47,7 @@ int setTempTimer(){
                 .sa_handler = temp_sig_handler        //one arg method
         };
 //        sig_act.sa_mask = mask;
-        ret = sigaction(SIGTEMP,&sig_act,NULL);
+        ret = sigaction(TEMPERATURE_SIGNAL_OPT,&sig_act,NULL);
         if(ret == -1) return -1;
 /***********************Creating the timer*********************/
 
@@ -55,7 +55,7 @@ int setTempTimer(){
         timer_t timerid;
         struct sigevent sig_ev ={
                 .sigev_notify=SIGEV_SIGNAL,      //notify by signal in sigev_signo
-                .sigev_signo = SIGTEMP,      //Notification Signal
+                .sigev_signo = TEMPERATURE_SIGNAL_OPT,      //Notification Signal
                 .sigev_value.sival_ptr=&timerid      //data passed with notification
         };
 
@@ -93,7 +93,7 @@ int setLightTimer(){
                 .sa_handler = light_sig_handler //one arg method
         };
         //  sig_act.sa_mask=mask;
-        ret = sigaction(SIGLIGHT,&sig_act,NULL);
+        ret = sigaction(LIGHT_SIGNAL_OPT,&sig_act,NULL);
         if(ret == -1) return -1;
 
 /***********************Creating the timer*********************/
@@ -102,7 +102,7 @@ int setLightTimer(){
 /*sigevent struct specifies how the caller should be notified on timer expiry*/
         struct sigevent sig_ev ={
                 .sigev_notify=SIGEV_SIGNAL, //notify by signal in sigev_signo
-                .sigev_signo = SIGLIGHT, //Notification Signal
+                .sigev_signo = LIGHT_SIGNAL_OPT, //Notification Signal
                 .sigev_value.sival_ptr=&timerid //data passed with notification
         };
 

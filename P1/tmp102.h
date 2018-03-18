@@ -14,7 +14,7 @@
 #include "i2c_wrap.h"
 #include "includes.h"
 
-#define TEMP_ADDR 			(0x48)
+#define TEMP_ADDR (0x48)
 #define TEMP_READ_REG 	(0x00)
 #define TEMP_CONFIG_REG (0x01)
 #define TEMP_TLOW_REG 	(0x10)

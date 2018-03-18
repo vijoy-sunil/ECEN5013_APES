@@ -12,7 +12,7 @@
 #include <string.h>
 #include <time.h>
 #include <unistd.h>
-#define SLEEP(t)                                                               \
+#define UNITERRUPTIBLE_SLEEP(t)                                                               \
   struct timespec current, remaining;                                          \
   current.tv_nsec = 0;                                                         \
   current.tv_sec = t;                                                          \
@@ -28,6 +28,7 @@ sig_atomic_t light_heartbeat_flag;
 sig_atomic_t temperature_heartbeat_flag;
 sig_atomic_t logger_heartbeat_flag;
 sig_atomic_t socket_heartbeat_flag;
+
 
 void socket_heartbeat_handl(int sig) ;
 

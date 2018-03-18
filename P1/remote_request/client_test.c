@@ -14,13 +14,13 @@
 
 #include "client_test.h"
 
-// int test_client_data(char* buf, int choice){
+// int test_client_data(char* buf, int threadoption){
 //
 //
 //
 // }
 
-int test_client_data(char *buf, int choice) {
+int test_client_data(char *buf, int threadoption) {
 
   int shmem_fd; /*shared memory file desxriptor*/
   void *pshmem_obj;
@@ -36,14 +36,14 @@ int test_client_data(char *buf, int choice) {
   if (pshmem_obj == NULL)
     perror("mmap");
 
-  if (choice == 0) { // write
+  if (threadoption == 0) { // write
     if (memcpy((void *)pshmem_obj, (const void *)buf, TEST_SIZE) == NULL)
       perror("memcpy");
     printf("written %s\n", buf);
     return 1;
   }
 
-  if (choice == 1) { // read
+  if (threadoption == 1) { // read
     bzero(buf, TEST_SIZE);
     if (memcpy(buf, pshmem_obj, TEST_SIZE) == NULL)
       perror("memcpy");
