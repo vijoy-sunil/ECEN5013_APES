@@ -1,6 +1,6 @@
 
 #include "includes.h"
-#include "i2cWrappper.h"
+#include "i2c_wrap.h"
 #include <pthread.h>
 
 int i2cInit(char *dev_path, int i2c_file_handler, int slave_addr) {

@@ -1,5 +1,5 @@
 #include <math.h>
-#include "i2cWrappper.h"
+#include "i2c_wrap.h"
 
 #define LIGHT_ADDR	(0x39)
 #define POWERUP 	  (0x03)

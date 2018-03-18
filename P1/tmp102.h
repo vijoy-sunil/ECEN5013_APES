@@ -11,7 +11,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <sys/ioctl.h>
-#include "i2cWrappper.h"
+#include "i2c_wrap.h"
 #include "includes.h"
 
 #define TEMP_ADDR 			(0x48)
