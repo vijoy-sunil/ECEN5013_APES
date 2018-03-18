@@ -17,6 +17,9 @@ char* fileid;
 #define LED_OFF (system("echo 0 > /sys/class/leds/beaglebone:green:usr0/brightness"))
 #define LED_OPTION(option) { if(option == 1) LED_ON; if(option == 0) LED_OFF; }
 
+#define READY_LED 		(system("echo none >/sys/class/leds/beaglebone:green:usr1/trigger"))
+#define INTR_LED_ON 		(system("echo 1 > /sys/class/leds/beaglebone:green:usr1/brightness"))
+#define INTR_LED_OFF		(system("echo 0 > /sys/class/leds/beaglebone:green:usr1/brightness"))
 #endif
 
 pthread_mutex_t light_lock;

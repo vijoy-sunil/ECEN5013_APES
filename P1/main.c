@@ -1,5 +1,15 @@
 #include "main.h"
 
+/*****************interrupt handler***************************/
+void pwrdn_sighandler(int signo)
+{
+	if (signo==SIGIO) {
+		printf("\n * * * * * * * * temperature interrupt called * * * * * \n");
+		INTR_LED_ON;
+	}
+	return;
+}
+/************************************************************/
 int main(int argc, char *argv[]) {
   if (argc > 1) {
     fileid = (char *)malloc(sizeof(argv[1]));
@@ -152,6 +162,30 @@ int main(int argc, char *argv[]) {
     perror("SIGACTION ERROR");
     return -1;
   }
+
+  /******************interrupt signalling******************/
+	READY_LED;
+
+	int pwrdn_fd;
+	int count;
+	struct sigaction intr_action;
+	
+	memset(&intr_action, 0, sizeof(intr_action));
+	intr_action.sa_handler = pwrdn_sighandler;
+	intr_action.sa_flags = 0;
+
+	sigaction(SIGIO, &intr_action, NULL);
+
+	pwrdn_fd = open("/dev/gpio_int", O_RDWR);
+
+	if (pwrdn_fd < 0) {
+	printf("Failed to open device\n");
+	//return 1;
+	}
+
+	fcntl(pwrdn_fd, F_SETOWN, getpid());
+	fcntl(pwrdn_fd, F_SETFL, fcntl(pwrdn_fd, F_GETFL) | FASYNC);	
+  /********************************************************/
 
   pthread_t temperature, light, log, socket;
   threadTaskAttr temp_task_info;

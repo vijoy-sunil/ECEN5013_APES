@@ -14,30 +14,34 @@
 #include "i2c_wrap.h"
 #include "includes.h"
 
-#define TEMP_ADDR (0x48)
+#define TEMP_ADDR 			(0x48)
 #define TEMP_READ_REG 	(0x00)
 #define TEMP_CONFIG_REG (0x01)
-#define TEMP_TLOW_REG 	(0x10)
-#define TEMP_THIGH_REG 	(0x11)
-#define TEMP_THIGH_VAL 	(0x15)
-#define TEMP_TLOW_VAL 	(0x10)
+#define TEMP_TLOW_REG 	(0x02)
+#define TEMP_THIGH_REG 	(0x03)
+
+#define TEMP_THIGH_VAL_B1 	(0x20)
+#define TEMP_TLOW_VAL_B1 	(0x19)
+
+#define TEMP_THIGH_VAL_B2 	(0x50)
+#define TEMP_TLOW_VAL_B2	(0x50)
 
 #define TEMP_CONFIG_VAL (0x60)
 
 
 #define SHUTDOWN_EN 	0x01
-#define SHUTDOWN_DI	0x00
-#define RES_9BIT	0x00
-#define RES_10BIT	0x20
-#define	RES_11BIT	0x40
-#define RES_12BIT	0x60
+#define SHUTDOWN_DI	0xFE
+#define TM_EN		0x02
+#define TM_DI		0xFD
 #define FAULT1		0x00
 #define FAULT2		0x08
 #define FAULT4		0x10
 #define FAULT6		0x18
 
 //2nd byte
-#define EMMODE		0x10
+#define EMMODE_EN	0x10
+#define EMMODE_DI       0xEF
+
 #define CONVRATE0	0x00
 #define CONVRATE1	0x40
 #define CONVRATE2	0x80
@@ -107,7 +111,7 @@ void thighRead(int i2c_file_handler, char *buffer);
 *@param:
 *@return:
 */
-void thighWrite(int i2c_file_handler, char *buffer);
+void thighWrite(int i2c_file_handler);
 
 /**
 *@brief:
@@ -115,4 +119,4 @@ void thighWrite(int i2c_file_handler, char *buffer);
 *@param:
 *@return:
 */
-void tlowWrite(int i2c_file_handler, char *buffer);
+void tlowWrite(int i2c_file_handler);

@@ -192,54 +192,75 @@ void *TemperatureTask(void *pthread_inf) {
 
 #ifdef BBB
   /*****Looging BBB configurations*******/
-  char buffer[3];
-  tlowRead(temperature, buffer);
-  printf("TEMP SENSOR TLOW READ %x %x \n", buffer[0], buffer[1]);
+  printf("-------------configuring temperature sensor------------ \n\n");
+  printf("configuring TLOW register\n");
+  char rd_tbyte[2];
+  char wr_byte[2];
+  
+  tlowWrite(temperature);  
+  tlowRead(temperature, rd_tbyte);
 
-  thighWrite(temperature, buffer);
-  buffer[0] = buffer[1] = 0;
-  thighRead(temperature, buffer);
-  printf("TEMP SENSOR THIGH READ %x %x \n", buffer[0], buffer[1]);
+  float res = temperatureConv(CELCIUS, rd_tbyte);
+  printf("TLOW value: %f\n", res);
 
-  buffer[0] = TEMP_CONFIG_REG;
-  buffer[1] = SHUTDOWN_DI;
-  configRegWrite(temperature, buffer);
+  thighWrite(temperature);
+  thighRead(temperature, rd_tbyte);
+  res = temperatureConv(CELCIUS, rd_tbyte);
+  printf("THIGH value: %f\n", res);
 
-  printf("TEMP SENSOR BEFORE SHUTDOWN %x %x \n", buffer[0], buffer[1]);
 
-  buffer[0] = TEMP_CONFIG_REG;
-  buffer[1] = SHUTDOWN_EN;
+  configRegRead(temperature, rd_tbyte);
+  printf("CONFIG register value %x %x\n", rd_tbyte[0], rd_tbyte[1]);
 
-  configRegWrite(temperature, buffer);
+  wr_byte[0] = rd_tbyte[0] | SHUTDOWN_EN;
+  wr_byte[1] = rd_tbyte[1];
+  configRegWrite(temperature, wr_byte);
 
-  buffer[0] = buffer[1] = 0;
-  configRegRead(temperature, buffer);
+  configRegRead(temperature, rd_tbyte);
+  printf("CONFIG register value after SD EN %x %x\n", rd_tbyte[0], rd_tbyte[1]);
 
-  printf("TEMP SENSOR AFTER SHUTDOWN %x %x \n", buffer[0], buffer[1]);
+  wr_byte[0] = rd_tbyte[0] & SHUTDOWN_DI;
+  wr_byte[1] = rd_tbyte[1];
+  configRegWrite(temperature, wr_byte);
 
-  buffer[0] = TEMP_CONFIG_REG;
-  buffer[1] = SHUTDOWN_DI;
-  configRegWrite(temperature, buffer);
+  configRegRead(temperature, rd_tbyte);
+  printf("CONFIG register value after SD DIS_EN %x %x\n", rd_tbyte[0], rd_tbyte[1]);
 
-  buffer[0] = TEMP_CONFIG_REG;
-  buffer[1] = RES_10BIT;
-  buffer[2] = EMMODE | CONVRATE3;
+  wr_byte[0] = rd_tbyte[0];
+  wr_byte[1] = rd_tbyte[1] | EMMODE_EN;
+  configRegWrite(temperature, wr_byte);
 
-  configRegWrite(temperature, buffer);
+  configRegRead(temperature, rd_tbyte);
+  printf("CONFIG register value after setting EMMODE %x %x\n", rd_tbyte[0], rd_tbyte[1]);
 
-  buffer[0] = buffer[1] = 0;
-  configRegRead(temperature, buffer);
+  wr_byte[0] = rd_tbyte[0];
+  wr_byte[1] = rd_tbyte[1] & EMMODE_DI;
+  configRegWrite(temperature, wr_byte);
 
-  printf("TEMPSENSOR 10 BIT RESOLUTION, EMMODE AND CONV RATE 8Hz- %x %x \n",
-         buffer[0], buffer[1]);
+  configRegRead(temperature, rd_tbyte);
+  printf("CONFIG register value after clearing EMMODE %x %x\n", rd_tbyte[0], rd_tbyte[1]);
 
-  printf("FAULT BITS ARE %d %d\n", (buffer[0] & 0x08) >> 3,
-         (buffer[0] & 0x10) >> 4);
+  wr_byte[0] = rd_tbyte[0];
+  wr_byte[1] = rd_tbyte[1] | CONVRATE3;
+  configRegWrite(temperature, wr_byte);
+
+  configRegRead(temperature, rd_tbyte);
+  printf("CONFIG register value after setting CONVERSION RATE 8Hz %x %x\n", rd_tbyte[0], rd_tbyte[1]);
+
+  wr_byte[0] = rd_tbyte[0] | TM_EN;
+  wr_byte[1] = rd_tbyte[1];
+  configRegWrite(temperature, wr_byte);
+
+  configRegRead(temperature, rd_tbyte);
+  printf("CONFIG register value after setting INTERRUPT MODE %x %x\n", rd_tbyte[0], rd_tbyte[1]);
+
+ printf("-------------complete------------ \n\n");
 #endif
 
   /****************Do this periodically*******************************/
   while (temperature_close_flag & application_close_flag) {
 
+    INTR_LED_OFF;
     // wait for next second
     pthread_mutex_lock(&gtemp_mutex);
     while (gtemp_flag == 0) {
@@ -254,6 +275,7 @@ void *TemperatureTask(void *pthread_inf) {
 #ifdef BBB
     temperatureRead(temperature, temp_data);
     data_cel = temperatureConv(temp_format, temp_data);
+    printf("temp: %f\n", data_cel);
 
     /************populate the log packet*********/
     sprintf(data_cel_str, "temperature %f", data_cel);

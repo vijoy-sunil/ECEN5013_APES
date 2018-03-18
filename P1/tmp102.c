@@ -12,16 +12,22 @@ void thighRead(int i2c_file_handler, char *buffer) {
   i2cRead(i2c_file_handler, buffer, 2);
 }
 
-void tlowWrite(int i2c_file_handler, char *buffer) {
+void tlowWrite(int i2c_file_handler) {
+  char buffer[3];
+
   buffer[0] = TEMP_TLOW_REG;
-  buffer[1] = TEMP_TLOW_VAL;
-  i2cWrite(i2c_file_handler, buffer, 2);
+  buffer[1] = TEMP_TLOW_VAL_B1;
+  buffer[2] = TEMP_TLOW_VAL_B2;
+  i2cWrite(i2c_file_handler, buffer, 3);
 }
 
-void thighWrite(int i2c_file_handler, char *buffer) {
+void thighWrite(int i2c_file_handler) {
+  char buffer[3];
+
   buffer[0] = TEMP_THIGH_REG;
-  buffer[1] = TEMP_THIGH_VAL;
-  i2cWrite(i2c_file_handler, buffer, 2);
+  buffer[1] = TEMP_THIGH_VAL_B1;
+  buffer[2] = TEMP_THIGH_VAL_B2;
+  i2cWrite(i2c_file_handler, buffer, 3);
 }
 
 void temperatureRead(int i2c_file_handler, char *buffer) {
@@ -31,15 +37,17 @@ void temperatureRead(int i2c_file_handler, char *buffer) {
 }
 
 int initializeTemp() {
-  int temperature;
-  temperature = i2cInit("/dev/i2c-2", temperature, TEMP_ADDR);
-  return temperature;
+  int temp;
+  temp = i2cInit("/dev/i2c-2", temp, TEMP_ADDR);
+  return temp;
 }
 
 void configRegWrite(int file_handler, char *buffer) {
-  buffer[0] = TEMP_CONFIG_REG;
-  buffer[1] = TEMP_CONFIG_VAL;
-  i2cWrite(file_handler, buffer, 2);
+  char config[3];
+  config[0] = TEMP_CONFIG_REG;
+  config[1] = buffer[0];
+  config[2] = buffer[1];
+  i2cWrite(file_handler, config, 3);
 }
 
 void configRegRead(int file_handler, char *buffer) {
