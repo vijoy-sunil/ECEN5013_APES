@@ -1,3 +1,6 @@
+# Makefile for all the files
+# AUTHOR : PRAVEEN GNANASEKARAN
+# DATE : 03/03/2018 
 
 main.elf:main.c LightTask.o TemperatureTask.o notify.o LoggerTask.o errorhandling.o socketTask.o  i2c_wrap.o tmp102.o adps9301.o
 	gcc -g -o $@ $^ -lpthread -lrt -lm

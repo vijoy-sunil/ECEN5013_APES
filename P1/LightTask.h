@@ -9,6 +9,14 @@
 #include "threads.h"
 #include "notify.h"
 #include "msgque.h"
+/***************************************************************
+* AUTHOR  : Vijoy Sunil Kumar
+* DATE    : 03/08/2018
+* DESCRITPTION  : Light Sensor Task
+                  
+* SOURCE FILES  : LightTask.c
+****************************************************************/
+
 #include <mqueue.h>
 #include "includes.h"
 #include "errorhandling.h"

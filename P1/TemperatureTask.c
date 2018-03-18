@@ -1,5 +1,12 @@
-#include "TemperatureTask.h"
+/***************************************************************
+* AUTHOR  : Vijoy Sunil Kumar
+* DATE    : 03/08/2018
+* DESCRITPTION  : Temperature Sensor Task
+                  
+* HEADER FILES  : TemperatureTask.h
+****************************************************************/
 
+#include "TemperatureTask.h"
 
 sig_atomic_t IPC_temperature_flag;
 
@@ -237,7 +244,7 @@ void *TemperatureTask(void *pthread_inf) {
 
     temperatureRead(temperature, temp_data);
     data_cel = covert_temperature(temp_format, temp_data);
-    printf("TEMPERATURE: %f\n", data_cel);
+    // printf("TEMPERATURE: %f\n", data_cel);
 
     sprintf(data_cel_str, "TEMPERATURE %f", data_cel);
     strcpy(temperature_log.log_msg, data_cel_str);

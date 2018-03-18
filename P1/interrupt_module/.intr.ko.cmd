@@ -1,0 +1,1 @@
+cmd_/home/praveen/Desktop/ECEN5013_APES/P1/interrupt_module/intr.ko := ld -r -m elf_x86_64 -T ./scripts/module-common.lds --build-id  -o /home/praveen/Desktop/ECEN5013_APES/P1/interrupt_module/intr.ko /home/praveen/Desktop/ECEN5013_APES/P1/interrupt_module/intr.o /home/praveen/Desktop/ECEN5013_APES/P1/interrupt_module/intr.mod.o

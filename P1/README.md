@@ -1,7 +1,9 @@
-# APES_proj1
-Repository for Advanced Practical Embedded Software Project1
+Project-1
 
-closing application:
-1) ctrl+ c closes all tasks(after releasing all resources) ; then press any key to exit
+Run program with main.elf file
 
-2)choose the tasks application to close as shown on command line;
+Select one option for temperature display
+
+Tasks get assigned periodically by themselves
+
+To close any of task, select the valid option displayed on the screen

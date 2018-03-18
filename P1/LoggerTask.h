@@ -1,3 +1,10 @@
+/***************************************************************
+* AUTHOR  : Vijoy Sunil Kumar
+* DATE    : 03/08/2018
+* DESCRITPTION  : Logger Sensor Task
+                  
+* Source FILES  : LoggerTask.h
+****************************************************************/
 
 #include "includes.h"
 #include "msgque.h"

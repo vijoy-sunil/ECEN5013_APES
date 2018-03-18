@@ -1,3 +1,11 @@
+/***************************************************************
+* AUTHOR  : Vijoy Sunil Kumar
+* DATE    : 03/08/2018
+* DESCRITPTION  : Logger Task
+                  
+* HEADER FILES  : LoggerTask.h
+****************************************************************/
+
 #include "LoggerTask.h"
 
 sig_atomic_t logger_data_flag;
@@ -122,7 +130,7 @@ void *logTask(void *pthread_inf) {
 
       num_bytes = mq_timedreceive(logtask_msg_que, (char *)log, BUFFER_SIZE, &msg_priority,&expire);
 
-      // write to a log file
+
       if (num_bytes > 0) 
       {
         fprintf(pfd, "TIME: %s  LEVEL: %d SOURCE: %d MESSAGE: %s\n\n", ((logger_pckt *)log)->time_stamp,((logger_pckt *)log)->log_level, ((logger_pckt *)log)->log_source,((logger_pckt *)log)->log_msg);

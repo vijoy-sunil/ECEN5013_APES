@@ -1,3 +1,11 @@
+/***************************************************************
+* AUTHOR  : Vijoy Sunil Kumar
+* DATE    : 03/08/2018
+* DESCRITPTION  : The remote reuqest socket task
+                  
+* HEADER FILES  : client_test.h
+****************************************************************/
+
 #include "../includes.h"
 #include "client_test.h"
 #include <arpa/inet.h>
@@ -53,36 +61,32 @@ int main() {
     return -1;
   }
 
-  /****create socket********/
-  sockfd = socket(AF_INET,     // com domain - IPv4
-                  SOCK_STREAM, // com type - TCP
-                  0);          // protocol
+  sockfd = socket(AF_INET,  SOCK_STREAM, 0);   
+
   if (sockfd < 0) {
     printf("socket Error:%s\n", strerror(errno));
     return -1;
   }
-  /*****clear and initialize the server address structure*****/
+
   memset(&server_addr, '0', sizeof(server_addr));
   server_addr.sin_family = AF_INET;
   server_addr.sin_port = htons(PORT);
 
-  /*convert IP addr from text to binary*/
+
   ret = inet_pton(AF_INET, "127.0.0.1", &server_addr.sin_addr);
   if (ret < 0) {
     printf("inet_pton Error:%s\n", strerror(errno));
     return -1;
   }
 
-  /****connect socket to the address specified in server_addr******/
   ret = connect(sockfd, (struct sockaddr *)&server_addr, sizeof(server_addr));
+
   if (ret < 0) {
     printf("connect Error:%s\n", strerror(errno));
     return -1;
   }
-#ifdef BBB
 
-  printf("Enter 1 for temperature in F, 2 for temperature in C, 3 for Kelvin. 4 for "
-         "DAY/NIGHT, 5 for lumens");
+  printf("Enter 1 for temperature in F, 2 for temperature in C, 3 for Kelvin. 4 for ""DAY/NIGHT, 5 for lumens");
   int input;
   scanf("%d", &input);
 
@@ -112,15 +116,10 @@ int main() {
     request->sensor = temperature;
     request->tunit = CELCIUS;
   }
-#else
-  request->sensor = temperature;
-#endif
-  /******write to socket******/
 
   num_char = send(sockfd, request, sizeof(sock_req), 0);
-  printf("message sent from child has %d bytes\n", num_char);
+  printf("CHILD SENT %d bytes\n", num_char);
 
-  /*****read from socket*****/
   num_char = read(sockfd, (char *)response, sizeof(logger_pckt));
 
 #ifndef TEST
@@ -137,9 +136,6 @@ int main() {
   printf("Read message  :%s\n", data);
   test_client_data((char *)data, 0);
 
-// while (gclose) {
-//   sleep(1);
-// } // while testing use cntrl c to break
 #endif
 
   printf("Exiting Client\n");

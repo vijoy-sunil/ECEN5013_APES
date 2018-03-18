@@ -1,3 +1,11 @@
+/***************************************************************
+* AUTHOR  : Vijoy Sunil Kumar
+* DATE    : 03/08/2018
+* DESCRITPTION  : Light Sensor Task
+                  
+* HEADER FILES  : LightTask.h
+****************************************************************/
+
 #include "LightTask.h"
 
 sig_atomic_t Light_Msg_flag;

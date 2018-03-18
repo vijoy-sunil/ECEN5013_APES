@@ -2,10 +2,7 @@
 
 static pthread_mutex_t error_msg_lock = PTHREAD_MUTEX_INITIALIZER;
 
-/****************puts initialization messages and errors on notify msg q and logger msg q. notify msg q is registered to notify main, which creates a thread to handle these conditions appropriately*************/
 void alert(char* msg,mqd_t alertmsg_queue,mqd_t logtask_msg_que,msg_type type){
-        //char msg[BUFFER_SIZE];
-        //sprintf(msg,"%s:%s",arg_msg,strerror(errno));
 
         alert_message err_pack={.type=type};
         strcpy(err_pack.msg, msg);
@@ -18,7 +15,6 @@ void alert(char* msg,mqd_t alertmsg_queue,mqd_t logtask_msg_que,msg_type type){
         if (type==init) prio = INIT_MESSAGE_PRIORITY;
         else if (type==error) prio = ERROR_MESSAGE_PRIORITY;
 
-//log on notify msg q
         if(alertmsg_queue >= 0 ) {
                 num_bytes = mq_timedsend(alertmsg_queue,
                                          (const char*)&err_pack,
@@ -33,7 +29,6 @@ void alert(char* msg,mqd_t alertmsg_queue,mqd_t logtask_msg_que,msg_type type){
                 strcpy(err_log.time_stamp, asctime(tm));
                 strcpy(err_log.log_msg, msg);
 
-//log on logegr q
                 clock_gettime(CLOCK_MONOTONIC,&current);
                 expire.tv_sec = current.tv_sec+5;
                 expire.tv_nsec = current.tv_nsec;
@@ -49,10 +44,8 @@ void alert(char* msg,mqd_t alertmsg_queue,mqd_t logtask_msg_que,msg_type type){
         return;
 }
 
-/*This thread is invoked via mq_notify on main once any initialization or error message is put on alertmsg_queue
- */
 void alertReceive(union sigval sv){
-//read and print the error
+
         if(sv.sival_ptr == NULL) {printf("alertReceive argument\n"); return;}
         mqd_t alertmsg_queue = *((mqd_t*)sv.sival_ptr);
         struct timespec current,expire;
@@ -63,7 +56,7 @@ void alertReceive(union sigval sv){
         int error_flag = 0;
         int ret =  pthread_mutex_lock(&error_msg_lock);
         if(ret !=0 ) {perror("alertReceive-mutexlock"); return;}
-//empty the logtask_msg_que - notification only for an empty q
+
         do {
                 bzero(message_packet,sizeof(message_packet));
 
@@ -81,11 +74,9 @@ void alertReceive(union sigval sv){
         ret =  pthread_mutex_unlock(&error_msg_lock);
         if(ret !=0 ) {perror("alertReceive-mutex unlock"); return;}
 
-//reregister for notification
         ret  = mq_notify(alertmsg_queue,&signal_event);
         if(ret == -1) {perror("mq_notify-alertReceive"); return;}
 
-//For error condition turn on the LED
 #ifdef BBB
         if(error_flag == 1) LED_OPTION(1);
 #endif
