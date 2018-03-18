@@ -1,5 +1,3 @@
-#ifndef messageQue_H
-#define messageQue_H
 #include <mqueue.h>
 
 
@@ -13,5 +11,3 @@
 #define ALERT_MSGQ_PCKT   "/alert_msg"
 #define TEMPERATURE_MSGQ_IPC   "/TEMPERATURE_MSGQ_IPC"
 #define LIGHT_MSGQ_IPC   "/LIGHT_MSGQ_IPC"
-
-#endif

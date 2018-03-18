@@ -1,6 +1,3 @@
-#ifndef THREAH_H
-#define THREAD_H
-
 #include <signal.h>
 #include <unistd.h>
 
@@ -24,36 +21,7 @@ typedef struct
         pthread_t main;
 } threadTaskAttr;
 
-/**
-*@brief:Implements Light Task
-*Wakes up periodically to read light data from light sensor via I2c,sends data *to Logger, sends HB to main and handles IPC socket requests
-*@param:pointer to thread info structure
-*@return: returns NULL pointer
-*/
 void *LightTask(void *pthread_inf);
-
-/**
-*@brief:Implements Temp Task
-*Wakes up periodically to read temperature data from light sensor via I2c,sends data *to Logger, sends HB to main and handles IPC socket requests
-*@param:pointer to thread info structure
-*@return: returns NULL pointer
-*/
 void *TemperatureTask(void *pthread_inf);
-
-/**
-*@brief:Implements log Task
-*Requests and receives logs from other tasks and writes them synchronously on file
-*@param:pointer to thread info structure
-*@return: returns NULL pointer
-*/
 void *logTask(void *pthread_inf);
-
-/**
-*@brief:Implements socketTask
-*Receives socket requests,based on the request probes the light or temperature sensor for data *and sends it back to the requestee.
-*@param:pointer to thread info structure
-*@return: returns NULL pointer
-*/
 void *socketTask(void *pthread_inf);
-
-#endif
