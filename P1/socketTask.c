@@ -1,7 +1,7 @@
 #include "adps9301.h"
 #include "tmp102.h"
 #include "includes.h"
-#include "messageQue.h"
+#include "msgque.h"
 #include "errorhandling.h"
 #include "notify.h"
 #include "threads.h"
@@ -50,7 +50,7 @@ void *socketTask(void *pthread_inf) {
 
   /*******Initialize Logger Message Que*****************/
   mqd_t logger_msgq;
-  int msg_prio = MSG_PRIO;
+  int msg_prio = MESSAGE_PRIORITY;
   int num_bytes;
   char message[BUFFER_SIZE];
   struct mq_attr msgq_attr = {.mq_maxmsg = MESSAGEQ_SIZE, // max # msg in queue

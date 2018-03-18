@@ -15,7 +15,7 @@ void notify(char* msg,mqd_t alertmsg_queue,mqd_t logger_msgq,msg_type type){
         expire.tv_sec = now.tv_sec+2;
         expire.tv_nsec = now.tv_nsec;
         int prio;
-        if (type==init) prio = MSG_PRIO_INIT;
+        if (type==init) prio = INIT_MESSAGE_PRIORITY;
         else if (type==error) prio = ERROR_MESSAGE_PRIORITY;
 
 //log on notify msg q

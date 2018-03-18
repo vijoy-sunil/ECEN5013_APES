@@ -1,6 +1,6 @@
 
 #include "includes.h"
-#include "messageQue.h"
+#include "msgque.h"
 #include "errorhandling.h"
 #include "notify.h"
 #include "threads.h"

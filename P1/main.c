@@ -330,21 +330,18 @@ void socket_heartbeat_handl(int sig) {
 
 void light_hearbeat_handl(int sig) {
   if (sig == LIGHT_SIG_HEARTBEAT) {
-    //  printf("L");
     light_heartbeat_flag = 1;
   }
 }
 
 void temperature_heartbeat_handl(int sig) {
   if (sig == TEMPERATURE_SIG_HEARTBEAT) {
-    //  printf("T");
     temperature_heartbeat_flag = 1;
   }
 }
 
 void logger_heartbeat_handl(int sig) {
   if (sig == LOGGER_SIG_HEARTBEAT) {
-    //    printf("l");
     logger_heartbeat_flag = 1;
   }
 }

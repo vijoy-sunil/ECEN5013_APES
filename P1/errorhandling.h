@@ -12,7 +12,7 @@
 #include <unistd.h>
 // #include "threads.h"
 #include "notify.h"
-#include "messageQue.h"
+#include "msgque.h"
 #include <mqueue.h>
 
 alert_message *message_packet;

@@ -60,7 +60,7 @@ void *LightTask(void *pthread_inf) {
         }
 /*******Initialize Logger Message Que*****************/
         mqd_t logger_msgq;
-        int msg_prio = MSG_PRIO;
+        int msg_prio = MESSAGE_PRIORITY;
         int num_bytes;
         char message[BUFFER_SIZE];
         struct mq_attr msgq_attr = {.mq_maxmsg = MESSAGEQ_SIZE, //max # msg in queue

@@ -2,7 +2,7 @@
 #define includes_H
 
 #include<stdint.h>
-#include"messageQue.h"
+#include"msgque.h"
 #define PORT 8080
 #define DEFAULT_FILE_NAME ("logfile.txt")
 char* fileid;

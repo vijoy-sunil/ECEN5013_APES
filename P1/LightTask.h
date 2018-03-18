@@ -8,7 +8,7 @@
 #include <unistd.h>
 #include "threads.h"
 #include "notify.h"
-#include "messageQue.h"
+#include "msgque.h"
 #include <mqueue.h>
 #include "includes.h"
 #include "errorhandling.h"

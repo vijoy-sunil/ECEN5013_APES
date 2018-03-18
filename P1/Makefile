@@ -5,16 +5,16 @@ main.elf:main.c LightTask.o TemperatureTask.o notify.o logTask.o errorhandling.o
 notify.o:notify.c
 	gcc -c -o $@ $<
 
-logTask.o:logTask.c messageQue.h includes.h
+logTask.o:logTask.c msgque.h includes.h
 	gcc -c -o $@ $<  -lpthread
 
-LightTask.o:LightTask.c messageQue.h includes.h
+LightTask.o:LightTask.c msgque.h includes.h
 	gcc -c -o $@ $<  -lpthread -lrt
 
-TemperatureTask.o:TemperatureTask.c messageQue.h includes.h
+TemperatureTask.o:TemperatureTask.c msgque.h includes.h
 	gcc -c -o $@ $<  -lpthread -lrt
 
-errorhandling.o:errorhandling.c messageQue.h includes.h
+errorhandling.o:errorhandling.c msgque.h includes.h
 	gcc -c -o $@ $<  -lpthread -lrt
 
 socketTask.o:socketTask.c includes.h
