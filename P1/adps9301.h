@@ -92,7 +92,7 @@ void timingReg(int file_handler, apds9301_opt op1, apds9301_opt op2,
 *@param:
 *@return:
 */
-void interrupReg(int file_handler, apds9301_opt op);
+void interrupReg(int file_handler, apds9301_opt op1, apds9301_opt op2, char *buffer);
 
 /**
 *@brief:
