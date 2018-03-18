@@ -37,7 +37,7 @@ void light_sig_handler(int sig){
 
 }
 
-int setTempTimer(){
+int Temp_init_timer(){
         int ret;
 /****** creating RT signal TEMPERATURE_SIGNAL_OPT with SA_RESTART flag for which 1 parameter
  *** .sa_handler should be used for handler function(not .sa_sigaction)********/

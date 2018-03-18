@@ -36,7 +36,7 @@ void temperatureRead(int i2c_file_handler, char *buffer) {
   i2cRead(i2c_file_handler, buffer, 2);
 }
 
-int initializeTemp() {
+int Temp_sensor_init() {
   int temp;
   temp = i2cInit("/dev/i2c-2", temp, TEMP_ADDR);
   return temp;
@@ -56,7 +56,7 @@ void configRegRead(int file_handler, char *buffer) {
   i2cRead(file_handler, buffer, 2);
 }
 
-float temperatureConv(temp_unit unit, char *buffer) {
+float covert_temperature(temp_unit unit, char *buffer) {
   float temperature;
   unsigned char MSB, LSB;
   int temp_12b;

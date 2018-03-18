@@ -54,7 +54,7 @@
 *@param:
 *@return:
 */
-float temperatureConv(temp_unit unit, char *buffer);
+float covert_temperature(temp_unit unit, char *buffer);
 
 /**
 *@brief:
@@ -70,7 +70,7 @@ void temperatureRead(int i2c_file_handler, char *buffer);
 *@param:
 *@return:
 */
-int initializeTemp();
+int Temp_sensor_init();
 
 /**
 *@brief:

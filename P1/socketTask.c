@@ -167,7 +167,7 @@ void *socketTask(void *pthread_inf) {
            alertmsg_queue, logtask_msg_que, init);
 
 #ifdef BBB
-  int temp_handle = initializeTemp(); // Get the Handler
+  int temp_handle = Temp_sensor_init(); // Get the Handler
   char temp_data[2], data_cel_str[BUFFER_SIZE - 200];
   float data_cel;
 
@@ -231,13 +231,13 @@ void *socketTask(void *pthread_inf) {
 
       temperatureRead(temp_handle, temp_data);
       if (request->tunit == CELCIUS) {
-        data_cel = temperatureConv(CELCIUS, temp_data);
+        data_cel = covert_temperature(CELCIUS, temp_data);
       }
       if (request->tunit == FARENHEIT) {
-        data_cel = temperatureConv(FARENHEIT, temp_data);
+        data_cel = covert_temperature(FARENHEIT, temp_data);
       }
       if (request->tunit == KELVIN) {
-        data_cel = temperatureConv(KELVIN, temp_data);
+        data_cel = covert_temperature(KELVIN, temp_data);
       }
       sprintf(data_cel_str, "temperature %f", data_cel);
       strcpy(response->log_msg, data_cel_str);

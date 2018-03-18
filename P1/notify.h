@@ -37,7 +37,7 @@ void SIGNAL_INTERRUPT_HANDL(int sig);
 *@param:void
 *@return: int success/failure
 */
-int setTempTimer();
+int Temp_init_timer();
 
 /**
 *@brief:sets timer and signal handler for light task

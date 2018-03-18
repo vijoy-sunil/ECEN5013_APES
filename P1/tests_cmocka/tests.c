@@ -20,15 +20,15 @@ void test_positive_temperature_conv(void **state) {
 
   float expected = 25.0;
   printf("Testing C,F,K conversion\n");
-  float result = temperatureConv(CELCIUS, buffer);
+  float result = covert_temperature(CELCIUS, buffer);
   assert_int_equal((int)expected, (int)result);
 
   expected = 77.0;
-  result = temperatureConv(FARENHEIT, buffer);
+  result = covert_temperature(FARENHEIT, buffer);
   assert_int_equal((int)expected, (int)result);
 
   expected = 298.15;
-  result = temperatureConv(KELVIN, buffer);
+  result = covert_temperature(KELVIN, buffer);
   assert_int_equal((int)expected, (int)result);
 }
 
@@ -41,15 +41,15 @@ void test_negative_temperature_conv(void **state) {
 
   float expected = -25.0;
   printf("Testing C,F,K conversion\n");
-  float result = temperatureConv(CELCIUS, buffer);
+  float result = covert_temperature(CELCIUS, buffer);
   assert_int_equal((int)expected, (int)result);
 
   expected = -13.0;
-  result = temperatureConv(FARENHEIT, buffer);
+  result = covert_temperature(FARENHEIT, buffer);
   assert_int_equal((int)expected, (int)result);
 
   expected = 248.15;
-  result = temperatureConv(KELVIN, buffer);
+  result = covert_temperature(KELVIN, buffer);
   assert_int_equal((int)expected, (int)result);
 }
 

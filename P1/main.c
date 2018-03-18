@@ -328,7 +328,7 @@ int main(int argc, char *argv[]) {
       }
 
       if(killoption=='A'){
-        printf("ALL TASKS BEING CLOSED\n");
+        printf("ALL TASKS BEING CLOSED in 5 seconds\n");
         temperature_close_flag = 0;
         light_close_flag = 0;
         logger_close_flag = 0;

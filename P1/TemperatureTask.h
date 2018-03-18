@@ -13,7 +13,4 @@
 #include <time.h>
 #include <unistd.h>
 
-#define GET_TIME                                                               \
-  clock_gettime(CLOCK_MONOTONIC, &current);                                        \
-  expire.tv_sec = current.tv_sec + 2;                                              \
-  expire.tv_nsec = current.tv_nsec;
+void IPCTemperature_Handl(int sig);
