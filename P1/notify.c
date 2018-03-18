@@ -46,7 +46,7 @@ int setTempTimer(){
                 .sa_flags = SA_RESTART,                  //three arguments
                 .sa_handler = temp_sig_handler        //one arg method
         };
-//        sig_act.sa_mask = mask;
+//        sig_act.sa_mask = mask_bit;
         ret = sigaction(TEMPERATURE_SIGNAL_OPT,&sig_act,NULL);
         if(ret == -1) return -1;
 /***********************Creating the timer*********************/
@@ -92,7 +92,7 @@ int timer_init_light(){
                 .sa_flags = SA_RESTART,          //three arguments
                 .sa_handler = light_sig_handler //one arg method
         };
-        //  sig_act.sa_mask=mask;
+        //  sig_act.sa_mask=mask_bit;
         ret = sigaction(LIGHT_SIGNAL_OPT,&sig_act,NULL);
         if(ret == -1) return -1;
 

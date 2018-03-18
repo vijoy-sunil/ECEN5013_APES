@@ -141,20 +141,20 @@ void *TemperatureTask(void *pthread_inf) {
 #endif
 
   /*****************Mask SIGNALS********************/
-  sigset_t mask; // set of signals
-  sigemptyset(&mask);
-  sigaddset(&mask, LIGHT_SIGNAL_OPT);
-  sigaddset(&mask, LIGHT_SIG_HEARTBEAT);
-  sigaddset(&mask, LOGGER_SIG_HEARTBEAT);
-  sigaddset(&mask, TEMPERATURE_SIG_HEARTBEAT);
-  sigaddset(&mask, LOGGER_SIG);
-  sigaddset(&mask, SIGCONT);
-  sigaddset(&mask, SOCKET_SIG_HEARTBEAT);
+  sigset_t mask_bit; // set of signals
+  sigemptyset(&mask_bit);
+  sigaddset(&mask_bit, LIGHT_SIGNAL_OPT);
+  sigaddset(&mask_bit, LIGHT_SIG_HEARTBEAT);
+  sigaddset(&mask_bit, LOGGER_SIG_HEARTBEAT);
+  sigaddset(&mask_bit, TEMPERATURE_SIG_HEARTBEAT);
+  sigaddset(&mask_bit, LOGGER_SIG);
+  sigaddset(&mask_bit, SIGCONT);
+  sigaddset(&mask_bit, SOCKET_SIG_HEARTBEAT);
 
   ret =
       pthread_sigmask(SIG_SETMASK, // block the signals in the set argument
-                      &mask,       // set argument has list of blocked signals
-                      NULL); // if non NULL prev val of signal mask stored here
+                      &mask_bit,       // set argument has list of blocked signals
+                      NULL); // if non NULL prev val of signal mask_bit stored here
   if (ret == -1) {
     initialize = 0;
     sprintf(&(initialize_msg[7][0]), "Temp task-pthread_sigmask %s\n",

@@ -111,20 +111,20 @@ void *LightTask(void *pthread_inf) {
 
 #endif
 
-        sigset_t mask; 
-        sigemptyset(&mask);
-        sigaddset(&mask,TEMPERATURE_SIGNAL_OPT); sigaddset(&mask,TEMPERATURE_SIG_HEARTBEAT);
-        sigaddset(&mask,LOGGER_SIG); sigaddset(&mask,LIGHT_SIG_HEARTBEAT);
-        sigaddset(&mask,LOGGER_SIG_HEARTBEAT); sigaddset(&mask,SIGCONT);
-        sigaddset(&mask,SOCKET_SIG_HEARTBEAT);
+        sigset_t mask_bit; 
+        sigemptyset(&mask_bit);
+        sigaddset(&mask_bit,TEMPERATURE_SIGNAL_OPT); sigaddset(&mask_bit,TEMPERATURE_SIG_HEARTBEAT);
+        sigaddset(&mask_bit,LOGGER_SIG); sigaddset(&mask_bit,LIGHT_SIG_HEARTBEAT);
+        sigaddset(&mask_bit,LOGGER_SIG_HEARTBEAT); sigaddset(&mask_bit,SIGCONT);
+        sigaddset(&mask_bit,SOCKET_SIG_HEARTBEAT);
 
 //unblocking for test
-//sigaddset(&mask,TEMPSIGNAL_PACKET); sigaddset(&mask,LIGHTSIGNAL_PACKET);
+//sigaddset(&mask_bit,TEMPSIGNAL_PACKET); sigaddset(&mask_bit,LIGHTSIGNAL_PACKET);
 
         ret = pthread_sigmask(
                 SIG_SETMASK, //block the signals in the set argument
-                &mask, //set argument has list of blocked signals
-                NULL); //if non NULL prev val of signal mask stored here
+                &mask_bit, //set argument has list of blocked signals
+                NULL); //if non NULL prev val of signal mask_bit stored here
         if(ret  == -1) {
                 initialize =0;
                 sprintf(&(initialize_msg[6][0]),"LightTask pthread_sigmask %s\n",strerror(errno));

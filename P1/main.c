@@ -77,7 +77,7 @@ int main(int argc, char *argv[]) {
   }
 
 //MASKING SIGNALS
-  sigset_t mask, all_signals_mask; // set of signals
+  sigset_t mask_bit, all_signals_mask; // set of signals
   
   sigfillset(&all_signals_mask);
   
@@ -205,15 +205,15 @@ int main(int argc, char *argv[]) {
   UNITERRUPTIBLE_SLEEP(1); // allow other threads to initialize
 
   // required masks for main
-  sigemptyset(&mask);
-  sigaddset(&mask, TEMPERATURE_SIGNAL_OPT);
-  sigaddset(&mask, LIGHT_SIGNAL_OPT);
-  sigaddset(&mask, TEMPSIGNAL_PACKET);
-  sigaddset(&mask, LIGHTSIGNAL_PACKET);
-  sigaddset(&mask, LOGGER_SIG);
-  sigaddset(&mask, SIGCONT);
+  sigemptyset(&mask_bit);
+  sigaddset(&mask_bit, TEMPERATURE_SIGNAL_OPT);
+  sigaddset(&mask_bit, LIGHT_SIGNAL_OPT);
+  sigaddset(&mask_bit, TEMPSIGNAL_PACKET);
+  sigaddset(&mask_bit, LIGHTSIGNAL_PACKET);
+  sigaddset(&mask_bit, LOGGER_SIG);
+  sigaddset(&mask_bit, SIGCONT);
 
-  ret =pthread_sigmask(SIG_SETMASK, &mask, NULL); // if non NULL prev val of signal mask stored here
+  ret =pthread_sigmask(SIG_SETMASK, &mask_bit, NULL); // if non NULL prev val of signal mask_bit stored here
   if (ret == -1) {
     printf("Main pthread_sigmask:%s\n", strerror(errno));
     return -1;
