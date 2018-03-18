@@ -20,10 +20,10 @@ void SIGNAL_INTERRUPT_HANDL(int sig){
 
 void temp_sig_handler(int sig){
         //printf("caught temperature signal %d\n",sig);
-        pthread_mutex_lock(&gtemp_mutex);
-        gtemp_flag = 1;
-        pthread_cond_signal(&gtemp_condition);
-        pthread_mutex_unlock(&gtemp_mutex);
+        pthread_mutex_lock(&lock_temp);
+        temp_flag_glb = 1;
+        pthread_cond_signal(&cond_var_temp);
+        pthread_mutex_unlock(&lock_temp);
 
 }
 

@@ -41,7 +41,7 @@ void *TemperatureTask(void *pthread_inf) {
     sprintf(&(initialize_msg[1][0]), "Success Temptask Temp_init_timer \n");
   }
 
-  ret = pthread_mutex_init(&gtemp_mutex, NULL);
+  ret = pthread_mutex_init(&lock_temp, NULL);
 
   if (ret == -1) 
   {
@@ -173,124 +173,106 @@ void *TemperatureTask(void *pthread_inf) {
   char rd_tbyte[2];
   char wr_byte[2];
   
-  tlowWrite(temperature);  
+  temp_TLOW_write(temperature);  
   tlowRead(temperature, rd_tbyte);
 
   float res = covert_temperature(CELCIUS, rd_tbyte);
   printf("TLOW value: %f\n", res);
 
-  thighWrite(temperature);
-  thighRead(temperature, rd_tbyte);
+  temp_THIGH_write(temperature);
+  temp_THIGH_read(temperature, rd_tbyte);
   res = covert_temperature(CELCIUS, rd_tbyte);
   printf("THIGH value: %f\n", res);
 
 
-  configRegRead(temperature, rd_tbyte);
-  printf("CONFIG register value %x %x\n", rd_tbyte[0], rd_tbyte[1]);
+  temp_CONFIG_read(temperature, rd_tbyte);
+  printf("config default %x %x\n", rd_tbyte[0], rd_tbyte[1]);
 
   wr_byte[0] = rd_tbyte[0] | SHUTDOWN_EN;
   wr_byte[1] = rd_tbyte[1];
-  configRegWrite(temperature, wr_byte);
+  temp_CONFIG_write(temperature, wr_byte);
 
-  configRegRead(temperature, rd_tbyte);
-  printf("CONFIG register value after SD EN %x %x\n", rd_tbyte[0], rd_tbyte[1]);
+  temp_CONFIG_read(temperature, rd_tbyte);
+  printf("shutdown enable %x %x\n", rd_tbyte[0], rd_tbyte[1]);
 
   wr_byte[0] = rd_tbyte[0] & SHUTDOWN_DI;
   wr_byte[1] = rd_tbyte[1];
-  configRegWrite(temperature, wr_byte);
+  temp_CONFIG_write(temperature, wr_byte);
 
-  configRegRead(temperature, rd_tbyte);
-  printf("CONFIG register value after SD DIS_EN %x %x\n", rd_tbyte[0], rd_tbyte[1]);
+  temp_CONFIG_read(temperature, rd_tbyte);
+  printf("Shutdown disable %x %x\n", rd_tbyte[0], rd_tbyte[1]);
 
   wr_byte[0] = rd_tbyte[0];
   wr_byte[1] = rd_tbyte[1] | EMMODE_EN;
-  configRegWrite(temperature, wr_byte);
+  temp_CONFIG_write(temperature, wr_byte);
 
-  configRegRead(temperature, rd_tbyte);
-  printf("CONFIG register value after setting EMMODE %x %x\n", rd_tbyte[0], rd_tbyte[1]);
-
-  wr_byte[0] = rd_tbyte[0];
-  wr_byte[1] = rd_tbyte[1] & EMMODE_DI;
-  configRegWrite(temperature, wr_byte);
-
-  configRegRead(temperature, rd_tbyte);
-  printf("CONFIG register value after clearing EMMODE %x %x\n", rd_tbyte[0], rd_tbyte[1]);
+  temp_CONFIG_read(temperature, rd_tbyte);
+  printf("Set EM mode %x %x\n", rd_tbyte[0], rd_tbyte[1]);
 
   wr_byte[0] = rd_tbyte[0];
   wr_byte[1] = rd_tbyte[1] | CONVRATE3;
-  configRegWrite(temperature, wr_byte);
+  temp_CONFIG_write(temperature, wr_byte);
 
-  configRegRead(temperature, rd_tbyte);
-  printf("CONFIG register value after setting CONVERSION RATE 8Hz %x %x\n", rd_tbyte[0], rd_tbyte[1]);
+  temp_CONFIG_read(temperature, rd_tbyte);
+  printf("Conv rate 8Hz %x %x\n", rd_tbyte[0], rd_tbyte[1]);
 
   wr_byte[0] = rd_tbyte[0] | TM_EN;
   wr_byte[1] = rd_tbyte[1];
-  configRegWrite(temperature, wr_byte);
+  temp_CONFIG_write(temperature, wr_byte);
 
-  configRegRead(temperature, rd_tbyte);
-  printf("CONFIG register value after setting INTERRUPT MODE %x %x\n", rd_tbyte[0], rd_tbyte[1]);
-
-
-  /****************Do this periodically*******************************/
-  while (temperature_close_flag & application_close_flag) {
-
+  while (temperature_close_flag & application_close_flag) 
+  {
     INTR_LED_OFF;
-    // wait for next second
-    pthread_mutex_lock(&gtemp_mutex);
-    while (gtemp_flag == 0) {
-      pthread_cond_wait(&gtemp_condition, &gtemp_mutex);
+
+    pthread_mutex_lock(&lock_temp);
+    while (temp_flag_glb == 0) 
+    {
+      pthread_cond_wait(&cond_var_temp, &lock_temp);
     }
 
-    pthread_mutex_unlock(&gtemp_mutex);
-    gtemp_flag = 0;
-    // send HB
+    pthread_mutex_unlock(&lock_temp);
+
+    temp_flag_glb = 0;
     pthread_kill(pthread_info->main, TEMPERATURE_SIG_HEARTBEAT);
-// collect temperatue
-#ifdef BBB
+
     temperatureRead(temperature, temp_data);
     data_cel = covert_temperature(temp_format, temp_data);
-    printf("temp: %f\n", data_cel);
+    printf("TEMPERATURE: %f\n", data_cel);
 
-    /************populate the log packet*********/
-    sprintf(data_cel_str, "temperature %f", data_cel);
+    sprintf(data_cel_str, "TEMPERATURE %f", data_cel);
     strcpy(temperature_log.log_msg, data_cel_str);
-#else
-    strcpy(temperature_log.log_msg, "Mock temperature");
 
-#endif
+
     time_t t = time(NULL);
     struct tm *tm = localtime(&t);
     strcpy(temperature_log.time_stamp, asctime(tm));
 
-    /*******Log messages on Que*************/
-    // set up time for timed send
 
     clock_gettime(CLOCK_MONOTONIC, &current);
     expire.tv_sec = current.tv_sec + 2;
     expire.tv_nsec = current.tv_nsec;
-    num_bytes = mq_timedsend(logtask_msg_que, (const char *)&temperature_log,
-                             sizeof(logger_pckt), msg_priority, &expire);
-    if (num_bytes < 0) {
+    num_bytes = mq_timedsend(logtask_msg_que, (const char *)&temperature_log,sizeof(logger_pckt), msg_priority, &expire);
+
+    if (num_bytes < 0) 
+    {
       alert("mq_send to Log Q in TemperatureTask", alertmsg_queue, logtask_msg_que, error);
     }
-    /******Log data on IPC Que if requested******/
 
-    if (IPC_temperature_flag == 1) {
+    if (IPC_temperature_flag == 1) 
+    {
       IPC_temperature_flag = 0;
-      // set up time for timed send
       clock_gettime(CLOCK_MONOTONIC, &current);
       expire.tv_sec = current.tv_sec + 2;
       expire.tv_nsec = current.tv_nsec;
-      num_bytes = mq_timedsend(messageq_ipc, (const char *)&temperature_log,
-                               sizeof(logger_pckt), msgprio_ipc, &expire);
-      if (num_bytes < 0) {
+      num_bytes = mq_timedsend(messageq_ipc, (const char *)&temperature_log,sizeof(logger_pckt), msgprio_ipc, &expire);
+
+      if (num_bytes < 0) 
+      {
         alert("mq_send-IPC Q-TemperatureTask Error", alertmsg_queue, logtask_msg_que, error);
       }
     }
-    // printf("hi\n");
-    //  alert("Test Error",alertmsg_queue,logtask_msg_que,error);
   }
-  printf("exiting Temp task\n");
+  printf("TEMP TASK QUITTING\n");
   mq_close(logtask_msg_que);
   mq_close(alertmsg_queue);
   mq_close(messageq_ipc);

@@ -78,7 +78,7 @@ int Temp_sensor_init();
 *@param:
 *@return:
 */
-void configRegWrite(int i2c_file_handler, char *buffer);
+void temp_CONFIG_write(int i2c_file_handler, char *buffer);
 
 /**
 *@brief:
@@ -86,7 +86,7 @@ void configRegWrite(int i2c_file_handler, char *buffer);
 *@param:
 *@return:
 */
-void configRegRead(int i2c_file_handler, char *buffer);
+void temp_CONFIG_read(int i2c_file_handler, char *buffer);
 
 /**
 *@brief:
@@ -103,7 +103,7 @@ void tlowRead(int i2c_file_handler, char *buffer);
 *@param:
 *@return:
 */
-void thighRead(int i2c_file_handler, char *buffer);
+void temp_THIGH_read(int i2c_file_handler, char *buffer);
 
 /**
 *@brief:
@@ -111,7 +111,7 @@ void thighRead(int i2c_file_handler, char *buffer);
 *@param:
 *@return:
 */
-void thighWrite(int i2c_file_handler);
+void temp_THIGH_write(int i2c_file_handler);
 
 /**
 *@brief:
@@ -119,4 +119,4 @@ void thighWrite(int i2c_file_handler);
 *@param:
 *@return:
 */
-void tlowWrite(int i2c_file_handler);
+void temp_TLOW_write(int i2c_file_handler);

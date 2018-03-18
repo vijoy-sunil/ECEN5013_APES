@@ -6,9 +6,9 @@
 
 #define DEFAULT_THREAD_ATTR ((void *)0)
 
-pthread_mutex_t gtemp_mutex ;//= PTHREAD_MUTEX_INITIALIZER;
-pthread_cond_t gtemp_condition;
-sig_atomic_t gtemp_flag;
+pthread_mutex_t lock_temp ;//= PTHREAD_MUTEX_INITIALIZER;
+pthread_cond_t cond_var_temp;
+sig_atomic_t temp_flag_glb;
 
 pthread_mutex_t glight_mutex ;//= PTHREAD_MUTEX_INITIALIZER;
 pthread_cond_t glight_condition;

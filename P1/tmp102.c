@@ -6,13 +6,13 @@ void tlowRead(int i2c_file_handler, char *buffer) {
   i2cRead(i2c_file_handler, buffer, 2);
 }
 
-void thighRead(int i2c_file_handler, char *buffer) {
+void temp_THIGH_read(int i2c_file_handler, char *buffer) {
   char P1P0 = TEMP_THIGH_REG;
   i2cWrite(i2c_file_handler, &P1P0, 1);
   i2cRead(i2c_file_handler, buffer, 2);
 }
 
-void tlowWrite(int i2c_file_handler) {
+void temp_TLOW_write(int i2c_file_handler) {
   char buffer[3];
 
   buffer[0] = TEMP_TLOW_REG;
@@ -21,7 +21,7 @@ void tlowWrite(int i2c_file_handler) {
   i2cWrite(i2c_file_handler, buffer, 3);
 }
 
-void thighWrite(int i2c_file_handler) {
+void temp_THIGH_write(int i2c_file_handler) {
   char buffer[3];
 
   buffer[0] = TEMP_THIGH_REG;
@@ -42,7 +42,7 @@ int Temp_sensor_init() {
   return temp;
 }
 
-void configRegWrite(int file_handler, char *buffer) {
+void temp_CONFIG_write(int file_handler, char *buffer) {
   char config[3];
   config[0] = TEMP_CONFIG_REG;
   config[1] = buffer[0];
@@ -50,7 +50,7 @@ void configRegWrite(int file_handler, char *buffer) {
   i2cWrite(file_handler, config, 3);
 }
 
-void configRegRead(int file_handler, char *buffer) {
+void temp_CONFIG_read(int file_handler, char *buffer) {
   char P1P0 = TEMP_CONFIG_REG;
   i2cWrite(file_handler, &P1P0, 1);
   i2cRead(file_handler, buffer, 2);
