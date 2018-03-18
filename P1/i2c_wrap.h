@@ -1,3 +1,11 @@
+/***************************************************************
+* AUTHOR  : Praveen Gnanaseakran
+* DATE    : 03/08/2018
+* DESCRITPTION  : i2cwrapper 
+                  
+* SOURCE FILES  : i2c_wrap.h
+****************************************************************/
+
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>

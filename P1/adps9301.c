@@ -1,3 +1,11 @@
+/***************************************************************
+* AUTHOR  : Vijoy Sunil Kumar
+* DATE    : 03/08/2018
+* DESCRITPTION  : LIGHT Sensor 
+                  
+* HEADER FILES  : adps9301.h
+****************************************************************/
+
 #include "includes.h"
 #include "adps9301.h"
 #include <pthread.h>

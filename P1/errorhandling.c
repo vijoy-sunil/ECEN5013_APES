@@ -1,3 +1,10 @@
+/***************************************************************
+* DATE    : 03/08/2018
+* DESCRITPTION  : ERROR HANDLER
+                  
+* HEADER FILES  : errorhandling.h
+****************************************************************/
+
 #include "errorhandling.h"
 
 static pthread_mutex_t error_msg_lock = PTHREAD_MUTEX_INITIALIZER;

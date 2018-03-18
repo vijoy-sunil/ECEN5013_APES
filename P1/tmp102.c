@@ -1,3 +1,11 @@
+/***************************************************************
+* AUTHOR  : Praveen Gnanaseakran
+* DATE    : 03/08/2018
+* DESCRITPTION  : TEMPERATURE FUNCTIONS
+                  
+* HEADER FILES  : socketTask.h
+****************************************************************/
+
 #include "tmp102.h"
 
 void tlowRead(int i2c_file_handler, char *buffer) {

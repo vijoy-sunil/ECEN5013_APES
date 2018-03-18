@@ -1,3 +1,11 @@
+/***************************************************************
+* AUTHOR  : Praveen Gnanaseakran
+* DATE    : 03/08/2018
+* DESCRITPTION  : main files
+                  
+* SOURCE FILES  : main.c
+****************************************************************/
+
 #include "includes.h"
 #include "msgque.h"
 #include "errorhandling.h"

@@ -1,6 +1,14 @@
 #include "tmp102.h"
 #include "includes.h"
 #include "msgque.h"
+/***************************************************************
+* AUTHOR  : Vijoy Sunil Kumar
+* DATE    : 03/08/2018
+* DESCRITPTION  : Temperature Sensor Task
+                  
+* SOURCE FILES  : TemperatureTask.c
+****************************************************************/
+
 #include "errorhandling.h"
 #include "notify.h"
 #include "threads.h"

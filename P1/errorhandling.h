@@ -1,3 +1,10 @@
+/***************************************************************
+* DATE    : 03/08/2018
+* DESCRITPTION  : ERROR HANDLER
+                  
+* HEADER FILES  : errorhandling.c
+****************************************************************/
+
 #include "includes.h"
 #include <stdio.h>
 #include <stdlib.h>

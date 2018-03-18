@@ -1,3 +1,11 @@
+/***************************************************************
+* AUTHOR  : Praveen Gnanaseakran
+* DATE    : 03/08/2018
+* DESCRITPTION  : NOTIFY FILES
+                  
+* SOURCE FILES  : notify.c
+****************************************************************/
+
 #include <signal.h>
 
 #define FREQ_NSEC (1000000000)

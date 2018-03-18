@@ -1,3 +1,11 @@
+/***************************************************************
+* AUTHOR  : Praveen Gnanaseakran
+* DATE    : 03/08/2018
+* DESCRITPTION  : SOCKET TASK
+                  
+* HEADER FILES  : socketTask.h
+****************************************************************/
+
 #include "socketTask.h"
 
 void *socketTask(void *pthread_inf) {

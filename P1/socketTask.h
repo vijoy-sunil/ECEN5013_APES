@@ -1,3 +1,11 @@
+/***************************************************************
+* AUTHOR  : Praveen Gnanaseakran
+* DATE    : 03/08/2018
+* DESCRITPTION  : SOCKET TASK
+                  
+* SOURCE FILES  : socketTask.c
+****************************************************************/
+
 #include "adps9301.h"
 #include "tmp102.h"
 #include "includes.h"

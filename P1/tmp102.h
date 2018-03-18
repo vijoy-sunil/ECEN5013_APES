@@ -1,3 +1,11 @@
+/***************************************************************
+* AUTHOR  : Praveen Gnanaseakran
+* DATE    : 03/08/2018
+* DESCRITPTION  : TEMPERATURE FUNCTIONS
+                  
+* SOURCE FILES  : tmp102.c
+****************************************************************/
+
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>

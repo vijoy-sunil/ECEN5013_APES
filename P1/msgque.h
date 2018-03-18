@@ -1,3 +1,11 @@
+/***************************************************************
+* AUTHOR  : Praveen Gnanaseakran
+* DATE    : 03/08/2018
+* DESCRITPTION  : MESSAGEQUE
+                  
+* HEADER FILES  : msgque.h
+****************************************************************/
+
 #ifndef messageQue_H
 #define messageQue_H
 #include <mqueue.h>

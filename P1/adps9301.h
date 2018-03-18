@@ -1,3 +1,12 @@
+/***************************************************************
+* AUTHOR  : Vijoy Sunil Kumar
+* DATE    : 03/08/2018
+* DESCRITPTION  : LIGHT Sensor 
+                  
+* SOURCE FILES  : adps9301.c
+****************************************************************/
+
+
 #include <math.h>
 #include "i2c_wrap.h"
 

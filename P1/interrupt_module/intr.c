@@ -10,7 +10,6 @@
  */
 
 
-
 /* Include linux kernel header files */
 #include <linux/kernel.h>
 #include <linux/module.h>
