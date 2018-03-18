@@ -153,45 +153,45 @@ int main(int argc, char *argv[]) {
     return -1;
   }
 
-  // create task threads
   pthread_t temperature, light, log, socket;
-  threadInfo temp_info;
-  temp_info.thread_id = 1;
-  temp_info.main = pthread_self();
-  threadInfo light_info;
-  light_info.thread_id = 2;
-  light_info.main = pthread_self();
-  threadInfo log_info;
-  log_info.thread_id = 3;
-  log_info.main = pthread_self();
-  threadInfo socket_info;
-  socket_info.thread_id = 3;
+  threadTaskAttr temp_task_info;
+  temp_task_info.t_id = 1;
+  temp_task_info.main = pthread_self();
+  threadTaskAttr light_task_info;
+  light_task_info.t_id = 2;
+  light_task_info.main = pthread_self();
+  threadTaskAttr log_task_info;
+  log_task_info.t_id = 3;
+  log_task_info.main = pthread_self();
+  
+  threadTaskAttr socket_info;
+  socket_info.t_id = 3;
   socket_info.main = pthread_self();
 
-  ret = pthread_create(&log, DEFAULT_THREAD_ATTR, logTask, (void *)&(log_info));
+  ret = pthread_create(&log, DEFAULT_THREAD_ATTR, logTask, (void *)&(log_task_info));
   if (ret != 0) {
-    printf("Main pthread_create:%s\n", strerror(errno));
+    printf("Pthread error:%s\n", strerror(errno));
     return -1;
   }
   sleep(1);
   ret = pthread_create(&light, DEFAULT_THREAD_ATTR, LightTask,
-                       (void *)&(light_info));
+                       (void *)&(light_task_info));
   if (ret != 0) {
-    printf("Main pthread_create:%s\n", strerror(errno));
+    printf("Pthread error:%s\n", strerror(errno));
     return -1;
   }
   sleep(1);
   ret = pthread_create(&temperature, DEFAULT_THREAD_ATTR, TemperatureTask,
-                       (void *)&(temp_info));
+                       (void *)&(temp_task_info));
   if (ret != 0) {
-    printf("Main pthread_create:%s\n", strerror(errno));
+    printf("Pthread error:%s\n", strerror(errno));
     return -1;
   }
   sleep(1);
   ret = pthread_create(&socket, DEFAULT_THREAD_ATTR, socketTask,
                        (void *)&(socket_info));
   if (ret != 0) {
-    printf("Main pthread_create:%s\n", strerror(errno));
+    printf("Pthread error:%s\n", strerror(errno));
     return -1;
   }
 

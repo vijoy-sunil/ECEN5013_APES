@@ -28,7 +28,7 @@ void *socketTask(void *pthread_inf) {
   char init_message[7][sizeof(alert_message)];
 
   int ret;
-  threadInfo *ppthread_info = (threadInfo *)pthread_inf;
+  threadTaskAttr *ppthread_info = (threadTaskAttr *)pthread_inf;
   /*******Initialize Notification  Message Que*****************/
   mqd_t alertmsg_queue;
   int msg_prio_err = ERROR_MESSAGE_PRIORITY;

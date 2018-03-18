@@ -19,10 +19,10 @@ sig_atomic_t glight_flag;
 */
 typedef struct
 {
-        int thread_id;
+        int t_id;
         char* plog_file;
         pthread_t main;
-} threadInfo;
+} threadTaskAttr;
 
 /**
 *@brief:Implements Light Task

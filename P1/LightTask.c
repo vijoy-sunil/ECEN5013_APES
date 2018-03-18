@@ -15,7 +15,7 @@ void *LightTask(void *pthread_inf) {
 
         light_IPC_flag = 0;
         int ret;
-        threadInfo *ppthread_info = (threadInfo *)pthread_inf;
+        threadTaskAttr *ppthread_info = (threadTaskAttr *)pthread_inf;
 
 /*******Initialize Notification  Message Que*****************/
         mqd_t alertmsg_queue;

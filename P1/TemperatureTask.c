@@ -20,7 +20,7 @@ void *TemperatureTask(void *pthread_inf) {
   char init_message[8][sizeof(alert_message)];
   temp_IPC_flag = 0;
   int ret;
-  threadInfo *ppthread_info = (threadInfo *)pthread_inf;
+  threadTaskAttr *ppthread_info = (threadTaskAttr *)pthread_inf;
 
   /*******Initialize ERROR Message Que*****************/
   mqd_t alertmsg_queue;

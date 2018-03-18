@@ -22,7 +22,7 @@ void *logTask(void *pthread_inf) {
   char init_message[4][sizeof(alert_message)];
 
   // log_data_flag=0;
-  threadInfo *ppthread_info = (threadInfo *)pthread_inf;
+  threadTaskAttr *ppthread_info = (threadTaskAttr *)pthread_inf;
 
   /*******Initialize Notification Message Que*****************/
   mqd_t alertmsg_queue;
