@@ -63,7 +63,7 @@ uint8_t log_level;
 }log_pack;
 
 typedef enum{
-temp,
+temperature,
 light
 }sensor_type;
 

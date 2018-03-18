@@ -29,10 +29,10 @@ sig_atomic_t temperature_heartbeat_flag;
 sig_atomic_t logger_heartbeat_flag;
 sig_atomic_t socket_heartbeat_flag;
 
-void SocketHBhandler(int sig) ;
+void socket_heartbeat_handl(int sig) ;
 
 void light_hearbeat_handl(int sig) ;
 
 void temperature_heartbeat_handl(int sig) ;
 
-void LogHBhandler(int sig) ;
+void logger_heartbeat_handl(int sig) ;

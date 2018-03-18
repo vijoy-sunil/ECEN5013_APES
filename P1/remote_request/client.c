@@ -81,22 +81,22 @@ int main() {
   }
 #ifdef BBB
 
-  printf("Enter 1 for temp in F, 2 for temp in C, 3 for Kelvin. 4 for "
+  printf("Enter 1 for temperature in F, 2 for temperature in C, 3 for Kelvin. 4 for "
          "DAY/NIGHT, 5 for lumens");
   int input;
   scanf("%d", &input);
 
   switch (input) {
   case 1:
-    request->sensor = temp;
+    request->sensor = temperature;
     request->tunit = FARENHEIT;
     break;
   case 2:
-    request->sensor = temp;
+    request->sensor = temperature;
     request->tunit = CELCIUS;
     break;
   case 3:
-    request->sensor = temp;
+    request->sensor = temperature;
     request->tunit = KELVIN;
     break;
   case 4:
@@ -109,11 +109,11 @@ int main() {
     break;
 
   default:
-    request->sensor = temp;
+    request->sensor = temperature;
     request->tunit = CELCIUS;
   }
 #else
-  request->sensor = temp;
+  request->sensor = temperature;
 #endif
   /******write to socket******/
 

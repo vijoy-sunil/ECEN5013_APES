@@ -92,11 +92,11 @@ void *logTask(void *pthread_inf) {
   sigemptyset(&mask);
   sigaddset(&mask, SIGLIGHT);
   sigaddset(&mask, LIGHT_SIG_HEARTBEAT);
-  sigaddset(&mask, SIGLOG_HB);
+  sigaddset(&mask, LOGGER_SIG_HEARTBEAT);
   sigaddset(&mask, TEMPERATURE_SIG_HEARTBEAT);
   sigaddset(&mask, SIGLOG);
   sigaddset(&mask, SIGCONT);
-  sigaddset(&mask, SIGSOCKET_HB);
+  sigaddset(&mask, SOCKET_SIG_HEARTBEAT);
 
   ret =
       pthread_sigmask(SIG_SETMASK, // block the signals in the set argument
@@ -122,7 +122,7 @@ void *logTask(void *pthread_inf) {
                                  .mq_msgsize =
                                      BUFFER_SIZE, // max size of msg in bytes
                                  .mq_flags = 0};
-  // temp
+  // temperature
   IPCmsgqT =
       mq_open(IPC_TEMP_MQ,      // name
               O_CREAT | O_RDWR, // flags. create a new if dosent already exist
@@ -132,7 +132,7 @@ void *logTask(void *pthread_inf) {
     perror("mq_open-logTask Error:");
     return NULL;
   } else
-    printf("IPC temp Messgae Que Opened in logTask\n");
+    printf("IPC temperature Messgae Que Opened in logTask\n");
   // light
   IPCmsgqL =
       mq_open(IPC_LIGHT_MQ,     // name
@@ -170,7 +170,7 @@ void *logTask(void *pthread_inf) {
   /*******************Do this in LOOP************************************/
   while (logger_close_flag & application_close_flag) {
 
-    pthread_kill(ppthread_info->main, SIGLOG_HB); // send HB
+    pthread_kill(ppthread_info->main, LOGGER_SIG_HEARTBEAT); // send HB
     // empty the message que
     do {
       // read from queue

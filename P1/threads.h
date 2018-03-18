@@ -34,7 +34,7 @@ void *LightTask(void *pthread_inf);
 
 /**
 *@brief:Implements Temp Task
-*Wakes up periodically to read temp data from light sensor via I2c,sends data *to Logger, sends HB to main and handles IPC socket requests
+*Wakes up periodically to read temperature data from light sensor via I2c,sends data *to Logger, sends HB to main and handles IPC socket requests
 *@param:pointer to thread info structure
 *@return: returns NULL pointer
 */
@@ -50,7 +50,7 @@ void *logTask(void *pthread_inf);
 
 /**
 *@brief:Implements socketTask
-*Receives socket requests,based on the request probes the light or temp sensor for data *and sends it back to the requestee.
+*Receives socket requests,based on the request probes the light or temperature sensor for data *and sends it back to the requestee.
 *@param:pointer to thread info structure
 *@return: returns NULL pointer
 */

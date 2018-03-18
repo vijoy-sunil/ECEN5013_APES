@@ -128,11 +128,11 @@ void *TemperatureTask(void *pthread_inf) {
 
 /************Initialize temperatue sensor******************/
 #ifdef BBB
-  int temp = initializeTemp();
+  int temperature = initializeTemp();
   char temp_data[2], data_cel_str[BUFFER_SIZE - 200];
   float data_cel;
 
-  if (temp == -1) {
+  if (temperature == -1) {
     init_state = 0;
     sprintf(&(init_message[6][0]), "Temp Sensor init Error\n");
   } else {
@@ -145,11 +145,11 @@ void *TemperatureTask(void *pthread_inf) {
   sigemptyset(&mask);
   sigaddset(&mask, SIGLIGHT);
   sigaddset(&mask, LIGHT_SIG_HEARTBEAT);
-  sigaddset(&mask, SIGLOG_HB);
+  sigaddset(&mask, LOGGER_SIG_HEARTBEAT);
   sigaddset(&mask, TEMPERATURE_SIG_HEARTBEAT);
   sigaddset(&mask, SIGLOG);
   sigaddset(&mask, SIGCONT);
-  sigaddset(&mask, SIGSOCKET_HB);
+  sigaddset(&mask, SOCKET_SIG_HEARTBEAT);
 
   ret =
       pthread_sigmask(SIG_SETMASK, // block the signals in the set argument
@@ -197,42 +197,42 @@ void *TemperatureTask(void *pthread_inf) {
 #ifdef BBB
   /*****Looging BBB configurations*******/
   char buffer[3];
-  tlowRead(temp, buffer);
+  tlowRead(temperature, buffer);
   printf("TEMP SENSOR TLOW READ %x %x \n", buffer[0], buffer[1]);
 
-  thighWrite(temp, buffer);
+  thighWrite(temperature, buffer);
   buffer[0] = buffer[1] = 0;
-  thighRead(temp, buffer);
+  thighRead(temperature, buffer);
   printf("TEMP SENSOR THIGH READ %x %x \n", buffer[0], buffer[1]);
 
   buffer[0] = TEMP_CONFIG_REG;
   buffer[1] = SHUTDOWN_DI;
-  configRegWrite(temp, buffer);
+  configRegWrite(temperature, buffer);
 
   printf("TEMP SENSOR BEFORE SHUTDOWN %x %x \n", buffer[0], buffer[1]);
 
   buffer[0] = TEMP_CONFIG_REG;
   buffer[1] = SHUTDOWN_EN;
 
-  configRegWrite(temp, buffer);
+  configRegWrite(temperature, buffer);
 
   buffer[0] = buffer[1] = 0;
-  configRegRead(temp, buffer);
+  configRegRead(temperature, buffer);
 
   printf("TEMP SENSOR AFTER SHUTDOWN %x %x \n", buffer[0], buffer[1]);
 
   buffer[0] = TEMP_CONFIG_REG;
   buffer[1] = SHUTDOWN_DI;
-  configRegWrite(temp, buffer);
+  configRegWrite(temperature, buffer);
 
   buffer[0] = TEMP_CONFIG_REG;
   buffer[1] = RES_10BIT;
   buffer[2] = EMMODE | CONVRATE3;
 
-  configRegWrite(temp, buffer);
+  configRegWrite(temperature, buffer);
 
   buffer[0] = buffer[1] = 0;
-  configRegRead(temp, buffer);
+  configRegRead(temperature, buffer);
 
   printf("TEMPSENSOR 10 BIT RESOLUTION, EMMODE AND CONV RATE 8Hz- %x %x \n",
          buffer[0], buffer[1]);
@@ -256,14 +256,14 @@ void *TemperatureTask(void *pthread_inf) {
     pthread_kill(ppthread_info->main, TEMPERATURE_SIG_HEARTBEAT);
 // collect temperatue
 #ifdef BBB
-    temperatureRead(temp, temp_data);
+    temperatureRead(temperature, temp_data);
     data_cel = temperatureConv(temp_format, temp_data);
 
     /************populate the log packet*********/
     sprintf(data_cel_str, "temperature %f", data_cel);
     strcpy(temp_log.log_msg, data_cel_str);
 #else
-    strcpy(temp_log.log_msg, "Mock temp");
+    strcpy(temp_log.log_msg, "Mock temperature");
 
 #endif
     time_t t = time(NULL);

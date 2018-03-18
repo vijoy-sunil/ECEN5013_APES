@@ -136,8 +136,8 @@ void *LightTask(void *pthread_inf) {
         sigemptyset(&mask);
         sigaddset(&mask,SIGTEMP); sigaddset(&mask,TEMPERATURE_SIG_HEARTBEAT);
         sigaddset(&mask,SIGLOG); sigaddset(&mask,LIGHT_SIG_HEARTBEAT);
-        sigaddset(&mask,SIGLOG_HB); sigaddset(&mask,SIGCONT);
-        sigaddset(&mask,SIGSOCKET_HB);
+        sigaddset(&mask,LOGGER_SIG_HEARTBEAT); sigaddset(&mask,SIGCONT);
+        sigaddset(&mask,SOCKET_SIG_HEARTBEAT);
 
 //unblocking for test
 //sigaddset(&mask,SIGTEMP_IPC); sigaddset(&mask,SIGLIGHT_IPC);

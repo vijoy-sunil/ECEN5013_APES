@@ -9,7 +9,7 @@ int main(int argc, char *argv[]) {
     strcpy(fileid, DEFAULT_FILE_NAME);
   }
   
-  printf("Enter Temp Format C.CELCIUS  F.FARENHEIT  K.KELVIN\n");
+  printf("Enter Temp Format C-CELCIUS  F-FARENHEIT  K-KELVIN\n");
   
   char input;
   input=getc(stdin);
@@ -118,47 +118,43 @@ int main(int argc, char *argv[]) {
     return -1;
   }
 
-
   struct sigaction sigactn;
   sigemptyset(&sigactn.sa_mask);
   sigactn.sa_handler = light_hearbeat_handl;
   ret = sigaction(LIGHT_SIG_HEARTBEAT, &sigactn, NULL);
   if (ret == -1) {
-    perror("Main sigaction");
+    perror("SIGACTION ERROR");
     return -1;
   }
 
-  // Register Temp HB signal
   sigemptyset(&sigactn.sa_mask);
   sigactn.sa_handler = temperature_heartbeat_handl;
   ret = sigaction(TEMPERATURE_SIG_HEARTBEAT, &sigactn, NULL);
   if (ret == -1) {
-    perror("Main sigaction");
+    perror("SIGACTION ERROR");
     return -1;
   }
 
-  // Register Log HB signal
   sigemptyset(&sigactn.sa_mask);
   sigactn.sa_flags = 0;
-  sigactn.sa_handler = LogHBhandler;
-  ret = sigaction(SIGLOG_HB, &sigactn, NULL);
+  sigactn.sa_handler = logger_heartbeat_handl;
+  ret = sigaction(LOGGER_SIG_HEARTBEAT, &sigactn, NULL);
   if (ret == -1) {
-    perror("Main sigaction");
+    perror("SIGACTION ERROR");
     return -1;
   }
 
-  // Register Socket HB signal
   sigemptyset(&sigactn.sa_mask);
   sigactn.sa_flags = 0;
-  sigactn.sa_handler = SocketHBhandler;
-  ret = sigaction(SIGSOCKET_HB, &sigactn, NULL);
+  sigactn.sa_handler = socket_heartbeat_handl;
+  ret = sigaction(SOCKET_SIG_HEARTBEAT, &sigactn, NULL);
   if (ret == -1) {
-    perror("Main sigaction");
+    perror("SIGACTION ERROR");
     return -1;
   }
 
   // create task threads
-  pthread_t temp, light, log, socket;
+  pthread_t temperature, light, log, socket;
   threadInfo temp_info;
   temp_info.thread_id = 1;
   temp_info.main = pthread_self();
@@ -185,7 +181,7 @@ int main(int argc, char *argv[]) {
     return -1;
   }
   sleep(1);
-  ret = pthread_create(&temp, DEFAULT_THREAD_ATTR, TemperatureTask,
+  ret = pthread_create(&temperature, DEFAULT_THREAD_ATTR, TemperatureTask,
                        (void *)&(temp_info));
   if (ret != 0) {
     printf("Main pthread_create:%s\n", strerror(errno));
@@ -228,7 +224,7 @@ int main(int argc, char *argv[]) {
   printf("\n*******************************************************************"
          "\n");
   printf(
-      " Enter thread to close 1-temp 2-light 3-log 4-socket 5-application\n");
+      " Enter thread to close 1-temperature 2-light 3-log 4-socket 5-application\n");
   printf(
       "*******************************************************************\n");
 
@@ -282,7 +278,7 @@ int main(int argc, char *argv[]) {
       switch (choice) {
       case '1':
         if (temp_cancelled == 0) {
-          printf("sending close signal to temp task\n");
+          printf("sending close signal to temperature task\n");
           temperature_close_flag = 0;
           temp_cancelled = 1;
         }
@@ -317,7 +313,7 @@ int main(int argc, char *argv[]) {
         logger_close_flag = 0;
         socket_close_flag = 0;
         pthread_kill(socket, SIGCONT);
-        // pthread_cancel(temp); pthread_cancel(light);
+        // pthread_cancel(temperature); pthread_cancel(light);
         // pthread_cancel(log);
         application_close_flag = 0;
         break;
@@ -325,7 +321,7 @@ int main(int argc, char *argv[]) {
       read_bytes = 0;
     }
   }
-  pthread_join(temp, NULL);
+  pthread_join(temperature, NULL);
   pthread_join(light, NULL);
   pthread_join(log, NULL);
   printf("Joined all threads\n");
@@ -347,8 +343,8 @@ int main(int argc, char *argv[]) {
   return 0;
 }
 
-void SocketHBhandler(int sig) {
-  if (sig == SIGSOCKET_HB) {
+void socket_heartbeat_handl(int sig) {
+  if (sig == SOCKET_SIG_HEARTBEAT) {
     socket_heartbeat_flag = 1;
   }
 }
@@ -367,8 +363,8 @@ void temperature_heartbeat_handl(int sig) {
   }
 }
 
-void LogHBhandler(int sig) {
-  if (sig == SIGLOG_HB) {
+void logger_heartbeat_handl(int sig) {
+  if (sig == LOGGER_SIG_HEARTBEAT) {
     //    printf("l");
     logger_heartbeat_flag = 1;
   }

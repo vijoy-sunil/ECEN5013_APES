@@ -7,14 +7,14 @@
 
 #define LIGHT_SIG_HEARTBEAT (SIGRTMAX-2)
 #define TEMPERATURE_SIG_HEARTBEAT  (SIGRTMAX-3)
-#define SIGLOG_HB  (SIGRTMAX-4)
+#define LOGGER_SIG_HEARTBEAT  (SIGRTMAX-4)
 
 #define SIGTEMP_IPC (SIGRTMAX-5)
 #define SIGLIGHT_IPC (SIGRTMAX-6)
 
 #define SIGLOG (SIGRTMAX-7)
 
-#define SIGSOCKET_HB  (SIGRTMAX-8)
+#define SOCKET_SIG_HEARTBEAT  (SIGRTMAX-8)
 
 
 sig_atomic_t light_close_flag;
@@ -33,7 +33,7 @@ void SIGNAL_INTERRUPT_HANDL(int sig);
 
 
 /**
-*@brief:sets timer and signal handler for timer notification for temp task
+*@brief:sets timer and signal handler for timer notification for temperature task
 *@param:void
 *@return: int success/failure
 */
@@ -48,8 +48,8 @@ int setLightTimer();
 
 
 /**
-*@brief:Signal handler for temp task
-*sets the global flag atomically and signals the temp task throught a condition *variable to read next data
+*@brief:Signal handler for temperature task
+*sets the global flag atomically and signals the temperature task throught a condition *variable to read next data
 *@param:signal no.
 *@return: no returns
 */

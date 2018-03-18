@@ -31,9 +31,9 @@ void temperatureRead(int i2c_file_handler, char *buffer) {
 }
 
 int initializeTemp() {
-  int temp;
-  temp = i2cInit("/dev/i2c-2", temp, TEMP_ADDR);
-  return temp;
+  int temperature;
+  temperature = i2cInit("/dev/i2c-2", temperature, TEMP_ADDR);
+  return temperature;
 }
 
 void configRegWrite(int file_handler, char *buffer) {

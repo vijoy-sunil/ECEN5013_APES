@@ -128,7 +128,7 @@ void *socketTask(void *pthread_inf) {
   sigaddset(&mask, TEMPERATURE_SIG_HEARTBEAT);
   sigaddset(&mask, LIGHT_SIG_HEARTBEAT);
   sigaddset(&mask, SIGLIGHT);
-  sigaddset(&mask, SIGLOG_HB);
+  sigaddset(&mask, LOGGER_SIG_HEARTBEAT);
   sigaddset(&mask, SIGLOG);
   sigaddset(&mask, SIGTEMP_IPC);
   sigaddset(&mask, SIGLIGHT_IPC);
@@ -187,7 +187,7 @@ void *socketTask(void *pthread_inf) {
 
   // keep doing this repeatedly
   while (socket_close_flag & application_close_flag) {
-    pthread_kill(ppthread_info->main, SIGSOCKET_HB); // send HB
+    pthread_kill(ppthread_info->main, SOCKET_SIG_HEARTBEAT); // send HB
 
     while (1) {
       if ((socket_close_flag & application_close_flag) == 0)
@@ -200,7 +200,7 @@ void *socketTask(void *pthread_inf) {
       else
         sleep(1);
       // send HB to main
-      pthread_kill(ppthread_info->main, SIGSOCKET_HB); // send HB
+      pthread_kill(ppthread_info->main, SOCKET_SIG_HEARTBEAT); // send HB
     }
     if ((socket_close_flag & application_close_flag) == 0)
       break;
@@ -227,7 +227,7 @@ void *socketTask(void *pthread_inf) {
 
 // collect data and populate the log packet
 #ifdef BBB
-    if (request->sensor == temp) {
+    if (request->sensor == temperature) {
 
       temperatureRead(temp_handle, temp_data);
       if (request->tunit == CELCIUS) {
@@ -260,7 +260,7 @@ void *socketTask(void *pthread_inf) {
     }
 
 #else
-    if (request->sensor == temp) {
+    if (request->sensor == temperature) {
       strcpy(response->log_msg, "TEMP");
     }
     if (request->sensor == light) {
