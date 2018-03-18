@@ -1,9 +1,5 @@
 #include "TemperatureTask.h"
 
-#define GET_TIME                                                               \
-  clock_gettime(CLOCK_MONOTONIC, &current);                                        \
-  expire.tv_sec = current.tv_sec + 2;                                              \
-  expire.tv_nsec = current.tv_nsec;
 
 sig_atomic_t temp_IPC_flag;
 
