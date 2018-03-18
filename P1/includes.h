@@ -60,7 +60,7 @@ char time_stamp[32];
 task_type log_source;
 char log_msg[BUFFER_SIZE -100];
 uint8_t log_level;
-}log_pack;
+}logger_pckt;
 
 typedef enum{
 temperature,

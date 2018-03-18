@@ -151,7 +151,7 @@ void interruptThreshReg(int file_handler, apds9301_opt op, char *buffer) {
     printf("ERROR: invalid operation\n");
 }
 
-uint16_t adcDataRead(int file_handler, int channel) {
+uint16_t LightSensorRead(int file_handler, int channel) {
   char buffer[2];
   uint16_t adc_data;
 
@@ -188,7 +188,7 @@ uint16_t adcDataRead(int file_handler, int channel) {
   return adc_data;
 }
 
-float reportLumen(uint16_t adc_data_ch0, uint16_t adc_data_ch1) {
+float LumenOut(uint16_t adc_data_ch0, uint16_t adc_data_ch1) {
   float lumen, ratio;
   ratio = (float)adc_data_ch1 / adc_data_ch0;
   if (ratio > 0 && ratio <= 0.50) {
@@ -210,11 +210,11 @@ status reportStatus(int file_handler) {
   uint16_t adc_ch0, adc_ch1;
   // pthread_mutex_lock(&light_lock);
 
-  adc_ch0 = adcDataRead(file_handler, 0);
-  adc_ch1 = adcDataRead(file_handler, 1);
+  adc_ch0 = LightSensorRead(file_handler, 0);
+  adc_ch1 = LightSensorRead(file_handler, 1);
   // pthread_mutex_unlock(&light_lock);
 
-  float lumen = reportLumen(adc_ch0, adc_ch1);
+  float lumen = LumenOut(adc_ch0, adc_ch1);
 
   if (lumen <= LUMENS_NIGHT)
     tod = NIGHT;

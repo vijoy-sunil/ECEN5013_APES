@@ -41,7 +41,7 @@ int main() {
     return -1;
   }
 
-  log_pack *response = (log_pack *)malloc(sizeof(log_pack));
+  logger_pckt *response = (logger_pckt *)malloc(sizeof(logger_pckt));
   if (response == NULL) {
     printf("malloc Error: %s\n", strerror(errno));
     return -1;
@@ -121,19 +121,19 @@ int main() {
   printf("message sent from child has %d bytes\n", num_char);
 
   /*****read from socket*****/
-  num_char = read(sockfd, (char *)response, sizeof(log_pack));
+  num_char = read(sockfd, (char *)response, sizeof(logger_pckt));
 
 #ifndef TEST
   printf("\nRead in Client\n");
-  printf("time     :%s\n", ((log_pack *)response)->time_stamp);
-  printf("source   :%d\n", ((log_pack *)response)->log_source);
-  printf("message  :%s\n", ((log_pack *)response)->log_msg);
-  printf("log level:%d\n", ((log_pack *)response)->log_level);
+  printf("time     :%s\n", ((logger_pckt *)response)->time_stamp);
+  printf("source   :%d\n", ((logger_pckt *)response)->log_source);
+  printf("message  :%s\n", ((logger_pckt *)response)->log_msg);
+  printf("log level:%d\n", ((logger_pckt *)response)->log_level);
 #endif
 
 #ifdef TEST
 
-  strcpy(data, (char *)(((log_pack *)response)->log_msg));
+  strcpy(data, (char *)(((logger_pckt *)response)->log_msg));
   printf("Read message  :%s\n", data);
   test_client_data((char *)data, 0);
 

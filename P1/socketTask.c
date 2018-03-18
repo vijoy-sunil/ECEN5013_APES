@@ -50,7 +50,7 @@ void *socketTask(void *pthread_inf) {
 
   /*******Initialize Logger Message Que*****************/
   mqd_t logtask_msg_que;
-  int msg_prio = MESSAGE_PRIORITY;
+  int msg_priority = MESSAGE_PRIORITY;
   int num_bytes;
   char message[BUFFER_SIZE];
   struct mq_attr msgq_attr = {.mq_maxmsg = MESSAGEQ_SIZE, // max # msg in queue
@@ -76,7 +76,7 @@ void *socketTask(void *pthread_inf) {
     return NULL;
   }
 
-  log_pack *response = (log_pack *)malloc(sizeof(log_pack));
+  logger_pckt *response = (logger_pckt *)malloc(sizeof(logger_pckt));
   if (response == NULL) {
     printf("malloc Error: %s\n", strerror(errno));
     return NULL;
@@ -142,16 +142,16 @@ void *socketTask(void *pthread_inf) {
   if (ret < 0)
     initialize = 0;
 
-  notify(&initialize_msg[0][0], alertmsg_queue, logtask_msg_que, init);
-  notify(&initialize_msg[1][0], alertmsg_queue, logtask_msg_que, init);
-  notify(&initialize_msg[2][0], alertmsg_queue, logtask_msg_que, init);
-  notify(&initialize_msg[3][0], alertmsg_queue, logtask_msg_que, init);
-  notify(&initialize_msg[4][0], alertmsg_queue, logtask_msg_que, init);
-  notify(&initialize_msg[5][0], alertmsg_queue, logtask_msg_que, init);
-  notify(&initialize_msg[6][0], alertmsg_queue, logtask_msg_que, init);
+  alert(&initialize_msg[0][0], alertmsg_queue, logtask_msg_que, init);
+  alert(&initialize_msg[1][0], alertmsg_queue, logtask_msg_que, init);
+  alert(&initialize_msg[2][0], alertmsg_queue, logtask_msg_que, init);
+  alert(&initialize_msg[3][0], alertmsg_queue, logtask_msg_que, init);
+  alert(&initialize_msg[4][0], alertmsg_queue, logtask_msg_que, init);
+  alert(&initialize_msg[5][0], alertmsg_queue, logtask_msg_que, init);
+  alert(&initialize_msg[6][0], alertmsg_queue, logtask_msg_que, init);
 
   if (initialize == 0) {
-    notify("##All elements not initialized in Socket Task, Not proceeding with "
+    alert("##All elements not initialized in Socket Task, Not proceeding with "
            "it##\n",
            alertmsg_queue, logtask_msg_que, error);
     while (socket_close_flag & application_close_flag) {
@@ -163,7 +163,7 @@ void *socketTask(void *pthread_inf) {
   }
 
   else if (initialize == 1)
-    notify("##All elements initialized in Socket Task, proceeding with it##\n",
+    alert("##All elements initialized in Socket Task, proceeding with it##\n",
            alertmsg_queue, logtask_msg_que, init);
 
 #ifdef BBB
@@ -216,7 +216,7 @@ void *socketTask(void *pthread_inf) {
 
     num_char = read(newsockfd, (char *)request, sizeof(sock_req));
     if (num_char < 0) {
-      notify("Socket Task read error", alertmsg_queue, logtask_msg_que, error);
+      alert("Socket Task read error", alertmsg_queue, logtask_msg_que, error);
       break;
     }
 
@@ -244,9 +244,9 @@ void *socketTask(void *pthread_inf) {
     }
     if (request->sensor == light) {
       if (request->lunit == LUMEN) {
-        ch0 = adcDataRead(light_handle, 0);
-        ch1 = adcDataRead(light_handle, 1);
-        lumen = reportLumen(ch0, ch1);
+        ch0 = LightSensorRead(light_handle, 0);
+        ch1 = LightSensorRead(light_handle, 1);
+        lumen = LumenOut(ch0, ch1);
         sprintf(data_lumen_str, "lumen %f", lumen);
         strcpy(response->log_msg, data_lumen_str);
       }
@@ -268,9 +268,9 @@ void *socketTask(void *pthread_inf) {
     }
 #endif
     // send the read data
-    num_char = write(newsockfd, response, sizeof(log_pack));
+    num_char = write(newsockfd, response, sizeof(logger_pckt));
     if (num_char < 0) {
-      notify("Socket Task write error", alertmsg_queue, logtask_msg_que, error);
+      alert("Socket Task write error", alertmsg_queue, logtask_msg_que, error);
       break;
     }
 

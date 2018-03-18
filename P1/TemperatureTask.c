@@ -1,9 +1,9 @@
 #include "TemperatureTask.h"
 
 #define GET_TIME                                                               \
-  clock_gettime(CLOCK_MONOTONIC, &now);                                        \
-  expire.tv_sec = now.tv_sec + 2;                                              \
-  expire.tv_nsec = now.tv_nsec;
+  clock_gettime(CLOCK_MONOTONIC, &current);                                        \
+  expire.tv_sec = current.tv_sec + 2;                                              \
+  expire.tv_nsec = current.tv_nsec;
 
 sig_atomic_t temp_IPC_flag;
 
@@ -67,7 +67,7 @@ void *TemperatureTask(void *pthread_inf) {
   }
   /*******Initialize Logger Message Que*****************/
   mqd_t logtask_msg_que;
-  int msg_prio = 30;
+  int msg_priority = 30;
   int num_bytes;
   char message[BUFFER_SIZE];
   struct mq_attr msgq_attr = {.mq_maxmsg = MESSAGEQ_SIZE, // max # msg in queue
@@ -165,19 +165,19 @@ void *TemperatureTask(void *pthread_inf) {
   }
 
   // send initialization status
-  notify(&initialize_msg[0][0], alertmsg_queue, logtask_msg_que, init);
-  notify(&initialize_msg[1][0], alertmsg_queue, logtask_msg_que, init);
-  notify(&initialize_msg[2][0], alertmsg_queue, logtask_msg_que, init);
-  notify(&initialize_msg[3][0], alertmsg_queue, logtask_msg_que, init);
-  notify(&initialize_msg[4][0], alertmsg_queue, logtask_msg_que, init);
+  alert(&initialize_msg[0][0], alertmsg_queue, logtask_msg_que, init);
+  alert(&initialize_msg[1][0], alertmsg_queue, logtask_msg_que, init);
+  alert(&initialize_msg[2][0], alertmsg_queue, logtask_msg_que, init);
+  alert(&initialize_msg[3][0], alertmsg_queue, logtask_msg_que, init);
+  alert(&initialize_msg[4][0], alertmsg_queue, logtask_msg_que, init);
 #ifdef BBB
-  notify(&initialize_msg[5][0], alertmsg_queue, logtask_msg_que, init);
+  alert(&initialize_msg[5][0], alertmsg_queue, logtask_msg_que, init);
 #endif
-  notify(&initialize_msg[6][0], alertmsg_queue, logtask_msg_que, init);
-  notify(&initialize_msg[7][0], alertmsg_queue, logtask_msg_que, init);
+  alert(&initialize_msg[6][0], alertmsg_queue, logtask_msg_que, init);
+  alert(&initialize_msg[7][0], alertmsg_queue, logtask_msg_que, init);
 
   if (initialize == 0) {
-    notify("##All elements not initialized in Temp Task, Not proceeding with "
+    alert("##All elements not initialized in Temp Task, Not proceeding with "
            "it##\n",
            alertmsg_queue, logtask_msg_que, error);
     while (temperature_close_flag & application_close_flag) {
@@ -187,12 +187,12 @@ void *TemperatureTask(void *pthread_inf) {
   }
 
   else if (initialize == 1)
-    notify("##All elements initialized in Temp Task, proceeding with it##\n",
+    alert("##All elements initialized in Temp Task, proceeding with it##\n",
            alertmsg_queue, logtask_msg_que, init);
 
   /************Creating logpacket*******************/
-  log_pack temp_log = {.log_level = 1, .log_source = temperatue_Task};
-  struct timespec now, expire;
+  logger_pckt temp_log = {.log_level = 1, .log_source = temperatue_Task};
+  struct timespec current, expire;
 
 #ifdef BBB
   /*****Looging BBB configurations*******/
@@ -273,30 +273,30 @@ void *TemperatureTask(void *pthread_inf) {
     /*******Log messages on Que*************/
     // set up time for timed send
 
-    clock_gettime(CLOCK_MONOTONIC, &now);
-    expire.tv_sec = now.tv_sec + 2;
-    expire.tv_nsec = now.tv_nsec;
+    clock_gettime(CLOCK_MONOTONIC, &current);
+    expire.tv_sec = current.tv_sec + 2;
+    expire.tv_nsec = current.tv_nsec;
     num_bytes = mq_timedsend(logtask_msg_que, (const char *)&temp_log,
-                             sizeof(log_pack), msg_prio, &expire);
+                             sizeof(logger_pckt), msg_priority, &expire);
     if (num_bytes < 0) {
-      notify("mq_send to Log Q in TemperatureTask", alertmsg_queue, logtask_msg_que, error);
+      alert("mq_send to Log Q in TemperatureTask", alertmsg_queue, logtask_msg_que, error);
     }
     /******Log data on IPC Que if requested******/
 
     if (temp_IPC_flag == 1) {
       temp_IPC_flag = 0;
       // set up time for timed send
-      clock_gettime(CLOCK_MONOTONIC, &now);
-      expire.tv_sec = now.tv_sec + 2;
-      expire.tv_nsec = now.tv_nsec;
+      clock_gettime(CLOCK_MONOTONIC, &current);
+      expire.tv_sec = current.tv_sec + 2;
+      expire.tv_nsec = current.tv_nsec;
       num_bytes = mq_timedsend(messageq_ipc, (const char *)&temp_log,
-                               sizeof(log_pack), IPCmsg_prio, &expire);
+                               sizeof(logger_pckt), IPCmsg_prio, &expire);
       if (num_bytes < 0) {
-        notify("mq_send-IPC Q-TemperatureTask Error", alertmsg_queue, logtask_msg_que, error);
+        alert("mq_send-IPC Q-TemperatureTask Error", alertmsg_queue, logtask_msg_que, error);
       }
     }
     // printf("hi\n");
-    //  notify("Test Error",alertmsg_queue,logtask_msg_que,error);
+    //  alert("Test Error",alertmsg_queue,logtask_msg_que,error);
   }
   printf("exiting Temp task\n");
   mq_close(logtask_msg_que);

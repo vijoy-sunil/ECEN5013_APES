@@ -61,7 +61,7 @@ void test_light_conv(void **state) {
   adc_data_ch1 = 973;
 
   float expected = 269;
-  float result = reportLumen(adc_data_ch0, adc_data_ch1);
+  float result = LumenOut(adc_data_ch0, adc_data_ch1);
   assert_int_equal((int)expected, (int)result);
 }
 

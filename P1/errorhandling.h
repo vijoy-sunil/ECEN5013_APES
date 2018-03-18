@@ -33,6 +33,6 @@ void alertReceive(union sigval sv);
 *@param:
 *@return:
 */
-void notify(char* msg,mqd_t alertmsg_queue,mqd_t msgq_log,msg_type type);
+void alert(char* msg,mqd_t alertmsg_queue,mqd_t msgq_log,msg_type type);
 
 #endif

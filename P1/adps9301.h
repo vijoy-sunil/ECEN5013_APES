@@ -117,7 +117,7 @@ void interruptThreshReg(int file_handler, apds9301_opt op, char *buffer);
 *@param:
 *@return:
 */
-uint16_t adcDataRead(int file_handler, int channel);
+uint16_t LightSensorRead(int file_handler, int channel);
 
 /**
 *@brief:
@@ -125,7 +125,7 @@ uint16_t adcDataRead(int file_handler, int channel);
 *@param:
 *@return:
 */
-float reportLumen(uint16_t adc_data_ch0, uint16_t adc_data_ch1);
+float LumenOut(uint16_t adc_data_ch0, uint16_t adc_data_ch1);
 
 /**
 *@brief:

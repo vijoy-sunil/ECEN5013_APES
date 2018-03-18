@@ -48,7 +48,7 @@ void *LightTask(void *pthread_inf) {
         }
 
         mqd_t logtask_msg_que;
-        int msg_prio = MESSAGE_PRIORITY;
+        int msg_priority = MESSAGE_PRIORITY;
         int num_bytes;
         char message[BUFFER_SIZE];
         struct mq_attr msgq_attr = {.mq_maxmsg = MESSAGEQ_SIZE, .mq_msgsize = BUFFER_SIZE,.mq_flags = 0};
@@ -90,7 +90,6 @@ void *LightTask(void *pthread_inf) {
         else {
                 sprintf(&(initialize_msg[4][0]),"LightTask sigaction %s\n",strerror(errno));
         }
-#ifdef BBB
 
         int light = init_light_sensor();
         if(light  == -1) {
@@ -109,7 +108,6 @@ void *LightTask(void *pthread_inf) {
         uint16_t ch0,ch1;
         status day_night = DAY;
 
-#endif
 
         sigset_t mask_bit; 
         sigemptyset(&mask_bit);
@@ -118,46 +116,45 @@ void *LightTask(void *pthread_inf) {
         sigaddset(&mask_bit,LOGGER_SIG_HEARTBEAT); sigaddset(&mask_bit,SIGCONT);
         sigaddset(&mask_bit,SOCKET_SIG_HEARTBEAT);
 
-//unblocking for test
-//sigaddset(&mask_bit,TEMPSIGNAL_PACKET); sigaddset(&mask_bit,LIGHTSIGNAL_PACKET);
 
-        ret = pthread_sigmask(
-                SIG_SETMASK, //block the signals in the set argument
-                &mask_bit, //set argument has list of blocked signals
-                NULL); //if non NULL prev val of signal mask_bit stored here
+        ret = pthread_sigmask(SIG_SETMASK,&mask_bit,NULL); 
+
         if(ret  == -1) {
                 initialize =0;
-                sprintf(&(initialize_msg[6][0]),"LightTask pthread_sigmask %s\n",strerror(errno));
+                sprintf(&(initialize_msg[6][0]),"Failure sigmask %s\n",strerror(errno));
         }
         else {
-                sprintf(&(initialize_msg[6][0]),"LightTask pthread_sigmask %s\n",strerror(errno));
+                sprintf(&(initialize_msg[6][0]),"Success sigmask %s\n",strerror(errno));
         }
-//send initialization status
 
-        notify(&initialize_msg[0][0],alertmsg_queue,logtask_msg_que,init);
-        notify(&initialize_msg[1][0],alertmsg_queue,logtask_msg_que,init);
-        notify(&initialize_msg[2][0],alertmsg_queue,logtask_msg_que,init);
-        notify(&initialize_msg[3][0],alertmsg_queue,logtask_msg_que,init);
-        notify(&initialize_msg[4][0],alertmsg_queue,logtask_msg_que,init);
-        notify(&initialize_msg[5][0],alertmsg_queue,logtask_msg_que,init);
-        notify(&initialize_msg[6][0],alertmsg_queue,logtask_msg_que,init);
-        notify(&initialize_msg[7][0],alertmsg_queue,logtask_msg_que,init);
+        alert(&initialize_msg[0][0],alertmsg_queue,logtask_msg_que,init);
+        alert(&initialize_msg[1][0],alertmsg_queue,logtask_msg_que,init);
+        alert(&initialize_msg[2][0],alertmsg_queue,logtask_msg_que,init);
+        alert(&initialize_msg[3][0],alertmsg_queue,logtask_msg_que,init);
+        alert(&initialize_msg[4][0],alertmsg_queue,logtask_msg_que,init);
+        alert(&initialize_msg[5][0],alertmsg_queue,logtask_msg_que,init);
+        alert(&initialize_msg[6][0],alertmsg_queue,logtask_msg_que,init);
+        alert(&initialize_msg[7][0],alertmsg_queue,logtask_msg_que,init);
 
-        if(initialize == 0) { notify("##All elements not initialized in Light Task, Not proceeding with it##\n",alertmsg_queue,logtask_msg_que,error);
-                              while(light_close_flag & application_close_flag) {sleep(1);};
-                              return NULL;}
+        if(initialize == 0) 
+        { 
+            alert("Light task faiulre quitting\n",alertmsg_queue,logtask_msg_que,error);
+            while(light_close_flag & application_close_flag) 
+            {
+                sleep(1);
+            };
+          return NULL;
+        }
 
-        else if(initialize == 1) notify("##All elements initialized in Light Task, proceeding with it##\n",alertmsg_queue,logtask_msg_que,init);
+        else if(initialize == 1) 
+
+            alert("Light task success continuing\n",alertmsg_queue,logtask_msg_que,init);
 
 
-        //  sleep(2);//allow other threads to Initialize
-
-/************Creating logpacket*******************/
-        log_pack light_log ={.log_level=1,.log_source = light_Task};
-        struct timespec now,expire;
+        logger_pckt light_logmsg ={.log_level=1,.log_source = light_Task};
+        struct timespec current,expire;
 
 
-/****************Do this periodically*******************************/
         while(light_close_flag & application_close_flag) {
 
                 pthread_kill(pthread_info->main,LIGHT_SIG_HEARTBEAT);//send HB
@@ -168,73 +165,62 @@ void *LightTask(void *pthread_inf) {
                 }
                 pthread_mutex_unlock(&glight_mutex);
                 glight_flag = 0;
-#ifdef BBB
-/*************collect data*****************/
-                ch0=adcDataRead(light,0);
-                ch1=adcDataRead(light,1);
-                lumen = reportLumen(ch0, ch1);
 
-/************populate the log packet*********/
-                sprintf(data_lumen_str,"lumen %f", lumen);
-                strcpy(light_log.log_msg, data_lumen_str);
+                ch0=LightSensorRead(light,0);
+                ch1=LightSensorRead(light,1);
+                lumen = LumenOut(ch0, ch1);
 
-#else
-                strcpy(light_log.log_msg, "Mock lumen");
-#endif
+                sprintf(data_lumen_str,"Lumens %f", lumen);
+                strcpy(light_logmsg.log_msg, data_lumen_str);
+
 
                 time_t t = time(NULL); struct tm *tm = localtime(&t);
-                strcpy(light_log.time_stamp, asctime(tm));
+                strcpy(light_logmsg.time_stamp, asctime(tm));
 
-/************Log messages on Que*************/
-                clock_gettime(CLOCK_MONOTONIC,&now);
-                expire.tv_sec = now.tv_sec+2;
-                expire.tv_nsec = now.tv_nsec;
-                num_bytes = mq_timedsend(logtask_msg_que,
-                                         (const char*)&light_log,
-                                         sizeof(log_pack),
-                                         msg_prio,
-                                         &expire);
-                if(num_bytes<0) {notify("mq_send-Log Q-LightTask",
-                                        alertmsg_queue,logtask_msg_que,error);}
+                clock_gettime(CLOCK_MONOTONIC,&current);
+                expire.tv_sec = current.tv_sec+2;
+                expire.tv_nsec = current.tv_nsec;
+                num_bytes = mq_timedsend(logtask_msg_que,(const char*)&light_logmsg,sizeof(logger_pckt),msg_priority,&expire);
 
-#ifdef BBB
-                if(day_night != reportStatus(light)) {
-                        day_night = reportStatus(light);
-                        sprintf(data_lumen_str,"Day Night State change\n");
-                        strcpy(light_log.log_msg, data_lumen_str);
-
-                        num_bytes = mq_timedsend(logtask_msg_que,
-                                                 (const char*)&light_log,
-                                                 sizeof(log_pack),
-                                                 msg_prio,
-                                                 &expire);
-                        if(num_bytes<0) {notify("mq_send-Log Q-LightTask",
-                                                alertmsg_queue,logtask_msg_que,error);}
-
+                if(num_bytes<0) 
+                {
+                    alert("Light message queue sent", alertmsg_queue,logtask_msg_que,error);
                 }
 
-#endif
+                if(day_night != reportStatus(light)) 
+                {
+                    day_night = reportStatus(light);
+                    sprintf(data_lumen_str,"Day Night State change\n");
+                    strcpy(light_logmsg.log_msg, data_lumen_str);
 
-/******Log data on IPC Que if requested******/
+                    num_bytes = mq_timedsend(logtask_msg_que,(const char*)&light_logmsg,sizeof(logger_pckt),msg_priority,&expire);
 
-                if(Light_Msg_flag == 1) {
-                        Light_Msg_flag = 0;
-//set up time for timed send
+                    if(num_bytes<0) 
+                    {
+                        alert("mq_send-Log Q-LightTask",alertmsg_queue,logtask_msg_que,error);
+                    }
+                }
 
-                        clock_gettime(CLOCK_MONOTONIC,&now);
-                        expire.tv_sec = now.tv_sec+2;
-                        expire.tv_nsec = now.tv_nsec;
-                        num_bytes = mq_timedsend(messageq_ipc,
-                                                 (const char*)&light_log,
-                                                 sizeof(log_pack),
-                                                 IPCmsg_prio,
-                                                 &expire);
-                        if(num_bytes<0) {notify("mq_send-IPC-LightTask Error",alertmsg_queue,logtask_msg_que,error);}
+
+
+                if(Light_Msg_flag == 1) 
+                {
+                    Light_Msg_flag = 0;
+
+                    clock_gettime(CLOCK_MONOTONIC,&current);
+                    expire.tv_sec = current.tv_sec+2;
+                    expire.tv_nsec = current.tv_nsec;
+                    num_bytes = mq_timedsend(messageq_ipc,(const char*)&light_logmsg,sizeof(logger_pckt),IPCmsg_prio,&expire);
+
+                    if(num_bytes<0) 
+                    {
+                        alert("mq_send-IPC-LightTask Error",alertmsg_queue,logtask_msg_que,error);
+                    }
                 }
 
 
         }
-        printf("exiting light task\n");
+        printf("LIGHT TASK CLOSE\n");
         mq_close(logtask_msg_que);
         mq_close(alertmsg_queue);
         mq_close(messageq_ipc);
