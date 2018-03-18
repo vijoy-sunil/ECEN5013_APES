@@ -1,11 +1,11 @@
 
-main.elf:main.c LightTask.o TemperatureTask.o notify.o logTask.o errorhandling.o socketTask.o  i2c_wrap.o tmp102.o adps9301.o
+main.elf:main.c LightTask.o TemperatureTask.o notify.o LoggerTask.o errorhandling.o socketTask.o  i2c_wrap.o tmp102.o adps9301.o
 	gcc -g -o $@ $^ -lpthread -lrt -lm
 
 notify.o:notify.c
 	gcc -c -o $@ $<
 
-logTask.o:logTask.c msgque.h includes.h
+LoggerTask.o:LoggerTask.c msgque.h includes.h
 	gcc -c -o $@ $<  -lpthread
 
 LightTask.o:LightTask.c msgque.h includes.h

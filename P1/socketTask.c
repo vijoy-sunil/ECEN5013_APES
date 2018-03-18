@@ -24,11 +24,11 @@
 
 void *socketTask(void *pthread_inf) {
 
-  uint8_t init_state = 1;
-  char init_message[7][sizeof(alert_message)];
+  uint8_t initialize = 1;
+  char initialize_msg[7][sizeof(alert_message)];
 
   int ret;
-  threadTaskAttr *ppthread_info = (threadTaskAttr *)pthread_inf;
+  threadTaskAttr *pthread_info = (threadTaskAttr *)pthread_inf;
   /*******Initialize Notification  Message Que*****************/
   mqd_t alertmsg_queue;
   int msg_prio_err = ERROR_MESSAGE_PRIORITY;
@@ -43,13 +43,13 @@ void *socketTask(void *pthread_inf) {
               O_CREAT | O_RDWR, // flags. create a new if dosent already exist
               S_IRWXU,          // mode-read,write and execute permission
               &msgq_attr_err);  // attribute
-  sprintf(&(init_message[0][0]), "SocketTask-mq_open-notify mq %s\n",
+  sprintf(&(initialize_msg[0][0]), "SocketTask-mq_open-notify mq %s\n",
           strerror(errno));
   if (alertmsg_queue < 0)
-    init_state = 0;
+    initialize = 0;
 
   /*******Initialize Logger Message Que*****************/
-  mqd_t logger_msgq;
+  mqd_t logtask_msg_que;
   int msg_prio = MESSAGE_PRIORITY;
   int num_bytes;
   char message[BUFFER_SIZE];
@@ -58,15 +58,15 @@ void *socketTask(void *pthread_inf) {
                                   BUFFER_SIZE, // max size of msg in bytes
                               .mq_flags = 0};
 
-  logger_msgq =
+  logtask_msg_que =
       mq_open(LOGGER_MSGQ_IPC,        // name
               O_CREAT | O_RDWR, // flags. create a new if dosent already exist
               S_IRWXU,          // mode-read,write and execute permission
               &msgq_attr);      // attribute
-  sprintf(&(init_message[1][0]), "SocketTask-mq_open-logger mq %s\n",
+  sprintf(&(initialize_msg[1][0]), "SocketTask-mq_open-logger mq %s\n",
           strerror(errno));
-  if (logger_msgq < 0)
-    init_state = 0;
+  if (logtask_msg_que < 0)
+    initialize = 0;
 
   /*************Sockets*****************************/
   // user defined data structures for data read and write
@@ -92,9 +92,9 @@ void *socketTask(void *pthread_inf) {
   sockfd = socket(AF_INET,                     // com domain - IPv4
                   SOCK_STREAM | SOCK_NONBLOCK, // com type - TCP
                   0);                          // protocol
-  sprintf(&(init_message[2][0]), "SocketTask-socket %s\n", strerror(errno));
+  sprintf(&(initialize_msg[2][0]), "SocketTask-socket %s\n", strerror(errno));
   if (sockfd < 0)
-    init_state = 0;
+    initialize = 0;
 
   /*****set options for the socket***********/
   ret = setsockopt(sockfd,
@@ -102,24 +102,24 @@ void *socketTask(void *pthread_inf) {
                    SO_REUSEADDR | SO_REUSEPORT,
                    &opt, // option is enabled
                    sizeof(opt));
-  sprintf(&(init_message[3][0]), "SocketTask-setsockopt %s\n", strerror(errno));
+  sprintf(&(initialize_msg[3][0]), "SocketTask-setsockopt %s\n", strerror(errno));
   if (ret < 0)
-    init_state = 0;
+    initialize = 0;
   /***initialize the address structure and bind socket ****/
   bzero((char *)&server_addr, sizeof(server_addr)); // sets all val to 0
   server_addr.sin_family = AF_INET;
   server_addr.sin_addr.s_addr = INADDR_ANY;
   server_addr.sin_port = htons(PORT);
   ret = bind(sockfd, (struct sockaddr *)&server_addr, sizeof(server_addr));
-  sprintf(&(init_message[4][0]), "SocketTask-bind %s\n", strerror(errno));
+  sprintf(&(initialize_msg[4][0]), "SocketTask-bind %s\n", strerror(errno));
   if (ret < 0)
-    init_state = 0;
+    initialize = 0;
 
   /**listen on socket for connections**/
   ret = listen(sockfd, 5);
-  sprintf(&(init_message[6][0]), "SocketTask-listen %s\n", strerror(errno));
+  sprintf(&(initialize_msg[6][0]), "SocketTask-listen %s\n", strerror(errno));
   if (ret < 0)
-    init_state = 0;
+    initialize = 0;
 
   /*****************Mask SIGNALS********************/
   sigset_t mask; // set of signals
@@ -137,23 +137,23 @@ void *socketTask(void *pthread_inf) {
       pthread_sigmask(SIG_SETMASK, // block the signals in the set argument
                       &mask,       // set argument has list of blocked signals
                       NULL); // if non NULL prev val of signal mask stored here
-  sprintf(&(init_message[5][0]), "SocketTask-pthread_sigmask %s\n",
+  sprintf(&(initialize_msg[5][0]), "SocketTask-pthread_sigmask %s\n",
           strerror(errno));
   if (ret < 0)
-    init_state = 0;
+    initialize = 0;
 
-  notify(&init_message[0][0], alertmsg_queue, logger_msgq, init);
-  notify(&init_message[1][0], alertmsg_queue, logger_msgq, init);
-  notify(&init_message[2][0], alertmsg_queue, logger_msgq, init);
-  notify(&init_message[3][0], alertmsg_queue, logger_msgq, init);
-  notify(&init_message[4][0], alertmsg_queue, logger_msgq, init);
-  notify(&init_message[5][0], alertmsg_queue, logger_msgq, init);
-  notify(&init_message[6][0], alertmsg_queue, logger_msgq, init);
+  notify(&initialize_msg[0][0], alertmsg_queue, logtask_msg_que, init);
+  notify(&initialize_msg[1][0], alertmsg_queue, logtask_msg_que, init);
+  notify(&initialize_msg[2][0], alertmsg_queue, logtask_msg_que, init);
+  notify(&initialize_msg[3][0], alertmsg_queue, logtask_msg_que, init);
+  notify(&initialize_msg[4][0], alertmsg_queue, logtask_msg_que, init);
+  notify(&initialize_msg[5][0], alertmsg_queue, logtask_msg_que, init);
+  notify(&initialize_msg[6][0], alertmsg_queue, logtask_msg_que, init);
 
-  if (init_state == 0) {
+  if (initialize == 0) {
     notify("##All elements not initialized in Socket Task, Not proceeding with "
            "it##\n",
-           alertmsg_queue, logger_msgq, error);
+           alertmsg_queue, logtask_msg_que, error);
     while (socket_close_flag & application_close_flag) {
       sleep(1);
     };
@@ -162,9 +162,9 @@ void *socketTask(void *pthread_inf) {
     return NULL;
   }
 
-  else if (init_state == 1)
+  else if (initialize == 1)
     notify("##All elements initialized in Socket Task, proceeding with it##\n",
-           alertmsg_queue, logger_msgq, init);
+           alertmsg_queue, logtask_msg_que, init);
 
 #ifdef BBB
   int temp_handle = initializeTemp(); // Get the Handler
@@ -187,7 +187,7 @@ void *socketTask(void *pthread_inf) {
 
   // keep doing this repeatedly
   while (socket_close_flag & application_close_flag) {
-    pthread_kill(ppthread_info->main, SOCKET_SIG_HEARTBEAT); // send HB
+    pthread_kill(pthread_info->main, SOCKET_SIG_HEARTBEAT); // send HB
 
     while (1) {
       if ((socket_close_flag & application_close_flag) == 0)
@@ -200,7 +200,7 @@ void *socketTask(void *pthread_inf) {
       else
         sleep(1);
       // send HB to main
-      pthread_kill(ppthread_info->main, SOCKET_SIG_HEARTBEAT); // send HB
+      pthread_kill(pthread_info->main, SOCKET_SIG_HEARTBEAT); // send HB
     }
     if ((socket_close_flag & application_close_flag) == 0)
       break;
@@ -216,7 +216,7 @@ void *socketTask(void *pthread_inf) {
 
     num_char = read(newsockfd, (char *)request, sizeof(sock_req));
     if (num_char < 0) {
-      notify("Socket Task read error", alertmsg_queue, logger_msgq, error);
+      notify("Socket Task read error", alertmsg_queue, logtask_msg_que, error);
       break;
     }
 
@@ -270,7 +270,7 @@ void *socketTask(void *pthread_inf) {
     // send the read data
     num_char = write(newsockfd, response, sizeof(log_pack));
     if (num_char < 0) {
-      notify("Socket Task write error", alertmsg_queue, logger_msgq, error);
+      notify("Socket Task write error", alertmsg_queue, logtask_msg_que, error);
       break;
     }
 

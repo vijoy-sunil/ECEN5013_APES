@@ -44,7 +44,7 @@ int setTempTimer();
 *@param:void
 *@return: int success/failure
 */
-int setLightTimer();
+int timer_init_light();
 
 
 /**

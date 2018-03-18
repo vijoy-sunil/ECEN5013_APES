@@ -83,7 +83,7 @@ int setTempTimer(){
 }
 
 
-int setLightTimer(){
+int timer_init_light(){
         int ret;
 /****** creating RT signal SIGRTMIN+1 with SA_RESTART flag for which 1 parameter
    .sa_handler should be used for handler function(not .sa_sigaction)********/

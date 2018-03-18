@@ -1,28 +1,15 @@
-
-#include "includes.h"
-#include "msgque.h"
-#include "errorhandling.h"
-#include "notify.h"
-#include "threads.h"
-#include <errno.h>
-#include <mqueue.h>
-#include <pthread.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <time.h>
-#include <unistd.h>
+#include "LoggerTask.h"
 
 sig_atomic_t log_data_flag;
 
 void *logTask(void *pthread_inf) {
 
   int ret;
-  uint8_t init_state = 1;
-  char init_message[4][sizeof(alert_message)];
+  uint8_t initialize = 1;
+  char initialize_msg[4][sizeof(alert_message)];
 
   // log_data_flag=0;
-  threadTaskAttr *ppthread_info = (threadTaskAttr *)pthread_inf;
+  threadTaskAttr *pthread_info = (threadTaskAttr *)pthread_inf;
 
   /*******Initialize Notification Message Que*****************/
   mqd_t alertmsg_queue;
@@ -39,16 +26,16 @@ void *logTask(void *pthread_inf) {
               S_IRWXU,          // mode-read,write and execute permission
               &msgq_attr_err);  // attribute
   if (alertmsg_queue < 0) {
-    init_state = 0;
-    sprintf(&(init_message[1][0]), "Log Task-mq_open-notify_mq %s\n",
+    initialize = 0;
+    sprintf(&(initialize_msg[1][0]), "Log Task-mq_open-notify_mq %s\n",
             strerror(errno));
   } else {
-    sprintf(&(init_message[1][0]), "Log Task-mq_open-notify_mq %s\n",
+    sprintf(&(initialize_msg[1][0]), "Log Task-mq_open-notify_mq %s\n",
             strerror(errno));
   }
 
   /*************create a logger message q****************/
-  mqd_t logger_msgq;
+  mqd_t logtask_msg_que;
   int msg_prio;
   int num_bytes;
   // char message[BUFFER_SIZE];
@@ -63,28 +50,28 @@ void *logTask(void *pthread_inf) {
                                   BUFFER_SIZE, // max size of msg in bytes
                               .mq_flags = 0};
 
-  logger_msgq =
+  logtask_msg_que =
       mq_open(LOGGER_MSGQ_IPC,        // name
               O_CREAT | O_RDWR, // flags. create a new if dosent already exist
               S_IRWXU,          // mode-read,write and execute permission
               &msgq_attr);      // attribute
-  if (logger_msgq < 0) {
-    init_state = 0;
-    sprintf(&(init_message[2][0]), "LogTask-mq_open-loggerQ %s\n",
+  if (logtask_msg_que < 0) {
+    initialize = 0;
+    sprintf(&(initialize_msg[2][0]), "LogTask-mq_open-loggerQ %s\n",
             strerror(errno));
   } else {
-    sprintf(&(init_message[2][0]), "LogTask-mq_open-loggerQ %s\n",
+    sprintf(&(initialize_msg[2][0]), "LogTask-mq_open-loggerQ %s\n",
             strerror(errno));
   }
 
   // open a file to write to
   FILE *pfd = fopen(fileid, "w");
   if (pfd == NULL) {
-    init_state = 0;
-    sprintf(&(init_message[3][0]), "Log Task-fopen %s\n", strerror(errno));
+    initialize = 0;
+    sprintf(&(initialize_msg[3][0]), "Log Task-fopen %s\n", strerror(errno));
   } else {
 
-    sprintf(&(init_message[3][0]), "Log Task-fopen %s\n", strerror(errno));
+    sprintf(&(initialize_msg[3][0]), "Log Task-fopen %s\n", strerror(errno));
   }
 
   /*****************Mask SIGNALS********************/
@@ -103,11 +90,11 @@ void *logTask(void *pthread_inf) {
                       &mask,       // set argument has list of blocked signals
                       NULL); // if non NULL prev val of signal mask stored here
   if (ret == -1) {
-    init_state = 0;
-    sprintf(&(init_message[0][0]), "LogTask Sigmask %s\n", strerror(errno));
+    initialize = 0;
+    sprintf(&(initialize_msg[0][0]), "LogTask Sigmask %s\n", strerror(errno));
   } else {
 
-    sprintf(&(init_message[0][0]), "LogTask Sigmask:%s\n", strerror(errno));
+    sprintf(&(initialize_msg[0][0]), "LogTask Sigmask:%s\n", strerror(errno));
   }
 /*******&&&&&&&&&&&&&& msg Q to test IPC
  * transfer&&&&&&&&&&&&&&&&&&**********************/
@@ -148,29 +135,29 @@ void *logTask(void *pthread_inf) {
   struct timespec now, expire;
 
   // send initialization message
-  notify(&init_message[0][0], alertmsg_queue, -1, init);
-  notify(&init_message[1][0], alertmsg_queue, -1, init);
-  notify(&init_message[2][0], alertmsg_queue, -1, init);
-  notify(&init_message[3][0], alertmsg_queue, -1, init);
+  notify(&initialize_msg[0][0], alertmsg_queue, -1, init);
+  notify(&initialize_msg[1][0], alertmsg_queue, -1, init);
+  notify(&initialize_msg[2][0], alertmsg_queue, -1, init);
+  notify(&initialize_msg[3][0], alertmsg_queue, -1, init);
 
-  if (init_state == 0) {
+  if (initialize == 0) {
     notify("##All elements not initialized in Log Task. Not proceeding with "
            "it##\n",
-           alertmsg_queue, logger_msgq, error);
+           alertmsg_queue, logtask_msg_que, error);
     while (logger_close_flag & application_close_flag) {
       sleep(1);
     };
     return NULL;
   }
 
-  else if (init_state == 1)
+  else if (initialize == 1)
     notify("##All elements initialized in Log Task, proceeding with it##\n",
-           alertmsg_queue, logger_msgq, init);
+           alertmsg_queue, logtask_msg_que, init);
 
   /*******************Do this in LOOP************************************/
   while (logger_close_flag & application_close_flag) {
 
-    pthread_kill(ppthread_info->main, LOGGER_SIG_HEARTBEAT); // send HB
+    pthread_kill(pthread_info->main, LOGGER_SIG_HEARTBEAT); // send HB
     // empty the message que
     do {
       // read from queue
@@ -178,7 +165,7 @@ void *logTask(void *pthread_inf) {
       expire.tv_sec = now.tv_sec + 5;
       expire.tv_nsec = now.tv_nsec;
 
-      num_bytes = mq_timedreceive(logger_msgq, (char *)log, BUFFER_SIZE, &msg_prio,
+      num_bytes = mq_timedreceive(logtask_msg_que, (char *)log, BUFFER_SIZE, &msg_prio,
                                   &expire);
 
       // write to a log file
@@ -190,7 +177,7 @@ void *logTask(void *pthread_inf) {
       }
     } while (num_bytes > 0);
 // reregister after emptying the que
-// ret  = mq_notify(logger_msgq,&sig_ev);
+// ret  = mq_notify(logtask_msg_que,&sig_ev);
 // if(ret == -1) {perror("mq_notify-main"); return NULL;}
 
 /*&&&&&&&&&&& printing data for IPC message Q test&&&&&&&&&&&&&&*/
@@ -219,7 +206,7 @@ void *logTask(void *pthread_inf) {
 
   printf("exiting Log task\n");
   fclose(pfd);
-  mq_close(logger_msgq);
+  mq_close(logtask_msg_que);
   mq_close(alertmsg_queue);
 #ifdef PRINT_IPC_MSGQ
   mq_close(IPCmsgqT);

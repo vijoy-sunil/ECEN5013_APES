@@ -3,7 +3,7 @@
 static pthread_mutex_t error_msg_lock = PTHREAD_MUTEX_INITIALIZER;
 
 /****************puts initialization messages and errors on notify msg q and logger msg q. notify msg q is registered to notify main, which creates a thread to handle these conditions appropriately*************/
-void notify(char* msg,mqd_t alertmsg_queue,mqd_t logger_msgq,msg_type type){
+void notify(char* msg,mqd_t alertmsg_queue,mqd_t logtask_msg_que,msg_type type){
         //char msg[BUFFER_SIZE];
         //sprintf(msg,"%s:%s",arg_msg,strerror(errno));
 
@@ -27,7 +27,7 @@ void notify(char* msg,mqd_t alertmsg_queue,mqd_t logger_msgq,msg_type type){
                                          &expire);
                 if(num_bytes<0) {perror("mq_send to alertmsg_queue in notify");}
         }
-        if(logger_msgq >= 0) {
+        if(logtask_msg_que >= 0) {
                 time_t t = time(NULL); struct tm* tm = localtime(&t);
                 log_pack err_log ={.log_level=2,.log_source = error_handler};
                 strcpy(err_log.time_stamp, asctime(tm));
@@ -38,12 +38,12 @@ void notify(char* msg,mqd_t alertmsg_queue,mqd_t logger_msgq,msg_type type){
                 expire.tv_sec = now.tv_sec+5;
                 expire.tv_nsec = now.tv_nsec;
 
-                num_bytes = mq_timedsend(logger_msgq,
+                num_bytes = mq_timedsend(logtask_msg_que,
                                          (const char*)&err_log,
                                          sizeof(log_pack),
                                          prio,
                                          &expire);
-                if(num_bytes<0) {perror("mq_send to logger_msgq in notify");}
+                if(num_bytes<0) {perror("mq_send to logtask_msg_que in notify");}
         }
 
         return;
@@ -63,7 +63,7 @@ void alertReceive(union sigval sv){
         int error_flag = 0;
         int ret =  pthread_mutex_lock(&error_msg_lock);
         if(ret !=0 ) {perror("alertReceive-mutexlock"); return;}
-//empty the logger_msgq - notification only for an empty q
+//empty the logtask_msg_que - notification only for an empty q
         do {
                 bzero(message_packet,sizeof(message_packet));
 

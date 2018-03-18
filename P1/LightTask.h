@@ -13,3 +13,5 @@
 #include "includes.h"
 #include "errorhandling.h"
 #include "adps9301.h"
+
+void Handl_LightMsg(int sig);
