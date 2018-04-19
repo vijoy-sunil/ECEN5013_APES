@@ -22,6 +22,11 @@ utils/heatbeat_timer.obj: C:/Users/VIJOY-PC/Downloads/FreeRTOSv10.0.1/FreeRTOS/S
 utils/heatbeat_timer.obj: C:/Users/VIJOY-PC/Downloads/FreeRTOSv10.0.1/FreeRTOS/Source/include/queue.h
 utils/heatbeat_timer.obj: C:/Users/VIJOY-PC/Downloads/FreeRTOSv10.0.1/FreeRTOS/Source/include/timers.h
 utils/heatbeat_timer.obj: C:/ti/ccsv8/tools/compiler/ti-cgt-arm_18.1.1.LTS/include/stdbool.h
+utils/heatbeat_timer.obj: C:/ti/ccsv8/tools/compiler/ti-cgt-arm_18.1.1.LTS/include/stdlib.h
+utils/heatbeat_timer.obj: C:/ti/ccsv8/tools/compiler/ti-cgt-arm_18.1.1.LTS/include/_ti_config.h
+utils/heatbeat_timer.obj: C:/ti/ccsv8/tools/compiler/ti-cgt-arm_18.1.1.LTS/include/linkage.h
+utils/heatbeat_timer.obj: C:/ti/ccsv8/tools/compiler/ti-cgt-arm_18.1.1.LTS/include/stdio.h
+utils/heatbeat_timer.obj: C:/ti/ccsv8/tools/compiler/ti-cgt-arm_18.1.1.LTS/include/stdarg.h
 utils/heatbeat_timer.obj: C:/ti/TivaWare_C_Series-2.1.4.178/inc/hw_memmap.h
 utils/heatbeat_timer.obj: C:/ti/TivaWare_C_Series-2.1.4.178/inc/hw_types.h
 utils/heatbeat_timer.obj: C:/ti/TivaWare_C_Series-2.1.4.178/driverlib/gpio.h
@@ -32,7 +37,6 @@ utils/heatbeat_timer.obj: C:/ti/TivaWare_C_Series-2.1.4.178/driverlib/sysctl.h
 utils/heatbeat_timer.obj: C:/ti/TivaWare_C_Series-2.1.4.178/driverlib/debug.h
 utils/heatbeat_timer.obj: C:/ti/TivaWare_C_Series-2.1.4.178/driverlib/uart.h
 utils/heatbeat_timer.obj: C:/ti/TivaWare_C_Series-2.1.4.178/utils/uartstdio.h
-utils/heatbeat_timer.obj: C:/ti/ccsv8/tools/compiler/ti-cgt-arm_18.1.1.LTS/include/stdarg.h
 
 ../utils/heatbeat_timer.c: 
 ../utils/../main.h: 
@@ -56,6 +60,11 @@ C:/Users/VIJOY-PC/Downloads/FreeRTOSv10.0.1/FreeRTOS/Source/include/list.h:
 C:/Users/VIJOY-PC/Downloads/FreeRTOSv10.0.1/FreeRTOS/Source/include/queue.h: 
 C:/Users/VIJOY-PC/Downloads/FreeRTOSv10.0.1/FreeRTOS/Source/include/timers.h: 
 C:/ti/ccsv8/tools/compiler/ti-cgt-arm_18.1.1.LTS/include/stdbool.h: 
+C:/ti/ccsv8/tools/compiler/ti-cgt-arm_18.1.1.LTS/include/stdlib.h: 
+C:/ti/ccsv8/tools/compiler/ti-cgt-arm_18.1.1.LTS/include/_ti_config.h: 
+C:/ti/ccsv8/tools/compiler/ti-cgt-arm_18.1.1.LTS/include/linkage.h: 
+C:/ti/ccsv8/tools/compiler/ti-cgt-arm_18.1.1.LTS/include/stdio.h: 
+C:/ti/ccsv8/tools/compiler/ti-cgt-arm_18.1.1.LTS/include/stdarg.h: 
 C:/ti/TivaWare_C_Series-2.1.4.178/inc/hw_memmap.h: 
 C:/ti/TivaWare_C_Series-2.1.4.178/inc/hw_types.h: 
 C:/ti/TivaWare_C_Series-2.1.4.178/driverlib/gpio.h: 
@@ -66,4 +75,3 @@ C:/ti/TivaWare_C_Series-2.1.4.178/driverlib/sysctl.h:
 C:/ti/TivaWare_C_Series-2.1.4.178/driverlib/debug.h: 
 C:/ti/TivaWare_C_Series-2.1.4.178/driverlib/uart.h: 
 C:/ti/TivaWare_C_Series-2.1.4.178/utils/uartstdio.h: 
-C:/ti/ccsv8/tools/compiler/ti-cgt-arm_18.1.1.LTS/include/stdarg.h: 

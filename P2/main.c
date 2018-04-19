@@ -2,6 +2,7 @@
 #include "./tasks/comm_task.h"
 #include "./tasks/uv_task.h"
 #include "./tasks/pressure_task.h"
+#include "./comms/i2c_drive.h"
 
 void main_task(void *pvParameters);
 TaskHandle_t mainTask_handle;
@@ -12,6 +13,7 @@ TaskHandle_t commTask_handle;
 TimerHandle_t MyTimer;
 void vTimerCallback( TimerHandle_t xTimer );
 
+QueueHandle_t main_comm_Queue = NULL;
 
 uint32_t output_clock_rate_hz;
 task_status_t get_task_status(void);
@@ -28,6 +30,9 @@ int main(void)
 
     // Configure the UART.
     ConfigureUART();
+
+    // Configure the I2C
+    ConfigureI2C();
 
     // configure led
     ROM_SysCtlPeripheralEnable(SYSCTL_PERIPH_GPION);
@@ -77,7 +82,7 @@ int main(void)
    // create tasks
 
     xTaskCreate(main_task, "MAIN-TASK",
-                configMINIMAL_STACK_SIZE, NULL, 2, &mainTask_handle);
+                configMINIMAL_STACK_SIZE, NULL, 1, &mainTask_handle);
 
     xTaskCreate(uv_task, "UV-TASK",
                 configMINIMAL_STACK_SIZE, NULL, 1, &uvTask_handle);
@@ -95,26 +100,40 @@ int main(void)
 void main_task(void *pvParameters)
 {
     task_status_t tstatus;
+    uint32_t main_ReceivedValue;
+    main_comm_Queue = xQueueCreate( MAIN_COMM_QUEUE_LENGTH, sizeof(task_status_t) );
     UARTprintf("Main task running\n");
     while(1)
     {
+        xTaskNotifyWait(0xFFFFFFFF,
+                        main_ReceivedValue,
+                        &main_ReceivedValue,
+                        portMAX_DELAY);
+
         //functions
         //get heartbeat periodically
-        //send status of other tasks to comm task - alive/dead
         tstatus = get_task_status();
+
+#ifdef SERIAL_DEBUG
         if(tstatus & UV_ALIVE)
             UARTprintf("<UV>\r\n");
         if(tstatus & PRESSURE_ALIVE)
             UARTprintf("<PR>\r\n");
         if(tstatus & COMM_ALIVE)
             UARTprintf("<COMM>\r\n");
+#endif
+
+        //send status of other tasks to comm task - alive/dead
+        //send data to comm task
+        xQueueSend( main_comm_Queue, &tstatus, portMAX_DELAY);
+
     }
 }
 
 //return dead or alive based upon heartbeat (3 missed heatbeat)
 task_status_t get_task_status(void)
 {
-    uint32_t ulReceivedValue;
+    uint32_t ulReceivedValue = 0;
     task_status_t state;
     static int uv_hb_cnt, comm_hb_cnt, pressure_hb_cnt;
 
@@ -141,7 +160,7 @@ task_status_t get_task_status(void)
 
     //UARTprintf("uv: %d, pressure: %d, comm: %d, fired: %d\r\n", uv_hb_cnt, pressure_hb_cnt, comm_hb_cnt,status_check_time );
     //check for 3 missed heartbeats
-    state = 0;
+    state = ALL_DEAD;
 
     if(status_check_time == NUM_MISS_HB){
         status_check_time = 0;

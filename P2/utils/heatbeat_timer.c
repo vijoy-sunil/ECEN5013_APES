@@ -4,13 +4,11 @@
 volatile int status_check_time = 0;
 
 extern TimerHandle_t MyTimer;
-extern QueueHandle_t uv_hb_Queue;
-extern QueueHandle_t pressure_hb_Queue;
-extern QueueHandle_t comm_hb_Queue;
 
 extern TaskHandle_t uvTask_handle;
 extern TaskHandle_t pressureTask_handle;
 extern TaskHandle_t commTask_handle;
+extern TaskHandle_t mainTask_handle;
  /*----------------------------------------------------------*/
  /* Define a callback function that will be used by multiple timer
  instances.  The callback function does nothing but count the number
@@ -23,7 +21,7 @@ extern TaskHandle_t commTask_handle;
     const uint32_t ulMaxExpiryCountBeforeStopping = 1;
     uint32_t ulCount;
     uint8_t signal;
-    BaseType_t ret;
+    //BaseType_t ret;
 
     /* Optionally do something if the pxTimer parameter is NULL. */
     //configASSERT( pxTimer );
@@ -49,6 +47,9 @@ extern TaskHandle_t commTask_handle;
 
         signal =COMM_REQUEST_HB;
         xTaskNotify(commTask_handle, signal, eSetBits);
+
+        signal =MAIN_REQUEST_HB;
+        xTaskNotify(mainTask_handle, signal, eSetBits);
 
         //UARTprintf("hb request timer fired\r\n");
 
