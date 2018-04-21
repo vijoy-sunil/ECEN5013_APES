@@ -12,7 +12,7 @@
 void uv_task(void *pvParameters);
 extern QueueHandle_t uv_hb_Queue;
 
-#define UV_SEND_HB              (0x11)
+#define UV_SEND_HB              (0x00000011)
 #define UV_COMM_QUEUE_LENGTH    (1)
 
 #define UV_SLAVE_ADDR           (0x38)

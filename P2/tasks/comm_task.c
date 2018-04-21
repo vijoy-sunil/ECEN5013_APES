@@ -2,15 +2,6 @@
 #include "./tasks/comm_task.h"
 #include "./utils/pack_msg.h"
 
-//return string
-char* get_client_info(char* client_info){
-    char id[50];
-    sprintf(id, "%d", CLIENT_ID);
-
-    client_info = id;
-    return client_info;
-}
-
 // Configure the UART and its pins
 void ConfigureUART(void)
 {
@@ -40,20 +31,12 @@ void comm_task(void *pvParameters)
 
     //BaseType_t ret;
     msg_pack_t* packReceived;
-    uint32_t comm_ReceivedValue, signal;
-    char* client_info = NULL;
-    client_info = get_client_info(client_info);
-
-    char line1[50], line2[200], line3[200], line4[200];
-    char uv_alive[1], pr_alive[1], cm_alive[1];
-    char uv_dead[1], pr_dead[1], cm_dead[1];
+    uint32_t comm_ReceivedValue;
 
     task_status_t tstatus;
     while(1)
     {
-        //functions
         //send heartbeat periodically
-
         xTaskNotifyWait(0xFFFFFFFF,
                         comm_ReceivedValue,
                         &comm_ReceivedValue,
@@ -62,78 +45,68 @@ void comm_task(void *pvParameters)
         //receive sensor data
         xQueueReceive( uv_comm_Queue, &packReceived, 0U );
 
-        sprintf(line1, "CLIENT_ID: %d\n" ,client_info);
-        //pack data as string
+        //pack data here
+        client_packet->clientInfo = CLIENT_ID;
+
         if(packReceived->source == SENSOR_UV)
         {
-            sprintf(line3, "SENSOR DATA: [uv] | [%f] | [?]\n",packReceived->payload);
+            client_packet->uv_payLoad = packReceived->payload;
         }
+
 
         xQueueReceive( pressure_comm_Queue, &packReceived, 0U );
+
         if(packReceived->source == SENSOR_PRESSURE)
         {
-            sprintf(line4, "SENSOR DATA: [pressure] | [%f] | [?]\n",packReceived->payload);
+            client_packet->pr_payLoad = packReceived->payload;
         }
-
-        uv_alive[0] = ' ';
-        pr_alive[0] = ' ';
-        cm_alive[0] = ' ';
-        uv_dead[0] = ' ';
-        pr_dead[0] = ' ';
-        cm_dead[0] = ' ';
 
         //get task status from main task
         //queue receive here
         xQueueReceive( main_comm_Queue, &tstatus, 0U );
+        client_packet->clientStatus = tstatus;
 
-        if(tstatus & UV_ALIVE)
-            sprintf(uv_alive, "%c", 'U');
-
-        else if(tstatus & UV_DEAD)
-            sprintf(uv_dead, "%c", 'U');
-
-        if(tstatus & PRESSURE_ALIVE)
-            sprintf(pr_alive, "%c", 'P');
-
-        else if(tstatus & PRESSURE_DEAD)
-            sprintf(pr_dead, "%c", 'P');
-
-        if(tstatus & COMM_ALIVE)
-            sprintf(cm_alive, "%c", 'C');
-
-        else if(tstatus & COMM_DEAD)
-            sprintf(cm_dead, "%c", 'C');
-
-        sprintf(line2, "CLIENT_STATUS: alive [%c %c %c] | dead [%c %c %c]\n" ,uv_alive[0], pr_alive[0], cm_alive[0],
-                                                                                 uv_dead[0], pr_dead[0], cm_dead[0]);
-
-
-        // client info:
-        client_packet->clientInfo = line1;
+        //how data will be logged in bbg
+        // client id:
         // client status: alive tasks [] | dead tasks [] |
-        client_packet->clientStatus = line2;
         // sensor source | payload | unit | for uv sensor
-        client_packet->payLoad1 = line3;
         // sensor source | payload | unit | for pressure sensor
-        client_packet->payLoad2 = line4;
 
 #ifdef SERIAL_DEBUG
         //print string in terminal
-        UARTprintf("%s", line1);
-        UARTprintf("%s", line2);
-        UARTprintf("%s", line3);
-        UARTprintf("%s", line4);
+        UARTprintf("\nclient id: %d\n", client_packet->clientInfo);
+
+        char uv_alive, uv_dead, pr_alive, pr_dead;
+        if(tstatus & UV_ALIVE){
+            uv_alive = 'U';
+            uv_dead = ' ';
+        }
+        else{
+            uv_alive = ' ';
+            uv_dead = 'U';
+        }
+
+        if(tstatus & PRESSURE_ALIVE){
+            pr_alive = 'P';
+            pr_dead = ' ';
+        }
+        else{
+            pr_alive = ' ';
+            pr_dead = 'P';
+        }
+        UARTprintf("client status: alive [%c %c] | dead [%c %c]\n", uv_alive, pr_alive, uv_dead, pr_dead);
+
+
+        uint32_t dec = (int)(client_packet->uv_payLoad);
+        int frac = (client_packet->uv_payLoad - dec) * 100;
+        UARTprintf("sensor: [UV] | [%d.%d] | [?]\n", dec, frac);
+
+        dec = (int)(client_packet->pr_payLoad);
+        frac = (client_packet->pr_payLoad - dec) * 100;
+        UARTprintf("sensor: [PR] | [%d.%d] | [?]\n", dec, frac);
 #endif
 
-        //send to bbg
-
-        //send heart beat
-        if(comm_ReceivedValue & COMM_REQUEST_HB){
-            comm_ReceivedValue = 0;
-            signal = COMM_SEND_HB;
-            xTaskNotify(mainTask_handle, signal, eSetBits);
-            //UARTprintf("COMM task send hb\r\n");
-        }
+        //send client_packet struct to bbg from here
 
     }
 }

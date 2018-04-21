@@ -16,7 +16,7 @@ void vTimerCallback( TimerHandle_t xTimer );
 QueueHandle_t main_comm_Queue = NULL;
 
 uint32_t output_clock_rate_hz;
-task_status_t get_task_status(void);
+task_status_t get_task_status(uint32_t main_ReceivedValue);
 
 extern volatile int status_check_time;
 
@@ -82,13 +82,13 @@ int main(void)
    // create tasks
 
     xTaskCreate(main_task, "MAIN-TASK",
-                configMINIMAL_STACK_SIZE, NULL, 1, &mainTask_handle);
+                configMINIMAL_STACK_SIZE, NULL, 2, &mainTask_handle);
 
     xTaskCreate(uv_task, "UV-TASK",
-                configMINIMAL_STACK_SIZE, NULL, 1, &uvTask_handle);
+                configMINIMAL_STACK_SIZE, NULL, 3, &uvTask_handle);
 
     xTaskCreate(pressure_task, "PRESSURE-TASK",
-                configMINIMAL_STACK_SIZE, NULL, 1, &pressureTask_handle);
+                configMINIMAL_STACK_SIZE, NULL, 3, &pressureTask_handle);
 
     xTaskCreate(comm_task, "COMM-TASK",
                 configMINIMAL_STACK_SIZE, NULL, 1, &commTask_handle);
@@ -100,9 +100,10 @@ int main(void)
 void main_task(void *pvParameters)
 {
     task_status_t tstatus;
-    uint32_t main_ReceivedValue;
+    uint32_t main_ReceivedValue, signal;
     main_comm_Queue = xQueueCreate( MAIN_COMM_QUEUE_LENGTH, sizeof(task_status_t) );
     UARTprintf("Main task running\n");
+
     while(1)
     {
         xTaskNotifyWait(0xFFFFFFFF,
@@ -110,81 +111,49 @@ void main_task(void *pvParameters)
                         &main_ReceivedValue,
                         portMAX_DELAY);
 
-        //functions
         //get heartbeat periodically
-        tstatus = get_task_status();
+        tstatus = get_task_status(main_ReceivedValue);
 
-#ifdef SERIAL_DEBUG
-        if(tstatus & UV_ALIVE)
-            UARTprintf("<UV>\r\n");
-        if(tstatus & PRESSURE_ALIVE)
-            UARTprintf("<PR>\r\n");
-        if(tstatus & COMM_ALIVE)
-            UARTprintf("<COMM>\r\n");
-#endif
+        //clear notification
+        main_ReceivedValue = 0;
 
-        //send status of other tasks to comm task - alive/dead
-        //send data to comm task
-        xQueueSend( main_comm_Queue, &tstatus, portMAX_DELAY);
+        //send alive/dead status tasks to comm task
+        xQueueSend( main_comm_Queue, &tstatus, 0U);
+
+        signal =COMM_WAKE_UP;
+        xTaskNotify(commTask_handle, signal, eSetBits);
 
     }
 }
 
-//return dead or alive based upon heartbeat (3 missed heatbeat)
-task_status_t get_task_status(void)
+//return dead or alive based upon heartbeat
+task_status_t get_task_status(uint32_t ulReceivedValue)
 {
-    uint32_t ulReceivedValue = 0;
-    task_status_t state;
-    static int uv_hb_cnt, comm_hb_cnt, pressure_hb_cnt;
-
-    //receive heartbeat
-    xTaskNotifyWait(0xFFFFFFFF,
-                    ulReceivedValue,
-                    &ulReceivedValue,
-                    portMAX_DELAY);
+    static task_status_t state = ALL_DEAD;
+    static task_status_t prev_state_uv, prev_state_pr;
 
     if(ulReceivedValue & UV_SEND_HB)
-        uv_hb_cnt++;
+    {
+        state |= UV_ALIVE;
+        prev_state_uv = UV_ALIVE;
+    }
+    else if(prev_state_uv == UV_DEAD)
+        state |= UV_DEAD;
+    else
+        prev_state_uv = UV_ALIVE;
+
 
 
     if(ulReceivedValue & PRESSURE_SEND_HB)
-        pressure_hb_cnt++;
-
-
-    if(ulReceivedValue & COMM_SEND_HB)
-        comm_hb_cnt++;
-
-    //clear notification
-    ulReceivedValue = 0;
-
-
-    //UARTprintf("uv: %d, pressure: %d, comm: %d, fired: %d\r\n", uv_hb_cnt, pressure_hb_cnt, comm_hb_cnt,status_check_time );
-    //check for 3 missed heartbeats
-    state = ALL_DEAD;
-
-    if(status_check_time == NUM_MISS_HB){
-        status_check_time = 0;
-
-        if(uv_hb_cnt == 0)
-            state |= UV_DEAD;
-        else
-            state |= UV_ALIVE;
-
-        if(pressure_hb_cnt == 0)
-            state |= PRESSURE_DEAD;
-        else
-            state |= PRESSURE_ALIVE;
-
-        if(comm_hb_cnt == 0)
-            state |= COMM_DEAD;
-        else
-            state |= COMM_ALIVE;
-
-        uv_hb_cnt = 0;
-        pressure_hb_cnt = 0;
-        comm_hb_cnt = 0;
-
+    {
+        state |= PRESSURE_ALIVE;
+        prev_state_pr = PRESSURE_ALIVE;
     }
+    else if(prev_state_pr == PRESSURE_DEAD)
+        state |= PRESSURE_DEAD;
+    else
+        prev_state_pr |= PRESSURE_DEAD;
+
     return state;
 }
 

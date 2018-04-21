@@ -11,8 +11,8 @@
 void pressure_task(void *pvParameters);
 extern QueueHandle_t pressure_hb_Queue;
 
-#define PRESSURE_SEND_HB                (0x22)
-#define PRESSURE_COMM_QUEUE_LENGTH      (2)
+#define PRESSURE_SEND_HB                (0x00000022)
+#define PRESSURE_COMM_QUEUE_LENGTH      (1)
 
 #define PRESSURE_SLAVE_ADDR                     (0x60)
 #define PRESSURE_SLAVE_CONFIG_CNTRL1            (0x26)

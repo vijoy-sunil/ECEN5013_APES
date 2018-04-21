@@ -28,22 +28,23 @@
 #include "utils/uartstdio.h"
 
 //unique identifier
-#define CLIENT_ID               (0x00)
+#define CLIENT_ID               (0x00000001)
 
 // display payload from sensor tasks on terminal
-//#define SERIAL_DEBUG
+#define SERIAL_DEBUG
+
+//turnoff i2c and run code with dummy data
+//#define I2C_ON
 
 // other Macros
 #define SYSTEM_CLOCK            (120000000)
-#define TIMER_PERIOD            (pdMS_TO_TICKS(1000))    //1000 ms
-#define HB_QUEUE_LENGTH         (1)
+#define TIMER_PERIOD            (pdMS_TO_TICKS(1000))
 
-#define UV_REQUEST_HB           (0x01)
-#define PRESSURE_REQUEST_HB     (0x02)
-#define COMM_REQUEST_HB         (0x04)
-#define MAIN_REQUEST_HB         (0x08)
+#define UV_REQUEST_HB           (0x00000001)
+#define PRESSURE_REQUEST_HB     (0x00000002)
+#define COMM_WAKE_UP            (0x00000004)
+#define MAIN_REQUEST_HB         (0x00000008)
 
-#define NUM_MISS_HB             (4)                      //heartbeat check every 3 seconds
 #define MAIN_COMM_QUEUE_LENGTH  (1)
 
 typedef enum{

@@ -35,6 +35,7 @@ void uv_task(void *pvParameters)
 
     msg_pack_t* uv_packet = (msg_pack_t*)malloc(sizeof(msg_pack_t));
 
+#ifdef I2C_ON
     //initialize uv sensor here
     //startup test
     int ret = initialize_uv();
@@ -42,18 +43,20 @@ void uv_task(void *pvParameters)
         UARTprintf("UV sensor init SUCCESS\n");
     else
         UARTprintf("UV sensor init ERROR");
+#endif
 
-    uint32_t packet[1];
+    //uint32_t packet[1];
     while(1)
     {
-        //functions
         //send heartbeat periodically
         xTaskNotifyWait(0xFFFFFFFF,
                         uv_ReceivedValue,
                         &uv_ReceivedValue,
                         portMAX_DELAY);
 
+
         //get sensor data 2 * 8 bit
+#ifdef I2C_ON
         receiveI2C(packet, 1, UV_SLAVE_MSB);
         uv_data[1] = (uint8_t)(packet[0]);
 
@@ -63,17 +66,22 @@ void uv_task(void *pvParameters)
         //pack data
         uv_packet->source = SENSOR_UV;
         uv_packet->payload = uv_data[0] | (uv_data[1] << 8);
+#endif
+
+#ifndef I2C_ON
+        //pack data
+        uv_packet->source = SENSOR_UV;
+        uv_packet->payload = 0.01;
+#endif
 
         //send data to comm task
-        xQueueSend( uv_comm_Queue, uv_packet, portMAX_DELAY);
+        xQueueSend( uv_comm_Queue, &uv_packet, 0U);
 
+        //send heatbeat to maintask
         if(uv_ReceivedValue & UV_REQUEST_HB){
             uv_ReceivedValue = 0;
             signal = UV_SEND_HB;
             xTaskNotify(mainTask_handle, signal, eSetBits);
-            //UARTprintf("UV task send hb\r\n");
         }
-
-
     }
 }

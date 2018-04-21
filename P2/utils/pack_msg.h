@@ -21,10 +21,11 @@ typedef struct{
 
 //message packet from client to server
 typedef struct{
-    char* clientInfo;
-    char* clientStatus;
-    char* payLoad1;
-    char* payLoad2;
+    uint32_t clientInfo;
+    uint32_t clientStatus;
+
+    float uv_payLoad;
+    float pr_payLoad;
 }client_pack_t;
 
 #endif /* UTILS_PACK_MSG_H_ */

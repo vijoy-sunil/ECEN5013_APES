@@ -14,22 +14,22 @@ void pressure_task(void *pvParameters)
     //BaseType_t ret;
 
     //data transfer queue
-    pressure_comm_Queue = xQueueCreate( PRESSURE_COMM_QUEUE_LENGTH, sizeof(unsigned char));
+    pressure_comm_Queue = xQueueCreate( PRESSURE_COMM_QUEUE_LENGTH, sizeof(msg_pack_t));
 
     uint32_t pressure_ReceivedValue, signal;
-    uint8_t pressure_data[4];
+    //uint8_t pressure_data[4];
 
     msg_pack_t* pressure_packet = (msg_pack_t*)malloc(sizeof(msg_pack_t));
-    uint32_t packet[4];
+    //uint32_t packet[4];
+
     while(1)
     {
-        //functions
-        //send heartbeat periodically
         xTaskNotifyWait(0xFFFFFFFF,
                         pressure_ReceivedValue,
                         &pressure_ReceivedValue,
                         portMAX_DELAY);
 
+#ifdef I2C_ON
         // Select control register(0x26)
         // Active mode, OSR = 128, barometer mode(0x39)
         packet[0] = PRESSURE_SLAVE_CONFIG_CNTRL1;
@@ -54,19 +54,23 @@ void pressure_task(void *pvParameters)
         //pack data
         pressure_packet->source = SENSOR_PRESSURE;
         pressure_packet->payload = pressure;
+#endif
+
+#ifndef I2C_ON
+        //pack data
+        pressure_packet->source = SENSOR_PRESSURE;
+        pressure_packet->payload = 0.02;
+#endif
 
         //send data to comm task
-        xQueueSend( pressure_comm_Queue, pressure_packet, portMAX_DELAY);
+        xQueueSend( pressure_comm_Queue, &pressure_packet, 0U);
 
-
+        //send heartbeat to maintask
         if(pressure_ReceivedValue & PRESSURE_REQUEST_HB){
             pressure_ReceivedValue = 0;
             signal = PRESSURE_SEND_HB;
             xTaskNotify(mainTask_handle, signal, eSetBits);
-            //UARTprintf("PRESSURE task send hb\r\n");
         }
-
-
     }
 }
 
