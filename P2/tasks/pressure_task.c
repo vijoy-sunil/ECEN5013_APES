@@ -17,10 +17,17 @@ void pressure_task(void *pvParameters)
     pressure_comm_Queue = xQueueCreate( PRESSURE_COMM_QUEUE_LENGTH, sizeof(msg_pack_t));
 
     uint32_t pressure_ReceivedValue, signal;
-    //uint8_t pressure_data[4];
+    uint8_t pressure_data[3], packet[2];
 
     msg_pack_t* pressure_packet = (msg_pack_t*)malloc(sizeof(msg_pack_t));
-    //uint32_t packet[4];
+
+    //config press sensor
+    // Select control register(0x26)
+    // Active mode, OSR = 128, barometer mode(0x39)
+    packet[0] = PRESSURE_SLAVE_CONFIG_CNTRL;
+    packet[1] = PRESSURE_SLAVE_BAR;
+    sendI2C(packet, 2, PRESSURE_SLAVE_ADDR);
+
 
     while(1)
     {
@@ -29,34 +36,26 @@ void pressure_task(void *pvParameters)
                         &pressure_ReceivedValue,
                         portMAX_DELAY);
 
-#ifdef I2C_ON
-        // Select control register(0x26)
-        // Active mode, OSR = 128, barometer mode(0x39)
-        packet[0] = PRESSURE_SLAVE_CONFIG_CNTRL1;
-        packet[1] = PRESSURE_SLAVE_CONFIG_CNTRL2;
-        sendI2C(packet, 2, PRESSURE_SLAVE_ADDR);
+#ifdef PRESSURE_ON
 
-        // Read 4 bytes of data from register(0x00)
-        // status, pres msb1, pres msb, pres lsb
-        packet[0] = PRESSURE_SLAVE_DATA_ADDR;
-        sendI2C(packet, 1, PRESSURE_SLAVE_ADDR);
+        pressure_data[0] = get_data_from_pressure(MSB_P, PRESSURE_SLAVE_ADDR);
 
-        receiveI2C(packet, 4, PRESSURE_SLAVE_ADDR);
-        pressure_data[0] = (uint8_t)(packet[0]);
-        pressure_data[1] = (uint8_t)(packet[1]);
-        pressure_data[2] = (uint8_t)(packet[2]);
-        pressure_data[3] = (uint8_t)(packet[3]);
+        pressure_data[1] = get_data_from_pressure(CSB_P, PRESSURE_SLAVE_ADDR);
 
-        // Convert the data to 20-bits
-        int pres = ((pressure_data[1] * 65536) + (pressure_data[2] * 256 + (pressure_data[3] & 0xF0))) / 16;
+        pressure_data[2] = get_data_from_pressure(LSB_P, PRESSURE_SLAVE_ADDR);
+
+        // Convert the data
+        int pres = ((pressure_data[0] * 65536) + (pressure_data[1] * 256 + (pressure_data[2] & 0xF0)))/16;
         float pressure = (pres / 4.0) / 1000.0;
 
         //pack data
         pressure_packet->source = SENSOR_PRESSURE;
         pressure_packet->payload = pressure;
+
+        //UARTprintf("msb: %x, csb: %x, lsb: %x\n", pressure_data[0], pressure_data[1], pressure_data[2]);
 #endif
 
-#ifndef I2C_ON
+#ifndef PRESSURE_ON
         //pack data
         pressure_packet->source = SENSOR_PRESSURE;
         pressure_packet->payload = 0.02;

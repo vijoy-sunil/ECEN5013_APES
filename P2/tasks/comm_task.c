@@ -98,12 +98,11 @@ void comm_task(void *pvParameters)
 
 
         uint32_t dec = (int)(client_packet->uv_payLoad);
-        int frac = (client_packet->uv_payLoad - dec) * 100;
-        UARTprintf("sensor: [UV] | [%d.%d] | [?]\n", dec, frac);
+        UARTprintf("sensor: [UV] | [%d] | [UVI]\n", dec);
 
         dec = (int)(client_packet->pr_payLoad);
-        frac = (client_packet->pr_payLoad - dec) * 100;
-        UARTprintf("sensor: [PR] | [%d.%d] | [?]\n", dec, frac);
+        uint32_t frac = (client_packet->pr_payLoad - dec) * 100;
+        UARTprintf("sensor: [PR] | [%d.%d] | [kPa]\n", dec, frac);
 #endif
 
         //send client_packet struct to bbg from here

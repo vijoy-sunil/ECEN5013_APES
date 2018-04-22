@@ -16,7 +16,8 @@
 #include <stdint.h>
 
 void ConfigureI2C(void);
-void sendI2C(uint32_t* packet, uint32_t packet_size, uint8_t slave_addr);
-void receiveI2C(uint32_t* packet, uint32_t packet_size, uint8_t slave_addr);
+void sendI2C(uint8_t* packet, uint8_t num_of_args, uint8_t slave_addr);
+uint8_t get_data_from_uv(uint8_t slave_addr);
+uint8_t  get_data_from_pressure(uint8_t reg, uint8_t slave_addr);
 
 #endif /* COMMS_I2C_DRIVE_H_ */

@@ -1,10 +1,6 @@
 #include "./comms/i2c_drive.h"
 #include "../main.h"
 
-#define NUM_I2C_DATA 3
-
-#define SLAVE_ADDRESS 0x3C
-
 extern uint32_t output_clock_rate_hz;
 
 void ConfigureI2C(void)
@@ -31,67 +27,104 @@ void ConfigureI2C(void)
     I2CMasterInitExpClk(I2C0_BASE, output_clock_rate_hz, false);
 }
 
-void sendI2C(uint32_t* packet, uint32_t packet_size, uint8_t slave_addr)
+void sendI2C(uint8_t* packet, uint8_t num_of_args, uint8_t slave_addr)
 {
-    // Set the slave address
-    I2CSlaveInit(I2C0_BASE, slave_addr);
-
+    int i;
     // Tell the master module what address it will place on the bus when
-    // communicating with the slave.  Set the address to SLAVE_ADDRESS
-    // (as set in the slave module).  The receive parameter is set to false
-    // which indicates the I2C Master is initiating a writes to the slave.
+    // communicating with the slave.
     I2CMasterSlaveAddrSet(I2C0_BASE, slave_addr, false);
 
-    //uint32_t pui32DataTx[packet_size];
-    uint32_t ui32Index;
+    //put data to be sent into FIFO
+    I2CMasterDataPut(I2C0_BASE, packet[0]);
 
-    // Send 3 peices of I2C data from the master to the slave.
-    for(ui32Index = 0; ui32Index < packet_size; ui32Index++)
+    //if there is only one argument, we only need to use the
+    //single send I2C function
+    if(num_of_args == 1)
     {
-        // Place the data to be sent in the data register
-        I2CMasterDataPut(I2C0_BASE, packet[ui32Index]);
-
-        // Initiate send of data from the master
+        //Initiate send of data from the MCU
         I2CMasterControl(I2C0_BASE, I2C_MASTER_CMD_SINGLE_SEND);
 
-        // Wait until the slave has received and acknowledged the data.
-        while(!(I2CSlaveStatus(I2C0_BASE) & I2C_SLAVE_ACT_RREQ));
+        // Wait until MCU is done transferring.
+        while(I2CMasterBusy(I2C0_BASE));
     }
-}
 
-void  receiveI2C(uint32_t* packet, uint32_t packet_size, uint8_t slave_addr)
-{
-    // Set the slave address to SLAVE_ADDRESS
-    I2CSlaveInit(I2C0_BASE, slave_addr);
-
-    // Tell the master module what address it will place on the bus when
-    // communicating with the slave.  Set the address to SLAVE_ADDRESS
-    // (as set in the slave module).
-    I2CMasterSlaveAddrSet(I2C0_BASE, slave_addr, true);
-
-    uint32_t ui32Index;
-
-    // Reset receive buffer.
-    for(ui32Index = 0; ui32Index < packet_size; ui32Index++)
-        packet[ui32Index] = 0;
-
-    for(ui32Index = 0; ui32Index < packet_size; ui32Index++)
+    //otherwise, we start transmission of multiple bytes on the
+    //I2C bus
+    else
     {
-        // Tell the master to read data.
-        I2CMasterControl(I2C0_BASE, I2C_MASTER_CMD_SINGLE_RECEIVE);
+        //Initiate send of data from the MCU
+        I2CMasterControl(I2C0_BASE, I2C_MASTER_CMD_BURST_SEND_START);
 
-        // Wait until transcation is done
+        // Wait until MCU is done transferring.
         while(I2CMasterBusy(I2C0_BASE));
 
-        // Read the data from the master.
-        packet[ui32Index] = I2CMasterDataGet(I2C0_BASE);
+        //send num_of_args-2 pieces of data, using the
+        //BURST_SEND_CONT command of the I2C module
+        for(i = 1; i < (num_of_args - 1); i++)
+        {
+            //put next piece of data into I2C FIFO
+            I2CMasterDataPut(I2C0_BASE, packet[i]);
+            //send next data that was just placed into FIFO
+            I2CMasterControl(I2C0_BASE, I2C_MASTER_CMD_BURST_SEND_CONT);
+
+            // Wait until MCU is done transferring.
+            while(I2CMasterBusy(I2C0_BASE));
+        }
+
+        //put last piece of data into I2C FIFO
+        I2CMasterDataPut(I2C0_BASE, packet[num_of_args - 1]);
+        //send next data that was just placed into FIFO
+        I2CMasterControl(I2C0_BASE, I2C_MASTER_CMD_BURST_SEND_FINISH);
+        // Wait until MCU is done transferring.
+        while(I2CMasterBusy(I2C0_BASE));
     }
 }
 
-void get_uvdata(uint8_t* result){
 
+uint8_t  get_data_from_pressure(uint8_t reg, uint8_t slave_addr)
+{
+    //uint8_t i = 0;
+
+    //specify that we are writing (a register address) to the
+    //slave device
+    I2CMasterSlaveAddrSet(I2C0_BASE, slave_addr, false);
+
+    //specify register to be read
+    I2CMasterDataPut(I2C0_BASE, reg);
+
+    //send control byte and register address byte to slave device
+    I2CMasterControl(I2C0_BASE,I2C_MASTER_CMD_BURST_SEND_START);
+
+    while(!I2CMasterBusy(I2C0_BASE));
+    while(I2CMasterBusy(I2C0_BASE));
+
+    //specify that we are going to read from slave device
+    I2CMasterSlaveAddrSet(I2C0_BASE, slave_addr, true);
+
+    I2CMasterControl(I2C0_BASE, I2C_MASTER_CMD_SINGLE_RECEIVE);
+    //wait for MCU to finish transaction
+    while(!I2CMasterBusy(I2C0_BASE));
+    while(I2CMasterBusy(I2C0_BASE));
+
+    //return data pulled from the specified register
+    return I2CMasterDataGet(I2C0_BASE);
 }
 
+uint8_t get_data_from_uv(uint8_t slave_addr)
+{
+    //specify that we are going to read from slave device
+    I2CMasterSlaveAddrSet(I2C0_BASE, slave_addr, true);
+
+    //send control byte and read from the register we
+    //specified
+    I2CMasterControl(I2C0_BASE, I2C_MASTER_CMD_SINGLE_RECEIVE);
+
+    //wait for MCU to finish transaction
+    while(I2CMasterBusy(I2C0_BASE));
+
+    //return data pulled from the specified register
+    return I2CMasterDataGet(I2C0_BASE);
+}
 
 
 

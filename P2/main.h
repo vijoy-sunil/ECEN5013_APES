@@ -33,8 +33,9 @@
 // display payload from sensor tasks on terminal
 #define SERIAL_DEBUG
 
-//turnoff i2c and run code with dummy data
-//#define I2C_ON
+//comment to turnoff i2c and run code with dummy data
+#define UV_ON
+#define PRESSURE_ON
 
 // other Macros
 #define SYSTEM_CLOCK            (120000000)

@@ -15,12 +15,11 @@ extern QueueHandle_t pressure_hb_Queue;
 #define PRESSURE_COMM_QUEUE_LENGTH      (1)
 
 #define PRESSURE_SLAVE_ADDR                     (0x60)
-#define PRESSURE_SLAVE_CONFIG_CNTRL1            (0x26)
-#define PRESSURE_SLAVE_CONFIG_CNTRL2            (0x39)
+#define PRESSURE_SLAVE_CONFIG_CNTRL             (0x26)
+#define PRESSURE_SLAVE_BAR                      (0x39)
 
-#define PRESSURE_SLAVE_CONFIG_DATA1             (0x13)
-#define PRESSURE_SLAVE_CONFIG_DATA2             (0x07)
-
-#define PRESSURE_SLAVE_DATA_ADDR                (0x00)
+#define MSB_P                (0x01)
+#define CSB_P                (0x02)
+#define LSB_P                (0x03)
 
 #endif /* TASKS_PRESSURE_TASK_H_ */
