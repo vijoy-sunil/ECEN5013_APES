@@ -47,7 +47,7 @@ void socket_client_task(void *pvParameters)
     ret = FreeRTOS_bind(xClientSocket, NULL, xSize);
 
     configASSERT(ret == 0);        //0 for success
-    UARTprintf("\nClient Created and bound to port\n");
+    UARTprintf("Client created and bound to port\n");
     //set up the remote server address here
     struct freertos_sockaddr xRemoteAddress;
     /* Set the IP address & port of server to which client will transmit. */
@@ -61,10 +61,9 @@ void socket_client_task(void *pvParameters)
 
     ret = FreeRTOS_connect(xClientSocket, &xRemoteAddress, sizeof(xRemoteAddress));
 
-    //const char* pcBufferToTransmit = "string test\n";    //tiva test packet
     if(ret!=0)
     {
-       UARTprintf("\nClient could not connect to server:%d\n",ret);
+       UARTprintf("Client could not connect to server:%d\n",ret);
        /* Initiate graceful shutdown. */
        FreeRTOS_shutdown(xClientSocket, FREERTOS_SHUT_RDWR);
        /* Wait for the socket to disconnect gracefully (indicated by FreeRTOS_recv()
@@ -73,7 +72,7 @@ void socket_client_task(void *pvParameters)
 
     else
     {
-        UARTprintf("\nClient connected to server\n");
+        UARTprintf("Client connected to server\n");
         BaseType_t xBytesSent;
         while (1)
         {

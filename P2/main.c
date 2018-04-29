@@ -1,4 +1,5 @@
 #include "main.h"
+#include "./comm/uart_client.h"
 #include "./tasks/comm_task.h"
 #include "./tasks/uv_task.h"
 #include "./tasks/pressure_task.h"
@@ -39,8 +40,9 @@ int main(void)
     // Configure the I2C
     ConfigureI2C();
 
-    // configure led
+    // configure leds - heartbeats for sensors
     ROM_SysCtlPeripheralEnable(SYSCTL_PERIPH_GPION);
+    ROM_GPIOPinTypeGPIOOutput(GPIO_PORTN_BASE, GPIO_PIN_0);
     ROM_GPIOPinTypeGPIOOutput(GPIO_PORTN_BASE, GPIO_PIN_1);
 
     // configure timer
@@ -163,8 +165,14 @@ task_status_t get_task_status(uint32_t ulReceivedValue)
     static task_status_t state = ALL_DEAD;
     static task_status_t prev_state_uv, prev_state_pr;
 
+    static uint32_t toggle_led1 = GPIO_PIN_1;
+    static uint32_t toggle_led0 = GPIO_PIN_0;
+
     if(ulReceivedValue & UV_SEND_HB)
     {
+        toggle_led0 ^= 0x00000001;
+        ROM_GPIOPinWrite(GPIO_PORTN_BASE, GPIO_PIN_0, toggle_led0);     //led heartbeat
+
         state |= UV_ALIVE;
         prev_state_uv = UV_ALIVE;
     }
@@ -177,6 +185,9 @@ task_status_t get_task_status(uint32_t ulReceivedValue)
 
     if(ulReceivedValue & PRESSURE_SEND_HB)
     {
+        toggle_led1 ^= 0x00000002;
+        ROM_GPIOPinWrite(GPIO_PORTN_BASE, GPIO_PIN_1, toggle_led1);     //led heartbeat
+
         state |= PRESSURE_ALIVE;
         prev_state_pr = PRESSURE_ALIVE;
     }

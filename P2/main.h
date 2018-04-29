@@ -34,7 +34,7 @@
 //#define USE_SOCKET_CLIENT
 
 //comment to turn off i2c_client
-//#define USE_UART_CLIENT
+#define USE_UART_CLIENT
 
 // display payload from sensor tasks on terminal
 #define SERIAL_DEBUG

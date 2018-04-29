@@ -37,6 +37,7 @@ main.obj: C:/ti/TivaWare_C_Series-2.1.4.178/driverlib/sysctl.h
 main.obj: C:/ti/TivaWare_C_Series-2.1.4.178/driverlib/debug.h
 main.obj: C:/ti/TivaWare_C_Series-2.1.4.178/driverlib/uart.h
 main.obj: C:/ti/TivaWare_C_Series-2.1.4.178/utils/uartstdio.h
+main.obj: .././comm/uart_client.h
 main.obj: .././tasks/comm_task.h
 main.obj: .././tasks/uv_task.h
 main.obj: .././tasks/pressure_task.h
@@ -89,6 +90,7 @@ C:/ti/TivaWare_C_Series-2.1.4.178/driverlib/sysctl.h:
 C:/ti/TivaWare_C_Series-2.1.4.178/driverlib/debug.h: 
 C:/ti/TivaWare_C_Series-2.1.4.178/driverlib/uart.h: 
 C:/ti/TivaWare_C_Series-2.1.4.178/utils/uartstdio.h: 
+.././comm/uart_client.h: 
 .././tasks/comm_task.h: 
 .././tasks/uv_task.h: 
 .././tasks/pressure_task.h: 

@@ -53,9 +53,6 @@ void uv_task(void *pvParameters)
             int ret = initialize_uv();
             if(ret)
                 UARTprintf("UV sensor init SUCCESS\n");
-            else
-                UARTprintf("UV sensor init ERROR");
-
             uv_initialized = 1;
         }
 

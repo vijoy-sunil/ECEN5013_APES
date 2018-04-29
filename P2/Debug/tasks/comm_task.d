@@ -1,7 +1,6 @@
 # FIXED
 
 tasks/comm_task.obj: ../tasks/comm_task.c
-tasks/comm_task.obj: C:/Users/VIJOY-PC/workspace_v8/apes_p2/comm/uart_client.h
 tasks/comm_task.obj: ../tasks/../main.h
 tasks/comm_task.obj: ../tasks/../FreeRTOSConfig.h
 tasks/comm_task.obj: C:/Users/VIJOY-PC/Downloads/FreeRTOSv10.0.1/FreeRTOS/Source/include/FreeRTOS.h
@@ -43,7 +42,6 @@ tasks/comm_task.obj: C:/Users/VIJOY-PC/workspace_v8/apes_p2/./utils/pack_msg.h
 tasks/comm_task.obj: ../tasks/../comm/socket_client.h
 
 ../tasks/comm_task.c: 
-C:/Users/VIJOY-PC/workspace_v8/apes_p2/comm/uart_client.h: 
 ../tasks/../main.h: 
 ../tasks/../FreeRTOSConfig.h: 
 C:/Users/VIJOY-PC/Downloads/FreeRTOSv10.0.1/FreeRTOS/Source/include/FreeRTOS.h: 
