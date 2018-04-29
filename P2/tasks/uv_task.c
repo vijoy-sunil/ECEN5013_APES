@@ -1,9 +1,8 @@
-#include <comms/i2c_drive.h>
 #include "../main.h"
 #include "./tasks/uv_task.h"
 #include "./utils/pack_msg.h"
 #include "./tasks/comm_task.h"
-#include "./comms/i2c_drive.h"
+#include "./comm/i2c_drive.h"
 
 
 QueueHandle_t uv_comm_Queue = NULL;
@@ -28,21 +27,9 @@ void uv_task(void *pvParameters)
 {
     //data transfer queue
     uv_comm_Queue = xQueueCreate( UV_COMM_QUEUE_LENGTH, sizeof(msg_pack_t) );
-    int uv_rad;
-    uv_index_t uv_index;
+
     uint32_t uv_ReceivedValue, signal;
     msg_pack_t* uv_packet = (msg_pack_t*)malloc(sizeof(msg_pack_t));
-
-#ifdef UV_ON
-    uint8_t uv_data[2];
-    //initialize uv sensor here
-    int ret = initialize_uv();
-    if(ret)
-        UARTprintf("UV sensor init SUCCESS\n");
-    else
-        UARTprintf("UV sensor init ERROR");
-#endif
-
 
     while(1)
     {
@@ -55,6 +42,23 @@ void uv_task(void *pvParameters)
 
         //get sensor data 2 * 8 bit
 #ifdef UV_ON
+
+        int uv_rad;
+        static int uv_initialized = 0;
+        uv_index_t uv_index;
+        uint8_t uv_data[2];
+        //initialize uv sensor here
+        if(uv_initialized == 0)
+        {
+            int ret = initialize_uv();
+            if(ret)
+                UARTprintf("UV sensor init SUCCESS\n");
+            else
+                UARTprintf("UV sensor init ERROR");
+
+            uv_initialized = 1;
+        }
+
         uv_data[0] = get_data_from_uv(UV_SLAVE_MSB);
 
         uv_data[1] = get_data_from_uv(UV_SLAVE_LSB);
@@ -83,6 +87,7 @@ void uv_task(void *pvParameters)
         //pack data
         uv_packet->source = SENSOR_UV;
         uv_packet->payload = 0.01;
+
 #endif
 
         //send data to comm task

@@ -63,7 +63,7 @@
 #define FREERTOS_MESSAGE_BUFFER_H
 
 /* Message buffers are built onto of stream buffers. */
-#include "../../include/stream_buffer.h"
+#include "stream_buffer.h"
 
 #if defined( __cplusplus )
 extern "C" {

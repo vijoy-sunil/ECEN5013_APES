@@ -8,7 +8,6 @@ SHELL = cmd.exe
 C_SRCS += \
 ../FreeRTOS/croutine.c \
 ../FreeRTOS/event_groups.c \
-../FreeRTOS/heap_2.c \
 ../FreeRTOS/list.c \
 ../FreeRTOS/queue.c \
 ../FreeRTOS/stream_buffer.c \
@@ -18,7 +17,6 @@ C_SRCS += \
 C_DEPS += \
 ./FreeRTOS/croutine.d \
 ./FreeRTOS/event_groups.d \
-./FreeRTOS/heap_2.d \
 ./FreeRTOS/list.d \
 ./FreeRTOS/queue.d \
 ./FreeRTOS/stream_buffer.d \
@@ -28,7 +26,6 @@ C_DEPS += \
 OBJS += \
 ./FreeRTOS/croutine.obj \
 ./FreeRTOS/event_groups.obj \
-./FreeRTOS/heap_2.obj \
 ./FreeRTOS/list.obj \
 ./FreeRTOS/queue.obj \
 ./FreeRTOS/stream_buffer.obj \
@@ -38,7 +35,6 @@ OBJS += \
 OBJS__QUOTED += \
 "FreeRTOS\croutine.obj" \
 "FreeRTOS\event_groups.obj" \
-"FreeRTOS\heap_2.obj" \
 "FreeRTOS\list.obj" \
 "FreeRTOS\queue.obj" \
 "FreeRTOS\stream_buffer.obj" \
@@ -48,7 +44,6 @@ OBJS__QUOTED += \
 C_DEPS__QUOTED += \
 "FreeRTOS\croutine.d" \
 "FreeRTOS\event_groups.d" \
-"FreeRTOS\heap_2.d" \
 "FreeRTOS\list.d" \
 "FreeRTOS\queue.d" \
 "FreeRTOS\stream_buffer.d" \
@@ -58,7 +53,6 @@ C_DEPS__QUOTED += \
 C_SRCS__QUOTED += \
 "../FreeRTOS/croutine.c" \
 "../FreeRTOS/event_groups.c" \
-"../FreeRTOS/heap_2.c" \
 "../FreeRTOS/list.c" \
 "../FreeRTOS/queue.c" \
 "../FreeRTOS/stream_buffer.c" \

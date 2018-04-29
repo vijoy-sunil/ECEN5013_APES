@@ -77,7 +77,7 @@
 #define configUSE_PREEMPTION            1
 #define configUSE_IDLE_HOOK             0
 #define configUSE_TICK_HOOK             0
-#define configMAX_PRIORITIES            ( 5 )
+#define configMAX_PRIORITIES            ( 15 )
 #define configMINIMAL_STACK_SIZE        ( ( unsigned short ) 200 )
 #define configTOTAL_HEAP_SIZE           ( ( size_t ) ( 50000 ) )
 #define configMAX_TASK_NAME_LEN         ( 10 )
@@ -92,6 +92,10 @@
 #define configUSE_APPLICATION_TASK_TAG  0
 #define configUSE_COUNTING_SEMAPHORES   1
 #define configUSE_TASK_NOTIFICATIONS    1
+#define configSUPPORT_STATIC_ALLOCATION         0
+
+// 1 then RTOS objects can be created using RAM that is automatically allocated from the FreeRTOS heap.
+#define configSUPPORT_DYNAMIC_ALLOCATION        1
 
 /* Co-routine definitions. */
 #define configUSE_CO_ROUTINES           0

@@ -13,7 +13,7 @@ FreeRTOS/stream_buffer.obj: C:/ti/ccsv8/tools/compiler/ti-cgt-arm_18.1.1.LTS/inc
 FreeRTOS/stream_buffer.obj: C:/ti/ccsv8/tools/compiler/ti-cgt-arm_18.1.1.LTS/include/linkage.h
 FreeRTOS/stream_buffer.obj: C:/Users/VIJOY-PC/Downloads/FreeRTOSv10.0.1/FreeRTOS/Source/include/FreeRTOS.h
 FreeRTOS/stream_buffer.obj: C:/ti/ccsv8/tools/compiler/ti-cgt-arm_18.1.1.LTS/include/stddef.h
-FreeRTOS/stream_buffer.obj: C:/Users/VIJOY-PC/workspace_v8/p2/FreeRTOSConfig.h
+FreeRTOS/stream_buffer.obj: C:/Users/VIJOY-PC/workspace_v8/apes_p2/FreeRTOSConfig.h
 FreeRTOS/stream_buffer.obj: C:/Users/VIJOY-PC/Downloads/FreeRTOSv10.0.1/FreeRTOS/Source/include/projdefs.h
 FreeRTOS/stream_buffer.obj: C:/Users/VIJOY-PC/Downloads/FreeRTOSv10.0.1/FreeRTOS/Source/include/portable.h
 FreeRTOS/stream_buffer.obj: C:/Users/VIJOY-PC/Downloads/FreeRTOSv10.0.1/FreeRTOS/Source/include/deprecated_definitions.h
@@ -36,7 +36,7 @@ C:/ti/ccsv8/tools/compiler/ti-cgt-arm_18.1.1.LTS/include/_ti_config.h:
 C:/ti/ccsv8/tools/compiler/ti-cgt-arm_18.1.1.LTS/include/linkage.h: 
 C:/Users/VIJOY-PC/Downloads/FreeRTOSv10.0.1/FreeRTOS/Source/include/FreeRTOS.h: 
 C:/ti/ccsv8/tools/compiler/ti-cgt-arm_18.1.1.LTS/include/stddef.h: 
-C:/Users/VIJOY-PC/workspace_v8/p2/FreeRTOSConfig.h: 
+C:/Users/VIJOY-PC/workspace_v8/apes_p2/FreeRTOSConfig.h: 
 C:/Users/VIJOY-PC/Downloads/FreeRTOSv10.0.1/FreeRTOS/Source/include/projdefs.h: 
 C:/Users/VIJOY-PC/Downloads/FreeRTOSv10.0.1/FreeRTOS/Source/include/portable.h: 
 C:/Users/VIJOY-PC/Downloads/FreeRTOSv10.0.1/FreeRTOS/Source/include/deprecated_definitions.h: 

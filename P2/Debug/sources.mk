@@ -114,7 +114,11 @@ SUBDIRS := \
 . \
 FreeRTOS \
 FreeRTOS/portable/CCS/ARM_CM4F \
-comms \
+FreeRTOS/portable/MemMang \
+FreeRTOS+TCP \
+FreeRTOS+TCP/portable/BufferManagement \
+FreeRTOS+TCP/portable/NetworkInterface \
+comm \
 tasks \
 utils \
 

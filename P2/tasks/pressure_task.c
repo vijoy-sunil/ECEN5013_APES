@@ -1,9 +1,9 @@
-#include <comms/i2c_drive.h>
+
 #include "../main.h"
 #include "./tasks/pressure_task.h"
 #include "./utils/pack_msg.h"
 #include "./tasks/comm_task.h"
-#include "./comms/i2c_drive.h"
+#include "./comm/i2c_drive.h"
 
 QueueHandle_t pressure_comm_Queue = NULL;
 extern TaskHandle_t mainTask_handle;
@@ -17,17 +17,9 @@ void pressure_task(void *pvParameters)
     pressure_comm_Queue = xQueueCreate( PRESSURE_COMM_QUEUE_LENGTH, sizeof(msg_pack_t));
 
     uint32_t pressure_ReceivedValue, signal;
-    uint8_t pressure_data[3], packet[2];
+
 
     msg_pack_t* pressure_packet = (msg_pack_t*)malloc(sizeof(msg_pack_t));
-
-    //config press sensor
-    // Select control register(0x26)
-    // Active mode, OSR = 128, barometer mode(0x39)
-    packet[0] = PRESSURE_SLAVE_CONFIG_CNTRL;
-    packet[1] = PRESSURE_SLAVE_BAR;
-    sendI2C(packet, 2, PRESSURE_SLAVE_ADDR);
-
 
     while(1)
     {
@@ -37,6 +29,19 @@ void pressure_task(void *pvParameters)
                         portMAX_DELAY);
 
 #ifdef PRESSURE_ON
+        //config press sensor
+        // Select control register(0x26)
+        // Active mode, OSR = 128, barometer mode(0x39)
+        static int pr_initialized = 0;
+        uint8_t pressure_data[3], packet[2];
+        if(pr_initialized == 0)
+        {
+            packet[0] = PRESSURE_SLAVE_CONFIG_CNTRL;
+            packet[1] = PRESSURE_SLAVE_BAR;
+            sendI2C(packet, 2, PRESSURE_SLAVE_ADDR);
+
+            pr_initialized = 1;
+        }
 
         pressure_data[0] = get_data_from_pressure(MSB_P, PRESSURE_SLAVE_ADDR);
 
@@ -59,6 +64,7 @@ void pressure_task(void *pvParameters)
         //pack data
         pressure_packet->source = SENSOR_PRESSURE;
         pressure_packet->payload = 0.02;
+
 #endif
 
         //send data to comm task

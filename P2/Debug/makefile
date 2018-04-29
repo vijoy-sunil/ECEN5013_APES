@@ -14,7 +14,6 @@ ORDERED_OBJS += \
 "./tm4c1294ncpdt_startup_ccs.obj" \
 "./FreeRTOS/croutine.obj" \
 "./FreeRTOS/event_groups.obj" \
-"./FreeRTOS/heap_2.obj" \
 "./FreeRTOS/list.obj" \
 "./FreeRTOS/queue.obj" \
 "./FreeRTOS/stream_buffer.obj" \
@@ -22,11 +21,25 @@ ORDERED_OBJS += \
 "./FreeRTOS/timers.obj" \
 "./FreeRTOS/portable/CCS/ARM_CM4F/port.obj" \
 "./FreeRTOS/portable/CCS/ARM_CM4F/portasm.obj" \
-"./comms/i2c_drive.obj" \
+"./FreeRTOS/portable/MemMang/heap_4.obj" \
+"./FreeRTOS+TCP/FreeRTOS_ARP.obj" \
+"./FreeRTOS+TCP/FreeRTOS_DHCP.obj" \
+"./FreeRTOS+TCP/FreeRTOS_DNS.obj" \
+"./FreeRTOS+TCP/FreeRTOS_IP.obj" \
+"./FreeRTOS+TCP/FreeRTOS_Sockets.obj" \
+"./FreeRTOS+TCP/FreeRTOS_Stream_Buffer.obj" \
+"./FreeRTOS+TCP/FreeRTOS_TCP_IP.obj" \
+"./FreeRTOS+TCP/FreeRTOS_TCP_WIN.obj" \
+"./FreeRTOS+TCP/FreeRTOS_UDP_IP.obj" \
+"./FreeRTOS+TCP/portable/BufferManagement/BufferAllocation_2.obj" \
+"./FreeRTOS+TCP/portable/NetworkInterface/NetworkInterface.obj" \
+"./comm/i2c_drive.obj" \
+"./comm/socket_client.obj" \
+"./comm/uart_client.obj" \
 "./tasks/comm_task.obj" \
 "./tasks/pressure_task.obj" \
 "./tasks/uv_task.obj" \
-"./utils/heatbeat_timer.obj" \
+"./utils/heartbeat_timer.obj" \
 "./utils/uartstdio.obj" \
 "../tm4c1294ncpdt.cmd" \
 $(GEN_CMDS__FLAG) \
@@ -43,13 +56,21 @@ RMDIR := RMDIR /S/Q
 -include subdir_vars.mk
 -include FreeRTOS/subdir_vars.mk
 -include FreeRTOS/portable/CCS/ARM_CM4F/subdir_vars.mk
--include comms/subdir_vars.mk
+-include FreeRTOS/portable/MemMang/subdir_vars.mk
+-include FreeRTOS+TCP/subdir_vars.mk
+-include FreeRTOS+TCP/portable/BufferManagement/subdir_vars.mk
+-include FreeRTOS+TCP/portable/NetworkInterface/subdir_vars.mk
+-include comm/subdir_vars.mk
 -include tasks/subdir_vars.mk
 -include utils/subdir_vars.mk
 -include subdir_rules.mk
 -include FreeRTOS/subdir_rules.mk
 -include FreeRTOS/portable/CCS/ARM_CM4F/subdir_rules.mk
--include comms/subdir_rules.mk
+-include FreeRTOS/portable/MemMang/subdir_rules.mk
+-include FreeRTOS+TCP/subdir_rules.mk
+-include FreeRTOS+TCP/portable/BufferManagement/subdir_rules.mk
+-include FreeRTOS+TCP/portable/NetworkInterface/subdir_rules.mk
+-include comm/subdir_rules.mk
 -include tasks/subdir_rules.mk
 -include utils/subdir_rules.mk
 -include objects.mk
@@ -148,42 +169,42 @@ endif
 
 # Add inputs and outputs from these tool invocations to the build variables 
 EXE_OUTPUTS += \
-p2.out \
+apes_p2.out \
 
 EXE_OUTPUTS__QUOTED += \
-"p2.out" \
+"apes_p2.out" \
 
 BIN_OUTPUTS += \
-p2.hex \
+apes_p2.hex \
 
 BIN_OUTPUTS__QUOTED += \
-"p2.hex" \
+"apes_p2.hex" \
 
 
 # All Target
 all: $(OBJS) $(CMD_SRCS) $(GEN_CMDS)
-	@$(MAKE) --no-print-directory -Onone "p2.out"
+	@$(MAKE) --no-print-directory -Onone "apes_p2.out"
 
 # Tool invocations
-p2.out: $(OBJS) $(CMD_SRCS) $(GEN_CMDS)
+apes_p2.out: $(OBJS) $(CMD_SRCS) $(GEN_CMDS)
 	@echo 'Building target: "$@"'
 	@echo 'Invoking: ARM Linker'
-	"C:/ti/ccsv8/tools/compiler/ti-cgt-arm_18.1.1.LTS/bin/armcl" -mv7M4 --code_state=16 --float_support=FPv4SPD16 -me --define=ccs="ccs" --define=TARGET_IS_TM4C129_RA0 --define=PART_TM4C1294NCPDT -g --gcc --diag_warning=225 --diag_wrap=off --display_error_number --abi=eabi -z -m"p2.map" --heap_size=128 --stack_size=512 -i"C:/ti/ccsv8/tools/compiler/ti-cgt-arm_18.1.1.LTS/lib" -i"C:/ti/ccsv8/tools/compiler/ti-cgt-arm_18.1.1.LTS/include" --reread_libs --diag_wrap=off --display_error_number --warn_sections --xml_link_info="p2_linkInfo.xml" --rom_model -o "p2.out" $(ORDERED_OBJS)
+	"C:/ti/ccsv8/tools/compiler/ti-cgt-arm_18.1.1.LTS/bin/armcl" -mv7M4 --code_state=16 --float_support=FPv4SPD16 -me --define=ccs="ccs" --define=TARGET_IS_TM4C129_RA0 --define=PART_TM4C1294NCPDT -g --gcc --diag_warning=225 --diag_wrap=off --display_error_number --abi=eabi -z -m"apes_p2.map" --heap_size=512 --stack_size=512 -i"C:/ti/ccsv8/tools/compiler/ti-cgt-arm_18.1.1.LTS/lib" -i"C:/ti/ccsv8/tools/compiler/ti-cgt-arm_18.1.1.LTS/include" --reread_libs --diag_wrap=off --display_error_number --warn_sections --xml_link_info="apes_p2_linkInfo.xml" --rom_model -o "apes_p2.out" $(ORDERED_OBJS)
 	@echo 'Finished building target: "$@"'
 	@echo ' '
 
-p2.hex: $(EXE_OUTPUTS)
+apes_p2.hex: $(EXE_OUTPUTS)
 	@echo 'Building files: $(strip $(EXE_OUTPUTS__QUOTED))'
 	@echo 'Invoking: ARM Hex Utility'
-	"C:/ti/ccsv8/tools/compiler/ti-cgt-arm_18.1.1.LTS/bin/armhex"  -o "p2.hex" $(EXE_OUTPUTS__QUOTED)
+	"C:/ti/ccsv8/tools/compiler/ti-cgt-arm_18.1.1.LTS/bin/armhex"  -o "apes_p2.hex" $(EXE_OUTPUTS__QUOTED)
 	@echo 'Finished building: $(strip $(EXE_OUTPUTS__QUOTED))'
 	@echo ' '
 
 # Other Targets
 clean:
 	-$(RM) $(BIN_OUTPUTS__QUOTED)$(EXE_OUTPUTS__QUOTED)
-	-$(RM) "main.obj" "tm4c1294ncpdt_startup_ccs.obj" "FreeRTOS\croutine.obj" "FreeRTOS\event_groups.obj" "FreeRTOS\heap_2.obj" "FreeRTOS\list.obj" "FreeRTOS\queue.obj" "FreeRTOS\stream_buffer.obj" "FreeRTOS\tasks.obj" "FreeRTOS\timers.obj" "FreeRTOS\portable\CCS\ARM_CM4F\port.obj" "FreeRTOS\portable\CCS\ARM_CM4F\portasm.obj" "comms\i2c_drive.obj" "tasks\comm_task.obj" "tasks\pressure_task.obj" "tasks\uv_task.obj" "utils\heatbeat_timer.obj" "utils\uartstdio.obj" 
-	-$(RM) "main.d" "tm4c1294ncpdt_startup_ccs.d" "FreeRTOS\croutine.d" "FreeRTOS\event_groups.d" "FreeRTOS\heap_2.d" "FreeRTOS\list.d" "FreeRTOS\queue.d" "FreeRTOS\stream_buffer.d" "FreeRTOS\tasks.d" "FreeRTOS\timers.d" "FreeRTOS\portable\CCS\ARM_CM4F\port.d" "comms\i2c_drive.d" "tasks\comm_task.d" "tasks\pressure_task.d" "tasks\uv_task.d" "utils\heatbeat_timer.d" "utils\uartstdio.d" 
+	-$(RM) "main.obj" "tm4c1294ncpdt_startup_ccs.obj" "FreeRTOS\croutine.obj" "FreeRTOS\event_groups.obj" "FreeRTOS\list.obj" "FreeRTOS\queue.obj" "FreeRTOS\stream_buffer.obj" "FreeRTOS\tasks.obj" "FreeRTOS\timers.obj" "FreeRTOS\portable\CCS\ARM_CM4F\port.obj" "FreeRTOS\portable\CCS\ARM_CM4F\portasm.obj" "FreeRTOS\portable\MemMang\heap_4.obj" "FreeRTOS+TCP\FreeRTOS_ARP.obj" "FreeRTOS+TCP\FreeRTOS_DHCP.obj" "FreeRTOS+TCP\FreeRTOS_DNS.obj" "FreeRTOS+TCP\FreeRTOS_IP.obj" "FreeRTOS+TCP\FreeRTOS_Sockets.obj" "FreeRTOS+TCP\FreeRTOS_Stream_Buffer.obj" "FreeRTOS+TCP\FreeRTOS_TCP_IP.obj" "FreeRTOS+TCP\FreeRTOS_TCP_WIN.obj" "FreeRTOS+TCP\FreeRTOS_UDP_IP.obj" "FreeRTOS+TCP\portable\BufferManagement\BufferAllocation_2.obj" "FreeRTOS+TCP\portable\NetworkInterface\NetworkInterface.obj" "comm\i2c_drive.obj" "comm\socket_client.obj" "comm\uart_client.obj" "tasks\comm_task.obj" "tasks\pressure_task.obj" "tasks\uv_task.obj" "utils\heartbeat_timer.obj" "utils\uartstdio.obj" 
+	-$(RM) "main.d" "tm4c1294ncpdt_startup_ccs.d" "FreeRTOS\croutine.d" "FreeRTOS\event_groups.d" "FreeRTOS\list.d" "FreeRTOS\queue.d" "FreeRTOS\stream_buffer.d" "FreeRTOS\tasks.d" "FreeRTOS\timers.d" "FreeRTOS\portable\CCS\ARM_CM4F\port.d" "FreeRTOS\portable\MemMang\heap_4.d" "FreeRTOS+TCP\FreeRTOS_ARP.d" "FreeRTOS+TCP\FreeRTOS_DHCP.d" "FreeRTOS+TCP\FreeRTOS_DNS.d" "FreeRTOS+TCP\FreeRTOS_IP.d" "FreeRTOS+TCP\FreeRTOS_Sockets.d" "FreeRTOS+TCP\FreeRTOS_Stream_Buffer.d" "FreeRTOS+TCP\FreeRTOS_TCP_IP.d" "FreeRTOS+TCP\FreeRTOS_TCP_WIN.d" "FreeRTOS+TCP\FreeRTOS_UDP_IP.d" "FreeRTOS+TCP\portable\BufferManagement\BufferAllocation_2.d" "FreeRTOS+TCP\portable\NetworkInterface\NetworkInterface.d" "comm\i2c_drive.d" "comm\socket_client.d" "comm\uart_client.d" "tasks\comm_task.d" "tasks\pressure_task.d" "tasks\uv_task.d" "utils\heartbeat_timer.d" "utils\uartstdio.d" 
 	-$(RM) "FreeRTOS\portable\CCS\ARM_CM4F\portasm.d" 
 	-@echo 'Finished clean'
 	-@echo ' '

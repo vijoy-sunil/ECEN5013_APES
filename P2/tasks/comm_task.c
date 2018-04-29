@@ -1,6 +1,40 @@
+#include <comm/uart_client.h>
 #include "../main.h"
 #include "./tasks/comm_task.h"
 #include "./utils/pack_msg.h"
+
+#include "../comm/socket_client.h"
+extern uint32_t output_clock_rate_hz;
+extern TaskHandle_t socket_clientTask_handle;
+int socket_client_task_ready = 0;
+// Configure the UART and its pins
+void ConfigureUART_client(void)
+{
+    // Enable the GPIO Peripheral used by the UART.
+    ROM_SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOP);
+
+    // Enable UART0
+    ROM_SysCtlPeripheralEnable(SYSCTL_PERIPH_UART6);
+
+    // Configure GPIO Pins for UART mode.
+    ROM_GPIOPinConfigure(GPIO_PP0_U6RX);
+    ROM_GPIOPinConfigure(GPIO_PP1_U6TX);
+    ROM_GPIOPinTypeUART(GPIO_PORTP_BASE, GPIO_PIN_0 | GPIO_PIN_1);
+
+    UARTConfigSetExpClk(UART6_BASE, output_clock_rate_hz, 9600,
+                        (UART_CONFIG_WLEN_8 | UART_CONFIG_STOP_ONE |
+                         UART_CONFIG_PAR_NONE));
+}
+
+void uart_send_data(uint32_t ui32UARTBase, const uint8_t *pui8Buffer, uint32_t ui32Count)
+{
+    // Loop while there are more characters to send.
+    while(ui32Count--)
+    {
+        // Write the next character to the UART.
+        MAP_UARTCharPut(ui32UARTBase, *pui8Buffer++);
+    }
+}
 
 // Configure the UART and its pins
 void ConfigureUART(void)
@@ -25,13 +59,17 @@ extern QueueHandle_t uv_comm_Queue;
 extern QueueHandle_t main_comm_Queue;
 extern QueueHandle_t pressure_comm_Queue;
 
+
+QueueHandle_t comm_socket_Queue = NULL;
 void comm_task(void *pvParameters)
 {
+    //data transfer queue
+    comm_socket_Queue = xQueueCreate( COMM_SOCKET_QUEUE_LENGTH, sizeof(client_pack_t) );
     client_pack_t* client_packet = (client_pack_t*)malloc(sizeof(client_pack_t));
 
     //BaseType_t ret;
-    msg_pack_t* packReceived;
-    uint32_t comm_ReceivedValue;
+    msg_pack_t* packReceived = (msg_pack_t*)malloc(sizeof(msg_pack_t));
+    uint32_t comm_ReceivedValue = 0;
 
     task_status_t tstatus;
     while(1)
@@ -42,6 +80,7 @@ void comm_task(void *pvParameters)
                         &comm_ReceivedValue,
                         portMAX_DELAY);
 
+        //notify from uv sensor{
         //receive sensor data
         xQueueReceive( uv_comm_Queue, &packReceived, 0U );
 
@@ -52,14 +91,16 @@ void comm_task(void *pvParameters)
         {
             client_packet->uv_payLoad = packReceived->payload;
         }
+        //}
 
-
+        //notify from pressure sensor{
         xQueueReceive( pressure_comm_Queue, &packReceived, 0U );
 
         if(packReceived->source == SENSOR_PRESSURE)
         {
             client_packet->pr_payLoad = packReceived->payload;
         }
+        //}
 
         //get task status from main task
         //queue receive here
@@ -106,6 +147,26 @@ void comm_task(void *pvParameters)
 #endif
 
         //send client_packet struct to bbg from here
+
+#ifdef USE_SOCKET_CLIENT
+        uint32_t signal;
+
+        //get notification from network interface
+        if(socket_client_task_ready == 1)
+        {
+            //send client_packet struct thru queue to socket task
+            xQueueSend( comm_socket_Queue, &client_packet, 0U);
+            //notify socket task
+            signal = SOCKET_WAKE_UP;
+            xTaskNotify(socket_clientTask_handle, signal, eSetBits);
+        }
+#endif
+
+
+#ifdef USE_UART_CLIENT
+        int numberOfBytes = sizeof(client_pack_t);
+        uart_send_data(UART6_BASE, (const uint8_t*)client_packet,numberOfBytes );
+#endif
 
     }
 }

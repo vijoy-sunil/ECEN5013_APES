@@ -40,9 +40,17 @@ main.obj: C:/ti/TivaWare_C_Series-2.1.4.178/utils/uartstdio.h
 main.obj: .././tasks/comm_task.h
 main.obj: .././tasks/uv_task.h
 main.obj: .././tasks/pressure_task.h
-main.obj: .././comms/i2c_drive.h
+main.obj: .././comm/i2c_drive.h
 main.obj: C:/ti/TivaWare_C_Series-2.1.4.178/inc/hw_i2c.h
 main.obj: C:/ti/TivaWare_C_Series-2.1.4.178/driverlib/i2c.h
+main.obj: C:/Users/VIJOY-PC/Downloads/FreeRTOSv10.0.1/FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/include/FreeRTOS_IP.h
+main.obj: C:/Users/VIJOY-PC/workspace_v8/apes_p2/FreeRTOSIPConfig.h
+main.obj: C:/ti/ccsv8/tools/compiler/ti-cgt-arm_18.1.1.LTS/include/stdlib.h
+main.obj: C:/Users/VIJOY-PC/Downloads/FreeRTOSv10.0.1/FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/include/FreeRTOSIPConfigDefaults.h
+main.obj: C:/Users/VIJOY-PC/Downloads/FreeRTOSv10.0.1/FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/include/FreeRTOS_errno_TCP.h
+main.obj: C:/Users/VIJOY-PC/Downloads/FreeRTOSv10.0.1/FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/include/IPTraceMacroDefaults.h
+main.obj: C:/Users/VIJOY-PC/Downloads/FreeRTOSv10.0.1/FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/portable/Compiler/GCC/pack_struct_start.h
+main.obj: C:/Users/VIJOY-PC/Downloads/FreeRTOSv10.0.1/FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/portable/Compiler/GCC/pack_struct_end.h
 
 ../main.c: 
 ../main.h: 
@@ -84,6 +92,14 @@ C:/ti/TivaWare_C_Series-2.1.4.178/utils/uartstdio.h:
 .././tasks/comm_task.h: 
 .././tasks/uv_task.h: 
 .././tasks/pressure_task.h: 
-.././comms/i2c_drive.h: 
+.././comm/i2c_drive.h: 
 C:/ti/TivaWare_C_Series-2.1.4.178/inc/hw_i2c.h: 
 C:/ti/TivaWare_C_Series-2.1.4.178/driverlib/i2c.h: 
+C:/Users/VIJOY-PC/Downloads/FreeRTOSv10.0.1/FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/include/FreeRTOS_IP.h: 
+C:/Users/VIJOY-PC/workspace_v8/apes_p2/FreeRTOSIPConfig.h: 
+C:/ti/ccsv8/tools/compiler/ti-cgt-arm_18.1.1.LTS/include/stdlib.h: 
+C:/Users/VIJOY-PC/Downloads/FreeRTOSv10.0.1/FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/include/FreeRTOSIPConfigDefaults.h: 
+C:/Users/VIJOY-PC/Downloads/FreeRTOSv10.0.1/FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/include/FreeRTOS_errno_TCP.h: 
+C:/Users/VIJOY-PC/Downloads/FreeRTOSv10.0.1/FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/include/IPTraceMacroDefaults.h: 
+C:/Users/VIJOY-PC/Downloads/FreeRTOSv10.0.1/FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/portable/Compiler/GCC/pack_struct_start.h: 
+C:/Users/VIJOY-PC/Downloads/FreeRTOSv10.0.1/FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/portable/Compiler/GCC/pack_struct_end.h: 

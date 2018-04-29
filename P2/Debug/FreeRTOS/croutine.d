@@ -10,7 +10,7 @@ FreeRTOS/croutine.obj: C:/ti/ccsv8/tools/compiler/ti-cgt-arm_18.1.1.LTS/include/
 FreeRTOS/croutine.obj: C:/ti/ccsv8/tools/compiler/ti-cgt-arm_18.1.1.LTS/include/machine/_types.h
 FreeRTOS/croutine.obj: C:/ti/ccsv8/tools/compiler/ti-cgt-arm_18.1.1.LTS/include/machine/_stdint.h
 FreeRTOS/croutine.obj: C:/ti/ccsv8/tools/compiler/ti-cgt-arm_18.1.1.LTS/include/sys/_stdint.h
-FreeRTOS/croutine.obj: C:/Users/VIJOY-PC/workspace_v8/p2/FreeRTOSConfig.h
+FreeRTOS/croutine.obj: C:/Users/VIJOY-PC/workspace_v8/apes_p2/FreeRTOSConfig.h
 FreeRTOS/croutine.obj: C:/Users/VIJOY-PC/Downloads/FreeRTOSv10.0.1/FreeRTOS/Source/include/projdefs.h
 FreeRTOS/croutine.obj: C:/Users/VIJOY-PC/Downloads/FreeRTOSv10.0.1/FreeRTOS/Source/include/portable.h
 FreeRTOS/croutine.obj: C:/Users/VIJOY-PC/Downloads/FreeRTOSv10.0.1/FreeRTOS/Source/include/deprecated_definitions.h
@@ -31,7 +31,7 @@ C:/ti/ccsv8/tools/compiler/ti-cgt-arm_18.1.1.LTS/include/sys/_types.h:
 C:/ti/ccsv8/tools/compiler/ti-cgt-arm_18.1.1.LTS/include/machine/_types.h: 
 C:/ti/ccsv8/tools/compiler/ti-cgt-arm_18.1.1.LTS/include/machine/_stdint.h: 
 C:/ti/ccsv8/tools/compiler/ti-cgt-arm_18.1.1.LTS/include/sys/_stdint.h: 
-C:/Users/VIJOY-PC/workspace_v8/p2/FreeRTOSConfig.h: 
+C:/Users/VIJOY-PC/workspace_v8/apes_p2/FreeRTOSConfig.h: 
 C:/Users/VIJOY-PC/Downloads/FreeRTOSv10.0.1/FreeRTOS/Source/include/projdefs.h: 
 C:/Users/VIJOY-PC/Downloads/FreeRTOSv10.0.1/FreeRTOS/Source/include/portable.h: 
 C:/Users/VIJOY-PC/Downloads/FreeRTOSv10.0.1/FreeRTOS/Source/include/deprecated_definitions.h: 
