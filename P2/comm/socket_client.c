@@ -16,10 +16,11 @@
 #include "driverlib/sysctl.h"
 
 extern QueueHandle_t comm_socket_Queue;
+client_packet_t* comm_client_packet;
 
 void socket_client_task(void *pvParameters)
 {
-    client_packet_t* comm_client_packet = (client_packet_t*)pvPortMalloc(sizeof(client_packet_t));
+    //client_packet_t* comm_client_packet = (client_packet_t*)malloc(sizeof(client_packet_t));
 
     uint32_t ReceivedValue;
     Socket_t xClientSocket;
@@ -85,14 +86,11 @@ void socket_client_task(void *pvParameters)
             if(ReceivedValue & SOCKET_WAKE_UP)
             {
                 ReceivedValue = 0;
-                // receive client_pack struct through queue
-                //xQueueReceive( comm_socket_Queue, &comm_client_packet, 0U );
-
                 //dummy tiva packet
-                comm_client_packet->clientInfo = 1;
-                comm_client_packet->clientStatus = 5;
-                comm_client_packet->uv_payLoad = 0.01;
-                comm_client_packet->pr_payLoad = 0.02;
+                //comm_client_packet->clientInfo = 1;
+                //comm_client_packet->clientStatus = 5;
+                //comm_client_packet->uv_payLoad = 0.01;
+                //comm_client_packet->pr_payLoad = 0.02;
 
                 // send client pack struct to server
                 xBytesSent = FreeRTOS_send(xClientSocket, /* The socket being sent to. */
@@ -100,7 +98,10 @@ void socket_client_task(void *pvParameters)
                                            sizeof(client_packet_t),/* The remaining length of data to send. */
                                            0); /* ulFlags. */
                 if (xBytesSent >= 0)
-                    UARTprintf("TIVA client packet sent, Bytes :%d\n", xBytesSent);
+                {
+                    //UARTprintf("TIVA client packet sent, Bytes :%d\n", xBytesSent);
+                }
+
                 else{
                     UARTprintf("Unable to send TIVA client packet\n");
                     break;

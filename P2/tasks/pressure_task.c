@@ -51,7 +51,7 @@ void pressure_task(void *pvParameters)
 
         // Convert the data
         int pres = ((pressure_data[0] * 65536) + (pressure_data[1] * 256 + (pressure_data[2] & 0xF0)))/16;
-        float pressure = (pres / 4.0)/1000;
+        float pressure = (pres / 4.0) /1000;
 
         //pack data
         pressure_packet->source = SENSOR_PRESSURE;

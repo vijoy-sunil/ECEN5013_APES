@@ -31,13 +31,14 @@ extern QueueHandle_t uv_comm_Queue;
 extern QueueHandle_t main_comm_Queue;
 extern QueueHandle_t pressure_comm_Queue;
 
-
+extern client_packet_t* comm_client_packet;
 QueueHandle_t comm_socket_Queue = NULL;
 void comm_task(void *pvParameters)
 {
     //data transfer queue
     comm_socket_Queue = xQueueCreate( COMM_SOCKET_QUEUE_LENGTH, sizeof(client_pack_t) );
     client_pack_t* client_packet = (client_pack_t*)malloc(sizeof(client_pack_t));
+    comm_client_packet = (client_packet_t*)client_packet;
 
     //BaseType_t ret;
     msg_pack_t* packReceived = (msg_pack_t*)malloc(sizeof(msg_pack_t));
